@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Rạp phim</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js"></script>
+    <style>
+        :root {
+            --color-background: #f9f9f9;
+            --color-topbar-bg: #1f1f1f;
+            --color-topbar-text: #ffffff;
+            --color-topbar-hover: #ffc107;
+            --color-border-language: #555;
+            --color-language-active: #e53935;
+            --color-navbar-bg: #ffffff;
+            --color-navbar-shadow: rgba(0,0,0,0.1);
+            --color-navbar-link: #333;
+            --color-navbar-hover: #e53935;
+            --color-main-bg: #ffffff;
+            --color-main-shadow: rgba(0,0,0,0.05);
+            --color-footer-bg: #2c2c2c;
+            --color-footer-text: #ccc;
+            --color-footer-hover: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--color-background);
+        }
+
+        .topbar {
+            background: var(--color-topbar-bg);
+            color: var(--color-topbar-text);
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+
+            .topbar a {
+                color: var(--color-topbar-text);
+                margin-left: 1rem;
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .topbar a:hover {
+                    color: var(--color-topbar-hover);
+                }
+
+        .language-switch {
+            display: inline-flex;
+            border-radius: 50px;
+            overflow: hidden;
+            border: 1px solid var(--color-border-language);
+        }
+
+            .language-switch a {
+                padding: 0.35rem 1rem;
+                color: var(--color-topbar-text);
+                background-color: var(--color-topbar-bg);
+                font-weight: 600;
+            }
+
+                .language-switch a.active {
+                    background-color: var(--color-language-active);
+                }
+
+        .navbar {
+            background-color: var(--color-navbar-bg);
+            box-shadow: 0 4px 6px var(--color-navbar-shadow);
+        }
+
+        .navbar-brand img {
+            height: 45px;
+        }
+
+        .navbar-nav .nav-link {
+            color: var(--color-navbar-link);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: var(--color-navbar-hover);
+            }
+
+        main.container {
+            background-color: var(--color-main-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+            box-shadow: 0 2px 8px var(--color-main-shadow);
+        }
+
+        footer {
+            background-color: var(--color-footer-bg);
+            color: var(--color-footer-text);
+            padding: 2rem 0;
+        }
+
+            footer a {
+                color: var(--color-footer-text);
+                text-decoration: none;
+                margin: 0 10px;
+            }
+
+                footer a:hover {
+                    color: var(--color-footer-hover);
+                }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="topbar d-flex justify-content-between align-items-center flex-wrap">
+        <div class="d-flex align-items-center">
+            <a href="#" class="ms-3">Tin mới & Ưu đãi</a>
+            <a href="#">Vé của tôi</a>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="language-switch me-3">
+                <a href="#" class="active">VN</a>
+                <a href="#">EN</a>
+            </div>
+            <a href="#">Đăng nhập / Đăng ký</a>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/"><img src="https://www.cgv.vn/skin/frontend/cgv/default/images/cgvlogo.png" alt="Logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/lich-chieu">Lịch Chiếu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/phim">Phim</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/rap">Rạp</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/uu-dai">Ưu Đãi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/thanh-vien">Thành Viên</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="container text-center">
+            <img src="https://www.galaxycine.vn/galaxy-logo-mobile.svg" alt="Galaxy Logo" style="height: 40px; margin-bottom: 1rem;" />
+            <p class="mb-1">&copy; 2025 Galaxy Cinema. All rights reserved.</p>
+            <p class="mb-1">Hotline: 1900 6017</p>
+            <p class="mb-3">Email: support@galaxycine.vn</p>
+            <div>
+                <a href="#">Facebook</a>
+                <a href="#">YouTube</a>
+                <a href="#">Instagram</a>
+            </div>
+        </div>
+    </footer>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
