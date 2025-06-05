@@ -1,0 +1,15 @@
+﻿footer {
+    background-color: var(--color-footer-bg);
+    color: var(--color-footer-text);
+    padding: 2rem 0;
+}
+
+    footer a {
+        color: var(--color-footer-text);
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+        footer a:hover {
+            color: var(--color-footer-hover);
+        }
