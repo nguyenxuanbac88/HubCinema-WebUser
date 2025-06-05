@@ -1,24 +1,48 @@
-html {
-  font-size: 14px;
-}
-
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+﻿:root {
+    --color-background: #f9f9f9;
+    --color-topbar-bg: #1f1f1f;
+    --color-topbar-text: #ffffff;
+    --color-topbar-hover: #ffc107;
+    --color-border-language: #555;
+    --color-language-active: #e53935;
+    --color-navbar-bg: #ffffff;
+    --color-navbar-shadow: rgba(0,0,0,0.1);
+    --color-navbar-link: #333;
+    --color-navbar-hover: #e53935;
+    --color-main-bg: #ffffff;
+    --color-main-shadow: rgba(0,0,0,0.05);
+    --color-footer-bg: #2c2c2c;
+    --color-footer-text: #ccc;
+    --color-footer-hover: #ffffff;
 }
 
 body {
-  margin-bottom: 60px;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: var(--color-background);
+}
+
+/* Đã có trong site.css, giữ lại */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.btn:focus, .btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .movie-poster {
@@ -26,3 +50,138 @@ body {
     height: 260px;
     object-fit: cover;
 }
+
+/* Header topbar */
+.topbar {
+    background: var(--color-topbar-bg);
+    color: var(--color-topbar-text);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+    .topbar a {
+        color: var(--color-topbar-text);
+        /*margin-left: 1rem;*/
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+        .topbar a:hover {
+            color: var(--color-topbar-hover);
+        }
+    .topbar .ms-auto {
+        padding-right: 2rem; /* hoặc 3rem, tùy UI */
+    }
+
+
+/* Ngôn ngữ */
+.language-switch {
+    display: inline-flex;
+    border-radius: 50px;
+    overflow: hidden;
+    border: 1px solid var(--color-border-language);
+}
+
+    .language-switch a {
+        padding: 0.35rem 1rem;
+        color: var(--color-topbar-text);
+        background-color: var(--color-topbar-bg);
+        font-weight: 600;
+    }
+
+        .language-switch a.active {
+            background-color: var(--color-language-active);
+        }
+
+/* Navbar */
+.navbar {
+    background-color: var(--color-navbar-bg);
+    box-shadow: 0 4px 6px var(--color-navbar-shadow);
+}
+
+.navbar-brand img {
+    height: 45px;
+}
+
+.navbar-nav .nav-link {
+    color: var(--color-navbar-link);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+    .navbar-nav .nav-link:hover {
+        color: var(--color-navbar-hover);
+    }
+
+/* Main content */
+main.container {
+    background-color: var(--color-main-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-top: 2rem;
+    box-shadow: 0 2px 8px var(--color-main-shadow);
+}
+
+/* Footer */
+footer {
+    background-color: var(--color-footer-bg);
+    color: var(--color-footer-text);
+    padding: 2rem 0;
+}
+
+    footer a {
+        color: var(--color-footer-text);
+        text-decoration: none;
+        margin: 0 10px;
+    }
+
+        footer a:hover {
+            color: var(--color-footer-hover);
+        }
+
+
+.nav-hub {
+    background-color: white;
+}
+
+.logo-hub {
+    height: 32px;
+}
+
+.btn-ticket {
+    background-color: #FFD700;
+    color: black;
+    font-weight: bold;
+    border: 2px dashed #fff;
+    border-radius: 8px;
+    padding: 4px 12px;
+}
+
+.nav-link {
+    color: #000;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .nav-link:hover,
+    .nav-link.dropdown-toggle:focus {
+        color: #e53935;
+    }
+
+.dropdown-menu {
+    min-width: 200px;
+    font-size: 0.95rem;
+}
+
+.nav-icon-link {
+    color: #000;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+    .nav-icon-link i {
+        font-size: 1rem;
+        margin-right: 4px;
+    }
