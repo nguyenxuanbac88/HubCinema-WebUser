@@ -1,15 +1,134 @@
-﻿footer {
-    background-color: var(--color-footer-bg);
-    color: var(--color-footer-text);
-    padding: 2rem 0;
+﻿
+.footer {
+    background-color: #2c2c2c;
+    color: #d0d0d0;
+    font-family: Arial, sans-serif;
+    padding: 40px 0;
 }
 
-    footer a {
-        color: var(--color-footer-text);
-        text-decoration: none;
-        margin: 0 10px;
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 16px;
+}
+
+.footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.footer-section {
+    flex: 1 1 200px;
+}
+
+    .footer-section h3 {
+        color: white;
+        font-size: 15px; /* chỉnh cỡ chữ tiêu đề */
+        font-weight: bold;
+        text-transform: uppercase; /* in hoa giống ảnh */
+        margin-bottom: 16px;
+        letter-spacing: 0.5px;
     }
 
-        footer a:hover {
-            color: var(--color-footer-hover);
+    .footer-section ul {
+        list-style: none;
+        padding: 0;
+    }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+            .footer-section ul li a {
+                color: #d0d0d0;
+                font-size: 14px; /* chỉnh cỡ chữ mục con */
+                line-height: 1.8; /* giãn dòng nhẹ */
+                text-decoration: none;
+                transition: color 0.3s;
+            }
+
+                .footer-section ul li a:hover {
+                    color: #FD841F;
+                }
+
+    .footer-section.social img {
+        max-width: 100%;
+        height: auto;
+    }
+
+/* Wrapper chứa các icon */
+.social-icons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.social-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+    .social-icon:hover {
+        transform: scale(1.05);
+    }
+
+    .social-icon img {
+        width: 80%;
+        height: 80%;
+        object-fit: cover; /* hoặc contain nếu muốn icon không bị cắt */
+        border-radius: 8px; /* đảm bảo bo viền đẹp */
+    }
+
+
+
+.bocongthuong {
+    margin-top: 10px;
+    width: 150px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #888;
+    margin-top: 40px;
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+    .footer-bottom img {
+        height: 42px;
+        width: auto;
+    }
+
+    .footer-bottom h3 {
+        font-size: 15px;
+        font-weight: bold;
+        color: white;
+        margin-bottom: 6px;
+    }
+
+    .footer-bottom p {
+        font-size: 14px;
+        color: #d0d0d0;
+        margin: 4px 0;
+        line-height: 1.6;
+    }
+
+    .footer-bottom a {
+        color: #d0d0d0;
+        text-decoration: none;
+    }
+
+        .footer-bottom a:hover {
+            color: #FD841F;
         }

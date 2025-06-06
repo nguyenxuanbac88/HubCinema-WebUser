@@ -31,7 +31,6 @@ html {
 body {
     font-family: 'Segoe UI', sans-serif;
     background-color: var(--color-background);
-    margin-bottom: 60px;
 }
 
 .btn:focus, .btn:active:focus,
