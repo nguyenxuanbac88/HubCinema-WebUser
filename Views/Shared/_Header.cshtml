@@ -1,0 +1,66 @@
+﻿@* HEADER - HubCinema *@
+
+<!-- Topbar -->
+<div class="topbar d-flex justify-content-end align-items-center px-4 py-2">
+    <div class="language-switch me-4">
+        <a href="#" class="lang active">VN</a><a href="#" class="lang">EN</a>
+    </div>
+    <a href="javascript:void(0);" onclick="openRegisterModal()" class="register-link">Đăng ký</a>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg nav-hub">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+
+        <!-- Logo -->
+        <a class="navbar-brand" href="/">
+            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub" />
+        </a>
+
+        <!-- Ticket Button -->
+        <a href="/dat-ve" class="btn-ticket text-uppercase fw-bold text-dark">
+            <img src="~/images/ticket-button.png" alt="TICKET" />
+        </a>
+
+        <!-- Menu -->
+        <div class="d-flex align-items-center gap-4">
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Phim</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Phim đang chiếu</a></li>
+                    <li><a class="dropdown-item" href="#">Phim sắp chiếu</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Rạp</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Tất cả rạp</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sản phẩm</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Bắp nước</a></li>
+                </ul>
+            </div>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sự kiện và ưu đãi</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Khuyến mãi</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Account -->
+        <div class="account d-flex gap-3 align-items-center">
+            <a href="javascript:void(0);" onclick="openLoginModal()" class="nav-icon-link d-flex align-items-center gap-1">
+                <img src="~/images/login.png" class="account-icon" alt="Đăng nhập" />
+                <span>Đăng nhập</span>
+            </a>
+            <a href="/thanh-vien" class="nav-icon-link d-flex align-items-center gap-1">
+                <img src="~/images/member.png" class="account-icon" alt="Thành viên" />
+                <span>Thành viên</span>
+            </a>
+        </div>
+    </div>
+</nav>

@@ -1,19 +1,25 @@
 ﻿:root {
-    --color-background: #f9f9f9;
-    --color-topbar-bg: #1f1f1f;
-    --color-topbar-text: #ffffff;
-    --color-topbar-hover: #ffc107;
-    --color-border-language: #555;
-    --color-language-active: #e53935;
+    --color-background: #ffffff;
+    --color-topbar-bg: #2c2c2c;
+    --color-topbar-text: #000;
+    --color-topbar-hover: #e53935;
+    --color-border-language: #ccc;
+    --color-language-active: #F7D708;
+    --color-language-bg:#ffffff;
+    --color-language-hover:#ffffff;
     --color-navbar-bg: #ffffff;
-    --color-navbar-shadow: rgba(0,0,0,0.1);
+    --color-navbar-shadow: rgba(0, 0, 0, 0.05);
     --color-navbar-link: #333;
     --color-navbar-hover: #e53935;
     --color-main-bg: #ffffff;
-    --color-main-shadow: rgba(0,0,0,0.05);
+    --color-main-shadow: #ffffff;
     --color-footer-bg: #2c2c2c;
     --color-footer-text: #ccc;
     --color-footer-hover: #ffffff;
+}
+
+* ::before, * ::after {
+    box-sizing: border-box;
 }
 
 html {

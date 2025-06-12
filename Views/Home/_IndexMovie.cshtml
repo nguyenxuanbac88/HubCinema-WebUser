@@ -1,0 +1,49 @@
+﻿@model List<MovieTicketWebsite.Models.Movie>
+
+<section class="movie-section">
+    <h2 class="section-title">PHIM</h2>
+
+    <ul class="nav nav-tabs justify-content-center" id="movieTab">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#showing">Đang chiếu</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#upcoming">Sắp chiếu</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-4">
+        <!-- PHIM ĐANG CHIẾU -->
+        <div class="tab-pane fade show active" id="showing">
+            <div class="movie-list">
+                @foreach (var movie in Model.Where(m => m.ReleaseDate <= DateTime.Now))
+                {
+                    <div class="movie">
+                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/doraemon.jpg" : movie.CoverURL)"
+                             alt="@movie.MovieName"
+                             onerror="this.onerror=null; this.src='/images/doraemon.jpg';" />
+                        <h3>@movie.MovieName</h3>
+                        <p>Thể loại: @movie.Genre</p>
+                        <p>Thời lượng: @movie.Duration phút</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- PHIM SẮP CHIẾU -->
+        <div class="tab-pane fade" id="upcoming">
+            <div class="movie-list">
+                @foreach (var movie in Model.Where(m => m.ReleaseDate > DateTime.Now))
+                {
+                    <div class="movie">
+                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/doraemon.jpg" : movie.CoverURL)"
+                             alt="@movie.MovieName"
+                             onerror="this.onerror=null; this.src='/images/doraemon.jpg';" />
+                        <h3>@movie.MovieName</h3>
+                        <p>Khởi chiếu: @movie.ReleaseDate.ToString("dd/MM/yyyy")</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,16 @@
+﻿@model List<MovieTicketWebsite.Models.ComboUuDai>
+
+<section class="combo-section">
+    <h2 class="section-title">COMBO ƯU ĐÃI</h2>
+
+    <div class="combo-list">
+        @foreach (var combo in Model)
+        {
+            <div class="combo">
+                <img src="@combo.ImageURL" alt="@combo.FoodName" />
+                <h3>@combo.FoodName</h3>
+                <p>Giá: @combo.Price.ToString("N0")đ</p>
+            </div>
+        }
+    </div>
+</section>

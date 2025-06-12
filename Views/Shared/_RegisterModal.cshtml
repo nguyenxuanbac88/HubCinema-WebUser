@@ -1,0 +1,59 @@
+﻿<!-- Modal đăng ký -->
+<div id="registerModal" class="custom-modal-overlay" style="display:none; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="custom-modal-box" style="max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
+        <button class="custom-modal-close" onclick="closeRegisterModal()">×</button>
+        <div class="text-center mb-4">
+            <img src="/picture/doraemon.jpg" width="150" alt="Register" />
+            <h4 class="fw-bold mt-2">Đăng Ký Tài Khoản</h4>
+        </div>
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <div class="form-group mb-3">
+                <label>Họ và tên</label>
+                <input type="text" name="FullName" class="form-control" placeholder="Nhập Họ và tên" required />
+            </div>
+            <div class="form-group mb-3">
+                <label>Email</label>
+                <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
+            </div>
+            <div class="form-group mb-3">
+                <label>Số điện thoại</label>
+                <input type="tel" name="Phone" class="form-control" placeholder="Nhập Số điện thoại" required />
+            </div>
+            <div class="form-group mb-3">
+                <label>Giới tính</label><br />
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Gender" id="genderMale" value="Nam" checked />
+                    <label class="form-check-label" for="genderMale">Nam</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="Gender" id="genderFemale" value="Nữ" />
+                    <label class="form-check-label" for="genderFemale">Nữ</label>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label>Ngày sinh</label>
+                <input type="date" name="BirthDate" class="form-control" required />
+            </div>
+            <div class="form-group mb-3">
+                <label>Mật khẩu</label>
+                <div class="input-group">
+                    <input type="password" name="Password" class="form-control" placeholder="Nhập Mật khẩu" required id="registerPassword" />
+                    <span class="input-group-text" onclick="togglePassword('registerPassword', this)"><i class="bi bi-eye-slash"></i></span>
+                </div>
+            </div>
+            <div class="form-group mb-3">
+                <label>Nhập lại mật khẩu</label>
+                <div class="input-group">
+                    <input type="password" name="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required id="registerConfirmPassword" />
+                    <span class="input-group-text" onclick="togglePassword('registerConfirmPassword', this)"><i class="bi bi-eye-slash"></i></span>
+                </div>
+            </div>
+
+            <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">ĐĂNG KÝ</button>
+        </form>
+        <hr />
+        <div class="text-center">
+            Bạn đã có tài khoản? <a href="javascript:void(0);" onclick="openLoginModal()" class="text-orange">Đăng nhập</a>
+        </div>
+    </div>
+</div>

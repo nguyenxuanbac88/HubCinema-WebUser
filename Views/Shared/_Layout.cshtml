@@ -2,15 +2,34 @@
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="Mô tả trang web của bạn">
+    <meta name="theme-color" content="#000000">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <title>@ViewBag.Title - Rạp phim</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/favicons/site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="HubCinema">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/header.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout_header.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layout_footer.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/homepage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index_banner.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index_movie.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/index_combo_UuDai.css" asp-append-version="true" />
+
     <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="~/js/site.js"></script>
     <script src="~/js/Login.js"></script>
     <script src="~/js/Register.js"></script>
@@ -18,247 +37,18 @@
     @RenderSection("Styles", required: false)
 </head>
 <body>
-    <div class="topbar d-flex justify-content-between align-items-center flex-wrap">
-        <div class="d-flex align-items-center gap-2 ms-auto">
-            <div class="language-switch me-3">
-                <a href="#" class="active">VN</a>
-                <a href="#">EN</a>
-            </div>
-            <a href="javascript:void(0);" onclick="openRegisterModal()">Đăng ký</a>
-        </div>
-    </div>
+    @Html.Partial("_Header")
 
-    <nav class="navbar navbar-expand-lg nav-hub">
-        <div class="container d-flex justify-content-between align-items-center py-2">
-            <!-- Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/images/hub-logo.png" alt="Logo" class="logo-hub">
-            </a>
-
-            <!-- Nút TICKET -->
-            <a href="/dat-ve" class="btn btn-ticket mx-3">
-                🎟 TICKET
-            </a>
-
-            <!-- Menu -->
-            <div class="d-flex align-items-center gap-4 flex-grow-1">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Phim</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Phim đang chiếu</a></li>
-                        <li><a class="dropdown-item" href="#">Phim sắp chiếu</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Rạp</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Tất cả rạp</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sản phẩm</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Bắp nước</a></li>
-                    </ul>
-                </div>
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sự kiện và ưu đãi</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Khuyến mãi</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Tài khoản -->
-            <div class="d-flex align-items-center gap-3">
-                <a href="javascript:void(0);"onclick="openLoginModal()" class="nav-icon-link">
-                    <i class="bi bi-box-arrow-in-right me-1"></i> Đăng nhập
-                </a>
-                <a href="/thanh-vien" class="nav-icon-link">
-                    <i class="bi bi-award me-1"></i> Thành viên
-                </a>
-            </div>
-        </div>
-    </nav>
-
-
-    <main class="container">
+    <main style="padding: 0 50px; background-color: white">
         @RenderBody()
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-top">
-                <div class="footer-section">
-                    <h3>GIỚI THIỆU</h3>
-                    <ul>
-                        <li><a href="/ve-chung-toi/">Về Chúng Tôi</a></li>
-                        <li><a href="/thoa-thuan-su-dung/">Thoả Thuận Sử Dụng</a></li>
-                        <li><a href="/quy-che-hoat-dong/">Quy Chế Hoạt Động</a></li>
-                        <li><a href="/chinh-sach-bao-mat/">Chính Sách Bảo Mật</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>GÓC ĐIỆN ẢNH</h3>
-                    <ul>
-                        <li><a href="/dien-anh/">Thể Loại Phim</a></li>
-                        <li><a href="/binh-luan-phim/">Bình Luận Phim</a></li>
-                        <li><a href="/movie-blog/">Blog Điện Ảnh</a></li>
-                        <li><a href="/phim-hay/">Phim Hay Tháng</a></li>
-                        <li><a href="/phim-imax/">Phim IMAX</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>HỖ TRỢ</h3>
-                    <ul>
-                        <li><a href="/gop-y/">Góp Ý</a></li>
-                        <li><a href="/sale-and-service/">Sale & Services</a></li>
-                        <li><a href="/rap-gia-ve/">Rạp / Giá Vé</a></li>
-                        <li><a href="https://tuyendung-daotao.galaxystudio.vn/" target="_blank">Tuyển Dụng</a></li>
-                        <li><a href="/hoi-dap/">FAQ</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section social">
-                    <img src="https://www.galaxycine.vn/media/2024/11/11/glx-footer.svg" alt="Galaxy Cinema" />
-                    <div class="social-icons">
-                        <a href="https://www.facebook.com/galaxycinevn" target="_blank" class="social-icon"><img src="~/picture/facebook.svg" alt="Facebook"></a>
-                        <a href="https://www.youtube.com/user/galaxymovies" target="_blank" class="social-icon"><img src="~/picture/youtube.svg" alt="YouTube"></a>
-                        <a href="https://www.instagram.com/galaxycinema" target="_blank" class="social-icon"><img src="~/picture/instagram.svg" alt="Instagram"></a>
-                    </div>
-                    <img src="/picture/Bocongthuong.png" alt="Bộ Công Thương" class="bocongthuong" />
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <img src="https://www.galaxycine.vn/media/2024/11/11/glx-footer.svg" alt="Logo" />
-                <div>
-                    <h3>CÔNG TY CỔ PHẦN PHIM THIÊN NGÂN</h3>
-                    <p>3/9 Võ Văn Tần, Phường Võ Thị Sáu, Quận 3, Tp. Hồ Chí Minh, Việt Nam</p>
-                    <p>☎ 028.39.333.303 - 📞 19002224 (9:00 - 22:00) - ✉ <a href="mailto:hotro@galaxystudio.vn">hotro@galaxystudio.vn</a></p>
-                </div>
-            </div>
-        </div>
-    </footer>
+    @Html.Partial("_Footer")
+    @Html.Partial("_LoginModal")
+    @Html.Partial("_RegisterModal")
+    @Html.Partial("_ForgotModal")
 
-    <!-- Modal đăng nhập -->
-    <div id="loginModal" class="custom-modal-overlay" style="display:none;">
-        <div class="custom-modal-box">
-            <button class="custom-modal-close" onclick="closeLoginModal()">×</button>
-            <div class="text-center mb-4">
-                <img src="/picture/doraemon.jpg" width="150" alt="Login" />
-                <h4 class="fw-bold mt-2">Đăng Nhập Tài Khoản</h4>
-            </div>
-
-            <form asp-controller="Account" asp-action="Login" method="post">
-                <div class="form-group mb-3">
-                    <label>Email</label>
-                    <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Mật khẩu</label>
-                    <div class="input-group">
-                        <input type="password" name="Password" id="loginPassword" class="form-control" placeholder="Nhập Mật khẩu" required />
-                        <span class="input-group-text" onclick="toggleLoginPassword(this)">
-                            <i class="bi bi-eye-slash"></i>
-                        </span>
-                    </div>
-                </div>
-
-                <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">ĐĂNG NHẬP</button>
-
-                <div class="text-start mt-2">
-                    <a href="javascript:void(0);" onclick="openForgotModal()" class="text-muted">Quên mật khẩu?</a>
-                </div>
-
-                <hr />
-                <div class="text-center">
-                    Bạn chưa có tài khoản? <a href="javascript:void(0);" onclick="openRegisterModal()" class="text-orange">Đăng ký</a>
-                </div>
-            </form>
-        </div>
-    </div>
-    <!-- Modal đăng ký -->
-    <div id="registerModal" class="custom-modal-overlay" style="display:none; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
-        <div class="custom-modal-box" style="max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
-            <button class="custom-modal-close" onclick="closeRegisterModal()">×</button>
-            <div class="text-center mb-4">
-                <img src="/picture/doraemon.jpg" width="150" alt="Register" />
-                <h4 class="fw-bold mt-2">Đăng Ký Tài Khoản</h4>
-            </div>
-            <form asp-controller="Account" asp-action="Register" method="post">
-                <div class="form-group mb-3">
-                    <label>Họ và tên</label>
-                    <input type="text" name="FullName" class="form-control" placeholder="Nhập Họ và tên" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label>Email</label>
-                    <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label>Số điện thoại</label>
-                    <input type="tel" name="Phone" class="form-control" placeholder="Nhập Số điện thoại" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label>Giới tính</label><br />
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="genderMale" value="Nam" checked />
-                        <label class="form-check-label" for="genderMale">Nam</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="Gender" id="genderFemale" value="Nữ" />
-                        <label class="form-check-label" for="genderFemale">Nữ</label>
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label>Ngày sinh</label>
-                    <input type="date" name="BirthDate" class="form-control" required />
-                </div>
-                <div class="form-group mb-3">
-                    <label>Mật khẩu</label>
-                    <div class="input-group">
-                        <input type="password" name="Password" class="form-control" placeholder="Nhập Mật khẩu" required id="registerPassword" />
-                        <span class="input-group-text" onclick="togglePassword('registerPassword', this)"><i class="bi bi-eye-slash"></i></span>
-                    </div>
-                </div>
-                <div class="form-group mb-3">
-                    <label>Nhập lại mật khẩu</label>
-                    <div class="input-group">
-                        <input type="password" name="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required id="registerConfirmPassword" />
-                        <span class="input-group-text" onclick="togglePassword('registerConfirmPassword', this)"><i class="bi bi-eye-slash"></i></span>
-                    </div>
-                </div>
-                
-                <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">ĐĂNG KÝ</button>
-            </form>
-            <hr />
-            <div class="text-center">
-                Bạn đã có tài khoản? <a href="javascript:void(0);" onclick="openLoginModal()" class="text-orange">Đăng nhập</a>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Modal quên mật khẩu -->
-    <div id="forgotModal" class="custom-modal-overlay" style="display:none;">
-        <div class="custom-modal-box">
-            <button class="custom-modal-close" onclick="closeForgotModal()">×</button>
-            <div class="text-center mb-4">
-                <img src="/picture/doraemon.jpg" width="150" alt="Forgot Password" />
-                <h4 class="fw-bold mt-2">Quên Mật Khẩu</h4>
-            </div>
-            <form asp-controller="Account" asp-action="ForgotPassword" method="post">
-                <div class="form-group mb-3">
-                    <label>Nhập Email để khôi phục</label>
-                    <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
-                </div>
-                <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">GỬI YÊU CẦU</button>
-            </form>
-        </div>
-    </div>
-    
     @RenderSection("Scripts", required: false)
-   
-
 </body>
+
 </html>

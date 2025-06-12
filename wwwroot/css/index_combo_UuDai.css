@@ -1,0 +1,57 @@
+﻿.combo-section {
+    max-width: 1400px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+.combo-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 item trên 1 hàng */
+    gap: 2rem;
+}
+
+.combo {
+    width: 100%; /* ← QUAN TRỌNG: tự fit vào 1fr */
+    border: 1px solid #ddd;
+    border-radius: 16px;
+    padding: 16px;
+    background-color: #fff;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+    .combo:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .combo img {
+        width: 100%;
+        height: 220px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+
+    .combo h3 {
+        font-size: 20px;
+        margin: 10px 0 5px;
+    }
+
+    .combo p {
+        color: #e53935;
+        font-weight: bold;
+    }
+
+/* Responsive */
+@media (max-width: 992px) {
+    .combo-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .combo-list {
+        grid-template-columns: 1fr;
+    }
+}

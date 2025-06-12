@@ -9,6 +9,9 @@ namespace MovieTicketWebsite
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            // ? Thêm dòng này ?? s? d?ng IHttpClientFactory
+            builder.Services.AddHttpClient();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

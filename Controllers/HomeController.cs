@@ -1,37 +1,47 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
-using System.Diagnostics;
+using Newtonsoft.Json;
 
-namespace MovieTicketWebsite.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    private readonly HttpClient _httpClient;
+
+    public HomeController(IHttpClientFactory httpClientFactory)
     {
-        private readonly ILogger<HomeController> _logger;
+        _httpClient = httpClientFactory.CreateClient();
+    }
 
-        public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index()
+    {
+        var movieUrl = "http://localhost:5264/api/Public/GetMovies";
+        var foodUrl = "http://localhost:5264/api/Public/GetFoods";
+
+        List<Movie> movies = new();
+        List<ComboUuDai> combos = new();
+
+        // Gọi API phim
+        var movieResponse = await _httpClient.GetAsync(movieUrl);
+        if (movieResponse.IsSuccessStatusCode)
         {
-            _logger = logger;
+            var json = await movieResponse.Content.ReadAsStringAsync();
+            movies = JsonConvert.DeserializeObject<List<Movie>>(json);
         }
 
-        public IActionResult Index()
+        // Gọi API combo
+        var foodResponse = await _httpClient.GetAsync(foodUrl);
+        if (foodResponse.IsSuccessStatusCode)
         {
-            return View();
+            var json = await foodResponse.Content.ReadAsStringAsync();
+            combos = JsonConvert.DeserializeObject<List<ComboUuDai>>(json);
         }
 
-        public IActionResult Privacy()
+        // Truyền xuống view model
+        var model = new HomeIndexViewModel
         {
-            return View();
-        }
+            Movies = movies,
+            Combos = combos
+        };
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
-
-        public IActionResult ShowPhimDangChieu()
-        {
-            return View();
-        }
+        return View(model);
     }
 }

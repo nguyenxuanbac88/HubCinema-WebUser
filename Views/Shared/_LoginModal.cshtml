@@ -1,0 +1,38 @@
+﻿<!-- Modal đăng nhập -->
+<div id="loginModal" class="custom-modal-overlay" style="display:none;">
+    <div class="custom-modal-box">
+        <button class="custom-modal-close" onclick="closeLoginModal()">×</button>
+        <div class="text-center mb-4">
+            <img src="/picture/doraemon.jpg" width="150" alt="Login" />
+            <h4 class="fw-bold mt-2">Đăng Nhập Tài Khoản</h4>
+        </div>
+
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div class="form-group mb-3">
+                <label>Email</label>
+                <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
+            </div>
+
+            <div class="form-group mb-3">
+                <label>Mật khẩu</label>
+                <div class="input-group">
+                    <input type="password" name="Password" id="loginPassword" class="form-control" placeholder="Nhập Mật khẩu" required />
+                    <span class="input-group-text" onclick="toggleLoginPassword(this)">
+                        <i class="bi bi-eye-slash"></i>
+                    </span>
+                </div>
+            </div>
+
+            <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">ĐĂNG NHẬP</button>
+
+            <div class="text-start mt-2">
+                <a href="javascript:void(0);" onclick="openForgotModal()" class="text-muted">Quên mật khẩu?</a>
+            </div>
+
+            <hr />
+            <div class="text-center">
+                Bạn chưa có tài khoản? <a href="javascript:void(0);" onclick="openRegisterModal()" class="text-orange">Đăng ký</a>
+            </div>
+        </form>
+    </div>
+</div>

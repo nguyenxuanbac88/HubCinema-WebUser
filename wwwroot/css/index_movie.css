@@ -1,0 +1,70 @@
+﻿.movie-section {
+    max-width: 1400px; /* hoặc 1280px */
+    margin: auto;
+    padding: 40px 20px;
+}
+
+
+.section-title {
+    font-size: 28px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.movie-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 item 1 hàng */
+    gap: 2rem; /* hoặc tùy ý: 20px, 32px, v.v. */
+    padding: 2rem 0;
+}
+
+
+.movie {
+    width: 100%; /* ← CHỈNH LẠI */
+    height: 616px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+
+    .movie:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .movie img {
+        width: 100%;
+        height: 85%;
+        border-radius: 16px;
+        object-fit: cover;
+    }
+
+    .movie h3 {
+        font-size: 18px;
+        margin-top: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .movie p {
+        font-size: 14px;
+        margin: 4px 0;
+        color: #555;
+    }
+
+@media (max-width: 992px) {
+    .movie-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .movie-list {
+        grid-template-columns: 1fr;
+    }
+}

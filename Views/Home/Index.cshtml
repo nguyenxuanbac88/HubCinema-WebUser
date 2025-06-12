@@ -1,8 +1,7 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model MovieTicketWebsite.Models.HomeIndexViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Châm ngôn cuộc sống</h1>
-    <p>Sống như Khá đừng như Thành</p>
-</div>
+<main>
+    @await Html.PartialAsync("_IndexBanner") <!-- banner vẫn gán cứng -->
+    @await Html.PartialAsync("_IndexMovie", Model.Movies)
+    @await Html.PartialAsync("_IndexCombo", Model.Combos)
+</main>
