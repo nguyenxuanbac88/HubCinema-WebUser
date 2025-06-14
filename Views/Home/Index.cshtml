@@ -4,4 +4,16 @@
     @await Html.PartialAsync("_IndexBanner") <!-- banner vẫn gán cứng -->
     @await Html.PartialAsync("_IndexMovie", Model.Movies)
     @await Html.PartialAsync("_IndexCombo", Model.Combos)
+
+    @if (TempData["RegisterMessage"] != null)
+    {
+        <script>
+            const encodedMsg = "@TempData["RegisterMessage"]";
+            const txt = document.createElement("textarea");
+            txt.innerHTML = encodedMsg;
+            alert(txt.value);
+        </script>
+    }
+
+
 </main>
