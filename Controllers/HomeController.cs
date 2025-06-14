@@ -13,8 +13,8 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var movieUrl = "http://localhost:5264/api/Public/GetMovies";
-        var foodUrl = "http://localhost:5264/api/Public/GetFoods";
+        var movieUrl = "http://api.dvxuanbac.com:2030/api/Public/GetMovies";
+        var foodUrl = "http://api.dvxuanbac.com:2030/api/Public/GetFoods";
 
         List<Movie> movies = new();
         List<ComboUuDai> combos = new();
