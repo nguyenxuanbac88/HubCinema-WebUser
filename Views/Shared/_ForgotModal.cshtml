@@ -6,10 +6,10 @@
             <img src="~/images/hub_logo_new.png" width="150" alt="Forgot Password" />
             <h4 class="fw-bold mt-2">Quên Mật Khẩu</h4>
         </div>
-        <form asp-controller="Account" asp-action="ForgotPassword" method="post">
+        <form asp-controller="Login" asp-action="ForgotPassword" method="post">
             <div class="form-group mb-3">
                 <label>Nhập Email để khôi phục</label>
-                <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
+                <input type="email" name="email" class="form-control" placeholder="Nhập Email" required />
             </div>
             <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">GỬI YÊU CẦU</button>
         </form>

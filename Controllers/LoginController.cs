@@ -67,5 +67,48 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                TempData["ForgotMessage"] = "Vui lòng nhập email.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+
+            var requestBody = new
+            {
+                username = email
+            };
+
+            var json = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/forgot-password", content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    dynamic result = JsonConvert.DeserializeObject(responseBody);
+                    TempData["ForgotMessage"] = result?.message?.ToString() ?? "Đã gửi yêu cầu khôi phục.";
+                }
+                else
+                {
+                    TempData["ForgotMessage"] = $"Lỗi: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ForgotMessage"] = "Lỗi kết nối API: " + ex.Message;
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
     }
 }

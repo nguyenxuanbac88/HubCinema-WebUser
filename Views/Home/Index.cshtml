@@ -15,5 +15,20 @@
         </script>
     }
 
+    @if (TempData["ForgotMessage"] != null)
+    {
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const encodedMsg = "@TempData["ForgotMessage"]";
+                const txt = document.createElement("textarea");
+                txt.innerHTML = encodedMsg;
+                alert(txt.value);
+                if (typeof openForgotModal === "function") openForgotModal();
+            });
+        </script>
+    }
+
+
+
 
 </main>
