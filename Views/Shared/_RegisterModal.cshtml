@@ -33,7 +33,9 @@
             <div class="form-group mb-3">
                 <label>Ngày sinh</label>
                 <div class="date-group d-flex gap-2">
-                    <select name="dob_day" class="form-select" required>
+                    <!-- thêm hidden để gom ngày sinh -->
+                    <input type="hidden" name="dob" id="dobHiddenInput" />
+                    <select name="dob_day" id="dob_day" class="form-select" required>
                         <option value="">Ngày</option>
                         @for (int i = 1; i <= 31; i++)
                         {
@@ -41,7 +43,7 @@
                         }
                     </select>
 
-                    <select name="dob_month" class="form-select" required>
+                    <select name="dob_month" id="dob_month" class="form-select" required>
                         <option value="">Tháng</option>
                         @for (int i = 1; i <= 12; i++)
                         {
@@ -49,7 +51,7 @@
                         }
                     </select>
 
-                    <select name="dob_year" class="form-select" required>
+                    <select name="dob_year" id="dob_year" class="form-select" required>
                         <option value="">Năm</option>
                         @for (int i = DateTime.Now.Year; i >= 1900; i--)
                         {
@@ -71,7 +73,7 @@
             <div class="form-group mb-3">
                 <label>Nhập lại mật khẩu</label>
                 <div class="input-group">
-                    <input type="password" name="ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required id="registerConfirmPassword" />
+                    <input type="password" name="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required id="registerConfirmPassword" />
                     <span class="input-group-text" onclick="togglePassword('registerConfirmPassword', this)"><i class="bi bi-eye-slash"></i></span>
                 </div>
             </div>
@@ -89,3 +91,5 @@
         </div>
     </div>
 </div>
+
+<script src="~/js/register_form_handler.js"></script>
