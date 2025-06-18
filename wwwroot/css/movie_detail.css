@@ -1,0 +1,69 @@
+﻿.movie-detail h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.movie-detail .badge {
+    font-size: 0.9rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+}
+
+.movie-detail .text-muted {
+    font-size: 0.95rem;
+}
+
+.movie-detail iframe {
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.movie-detail .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+}
+
+    .movie-detail .btn-sm:hover {
+        background-color: #ffc107;
+        color: black;
+        border-color: #ffc107;
+    }
+
+.movie-detail .shadow-sm {
+    background-color: #f9f9f9;
+}
+
+.movie-detail h5 {
+    margin-bottom: 10px;
+}
+
+.movie-detail img {
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.banner-trailer {
+    position: relative;
+}
+
+.banner-img {
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.btn-play-trailer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    background: none;
+    border: none;
+}
+
+    .btn-play-trailer img {
+        width: 64px;
+        height: 64px;
+    }

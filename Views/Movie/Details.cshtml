@@ -1,0 +1,77 @@
+﻿@using System.Linq
+
+<section class="container py-4 movie-detail">
+    <!-- Banner -->
+    <div class="position-relative">
+        <img src="@Model.CoverURL"
+             class="w-100 object-fit-cover rounded shadow"
+             style="height: 500px;"
+             onerror="this.onerror=null; this.src='/images/default-banner.jpg';" />
+        <button type="button"
+                class="position-absolute top-50 start-50 translate-middle border-0 bg-transparent"
+                data-bs-toggle="modal" data-bs-target="#trailerModal">
+            <img src="/images/button-play.png" width="64" height="64" alt="Play" />
+        </button>
+    </div>
+
+    <!-- Poster + Thông tin phim -->
+    <div class="row my-4">
+        <div class="col-md-3">
+            <img src="@Model.CoverURL"
+                 class="img-fluid rounded border border-white shadow"
+                 onerror="this.onerror=null; this.src='/images/default_poster.jpg';" />
+        </div>
+        <div class="col-md-9">
+            <h3 class="fw-bold">@Model.MovieName</h3>
+            <p>
+                <span class="badge bg-warning text-dark">@Model.ReleaseDate.ToString("dd/MM/yyyy")</span>
+                @Model.Duration phút | @Model.Genre
+            </p>
+            <p class="text-muted">@Model.Description</p>
+            <p><strong>Đạo diễn:</strong> @Model.Director</p>
+            <p><strong>Diễn viên:</strong> @Model.Actors</p>
+            <p><strong>NSX:</strong> @Model.Producer</p>
+            <p><strong>Giới hạn tuổi:</strong> @Model.AgeRestriction</p>
+        </div>
+    </div>
+
+    <!-- Lịch chiếu -->
+    @if (Model.ShowtimesByTheater?.Count > 0)
+    {
+        @foreach (var theater in Model.ShowtimesByTheater)
+        {
+            <div class="p-3 border rounded shadow-sm mb-4">
+                <h5 class="fw-bold text-primary">@theater.TheaterName</h5>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @foreach (var time in theater.Showtimes)
+                    {
+                        <a class="btn btn-outline-dark rounded-pill px-3 py-1"
+                           href="/booking/@Model.IdMovie?showtimeId=@time.Id">
+                            @time.StartTime.ToString("HH:mm")
+                        </a>
+                    }
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <p class="text-muted">Hiện chưa có lịch chiếu.</p>
+    }
+</section>
+
+<!-- Modal Trailer -->
+<div class="modal fade" id="trailerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content bg-black">
+            <div class="modal-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe src="@Model.TrailerURL"
+                            title="Trailer"
+                            allowfullscreen
+                            class="w-100 rounded-bottom"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
