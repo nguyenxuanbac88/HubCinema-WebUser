@@ -59,5 +59,13 @@ namespace MovieTicketWebsite.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
     }
 }

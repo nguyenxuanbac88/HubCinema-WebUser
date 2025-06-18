@@ -10,6 +10,7 @@ namespace MovieTicketWebsite
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddHttpClient();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
@@ -26,6 +27,7 @@ namespace MovieTicketWebsite
 
             app.UseRouting();
 
+            app.UseSession();
             app.UseAuthorization();
 
             app.MapControllerRoute(

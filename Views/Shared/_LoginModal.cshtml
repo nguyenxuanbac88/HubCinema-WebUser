@@ -7,16 +7,16 @@
             <h4 class="fw-bold mt-2">Đăng Nhập Tài Khoản</h4>
         </div>
 
-        <form asp-controller="Account" asp-action="Login" method="post">
+        <form asp-controller="Login" asp-action="Login" method="post">
             <div class="form-group mb-3">
                 <label>Email</label>
-                <input type="email" name="Email" class="form-control" placeholder="Nhập Email" required />
+                <input type="email" name="email" class="form-control" placeholder="Nhập Email" required />
             </div>
 
             <div class="form-group mb-3">
                 <label>Mật khẩu</label>
                 <div class="input-group">
-                    <input type="password" name="Password" id="loginPassword" class="form-control" placeholder="Nhập Mật khẩu" required />
+                    <input type="password" name="password" id="loginPassword" class="form-control" placeholder="Nhập Mật khẩu" required />
                     <span class="input-group-text" onclick="toggleLoginPassword(this)">
                         <i class="bi bi-eye-slash"></i>
                     </span>
@@ -34,5 +34,13 @@
                 Bạn chưa có tài khoản? <a href="javascript:void(0);" onclick="openRegisterModal()" class="text-orange">Đăng ký</a>
             </div>
         </form>
+        @if (TempData["LoginMessage"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                @TempData["LoginMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
     </div>
 </div>

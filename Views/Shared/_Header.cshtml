@@ -1,12 +1,20 @@
 ﻿@* HEADER - HubCinema *@
+@{
+    var token = Context.Session.GetString("AccessToken");
+    bool isLoggedIn = !string.IsNullOrEmpty(token);
+}
 
 <!-- Topbar -->
 <div class="topbar d-flex justify-content-end align-items-center px-4 py-2">
     <div class="language-switch me-4">
         <a href="#" class="lang active">VN</a><a href="#" class="lang">EN</a>
     </div>
-    <a href="javascript:void(0);" onclick="openRegisterModal()" class="register-link">Đăng ký</a>
+    @if (!isLoggedIn)
+    {
+        <a href="javascript:void(0);" onclick="openRegisterModal()" class="register-link">Đăng ký</a>
+    }
 </div>
+
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg nav-hub">
@@ -53,14 +61,25 @@
 
         <!-- Account -->
         <div class="account d-flex gap-3 align-items-center">
-            <a href="javascript:void(0);" onclick="openLoginModal()" class="nav-icon-link d-flex align-items-center gap-1">
-                <img src="~/images/login.png" class="account-icon" alt="Đăng nhập" />
-                <span>Đăng nhập</span>
-            </a>
-            <a href="/thanh-vien" class="nav-icon-link d-flex align-items-center gap-1">
-                <img src="~/images/member.png" class="account-icon" alt="Thành viên" />
-                <span>Thành viên</span>
-            </a>
+            @if (!isLoggedIn)
+            {
+                <a href="javascript:void(0);" onclick="openLoginModal()" class="nav-icon-link d-flex align-items-center gap-1">
+                    <img src="~/images/login.png" class="account-icon" alt="Đăng nhập" />
+                    <span>Đăng nhập</span>
+                </a>
+                
+            }
+            else
+            {
+                <a href="/thanh-vien" class="nav-icon-link d-flex align-items-center gap-1">
+                    <img src="~/images/member.png" class="account-icon" alt="Thành viên" />
+                    <span>Thành viên</span>
+                </a>
+                <form asp-controller="Login" asp-action="Logout" method="post" class="d-inline">
+                    <button class="btn btn-sm btn-outline-dark" type="submit">Đăng xuất</button>
+                </form>
+            }
         </div>
+
     </div>
 </nav>
