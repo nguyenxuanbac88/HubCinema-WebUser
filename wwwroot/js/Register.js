@@ -23,3 +23,4 @@ function togglePassword(fieldId, iconSpan) {
         icon.classList.add("bi-eye-slash");
     }
 }
+

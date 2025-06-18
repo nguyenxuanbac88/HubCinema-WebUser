@@ -3,7 +3,7 @@
     <div class="custom-modal-box" style="max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
         <button class="custom-modal-close" onclick="closeRegisterModal()">×</button>
         <div class="text-center mb-4">
-            <img src="/picture/doraemon.jpg" width="150" alt="Register" />
+            <img src="~/images/hub_logo_new.png" width="150" alt="Register" />
             <h4 class="fw-bold mt-2">Đăng Ký Tài Khoản</h4>
         </div>
         <form asp-controller="Register" asp-action="Submit" method="post">
@@ -32,8 +32,35 @@
             </div>
             <div class="form-group mb-3">
                 <label>Ngày sinh</label>
-                <input type="date" name="dob" class="form-control" required />
+                <div class="date-group d-flex gap-2">
+                    <select name="dob_day" class="form-select" required>
+                        <option value="">Ngày</option>
+                        @for (int i = 1; i <= 31; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+
+                    <select name="dob_month" class="form-select" required>
+                        <option value="">Tháng</option>
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+
+                    <select name="dob_year" class="form-select" required>
+                        <option value="">Năm</option>
+                        @for (int i = DateTime.Now.Year; i >= 1900; i--)
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    </select>
+                </div>
             </div>
+
+
+
             <div class="form-group mb-3">
                 <label>Mật khẩu</label>
                 <div class="input-group">
