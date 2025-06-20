@@ -28,13 +28,14 @@
     <link rel="stylesheet" href="~/css/index_combo_UuDai.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Register.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Login.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/movie_detail.css" asp-append-version="true"/>
     
     @RenderSection("Styles", required: false)
 </head>
 <body>
     @Html.Partial("_Header")
 
-    <main style="padding: 0 50px; background-color: white">
+    <main>
         @RenderBody()
     </main>
 
@@ -50,6 +51,8 @@
     <script src="~/js/Login.js" asp-append-version="true"></script>
     <script src="~/js/Register.js" asp-append-version="true"></script>
     <script src="~/js/ForgetPass.js" asp-append-version="true"></script>
+    
+
     @RenderSection("Scripts", required: false)
 </body>
 

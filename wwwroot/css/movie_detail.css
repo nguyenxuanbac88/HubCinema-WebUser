@@ -1,69 +1,72 @@
-﻿.movie-detail h2 {
-    font-size: 2rem;
-    margin-bottom: 10px;
-}
-
-.movie-detail .badge {
-    font-size: 0.9rem;
-    padding: 6px 12px;
-    border-radius: 6px;
-}
-
-.movie-detail .text-muted {
-    font-size: 0.95rem;
-}
-
-.movie-detail iframe {
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.movie-detail .btn-sm {
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
-}
-
-    .movie-detail .btn-sm:hover {
-        background-color: #ffc107;
-        color: black;
-        border-color: #ffc107;
-    }
-
-.movie-detail .shadow-sm {
-    background-color: #f9f9f9;
-}
-
-.movie-detail h5 {
-    margin-bottom: 10px;
-}
-
-.movie-detail img {
-    border-radius: 10px;
-    box-shadow: 0 0 12px rgba(0,0,0,0.1);
-}
-
-.banner-trailer {
+﻿.banner {
+    background-color: black;
     position: relative;
+    width: 100%;
+    height: 30rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
 .banner-img {
-    max-height: 500px;
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+.play-button {
+    z-index: 600;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+}
+
+    .play-button:hover {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+
+.play-icon {
+    width: 40px;
+    height: 40px;
+}
+
+
+.thumbnail-wrapper {
+    max-width: 320px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.thumbnail-img {
+    border: 3px solid #fff;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
     object-fit: cover;
 }
 
-.btn-play-trailer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 10;
-    background: none;
-    border: none;
+
+    .thumbnail-img:hover {
+        transform: scale(1.02);
+        opacity: 0.95;
+    }
+
+.content-text p {
+    margin-bottom: 12px;
 }
 
-    .btn-play-trailer img {
+.movie_content a {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+
+@media (min-width: 992px) {
+    .play-icon {
         width: 64px;
         height: 64px;
     }
+}
+
+
+

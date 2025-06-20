@@ -1,77 +1,180 @@
-﻿@using System.Linq
+﻿
+<!-- Banner -->
+<div class="banner position-relative bg-black overflow-hidden" style="height: 500px;">
+    <img src="~/images/default-banner-detail.jpg" alt="banner dan da dan"
+         class="d-block mx-auto h-100 object-fit-cover" />
+    <button type="button"
+            class="play-button position-absolute top-50 start-50 translate-middle border-0 bg-transparent">
+        <img src="/images/button-play.png" alt="Play" class="play-icon img-fluid" />
+    </button>
+</div>
 
-<section class="container py-4 movie-detail">
-    <!-- Banner -->
-    <div class="position-relative">
-        <img src="@Model.CoverURL"
-             class="w-100 object-fit-cover rounded shadow"
-             style="height: 500px;"
-             onerror="this.onerror=null; this.src='/images/default-banner.jpg';" />
-        <button type="button"
-                class="position-absolute top-50 start-50 translate-middle border-0 bg-transparent"
-                data-bs-toggle="modal" data-bs-target="#trailerModal">
-            <img src="/images/button-play.png" width="64" height="64" alt="Play" />
-        </button>
-    </div>
-
-    <!-- Poster + Thông tin phim -->
-    <div class="row my-4">
+<!-- Wrapper Galaxy Style -->
+<div class="wrapper-section bg-white py-4 px-3 px-md-4 px-lg-5 mx-auto" style="max-width: 1200px;">
+<!-- Movie Section (thumbnail đè vào banner ~60px) -->
+<div class="container movie_section position-relative" style="margin-top: -60px;">
+    <div class="row align-items-end g-4">
+        <!-- Thumbnail -->
         <div class="col-md-3">
-            <img src="@Model.CoverURL"
-                 class="img-fluid rounded border border-white shadow"
-                 onerror="this.onerror=null; this.src='/images/default_poster.jpg';" />
+            <div class="thumbnail-wrapper">
+                <img src="~/images/default_thumbnail.jpg"
+                     alt="Thumbnail"
+                     class="img-fluid thumbnail-img" />
+            </div>
         </div>
-        <div class="col-md-9">
-            <h3 class="fw-bold">@Model.MovieName</h3>
-            <p>
-                <span class="badge bg-warning text-dark">@Model.ReleaseDate.ToString("dd/MM/yyyy")</span>
-                @Model.Duration phút | @Model.Genre
-            </p>
-            <p class="text-muted">@Model.Description</p>
-            <p><strong>Đạo diễn:</strong> @Model.Director</p>
-            <p><strong>Diễn viên:</strong> @Model.Actors</p>
-            <p><strong>NSX:</strong> @Model.Producer</p>
-            <p><strong>Giới hạn tuổi:</strong> @Model.AgeRestriction</p>
+
+        <!-- Movie Details-->
+        <div class="col-md-9 mt-md-5 mt-4">
+            <div class="movie_details pt-4 ps-md-4">
+                <h3 class="fw-bold">
+                    Dan Da Dan: Tà Nhãn <span class="badge bg-warning text-white">T16</span>
+                </h3>
+                <p class="mb-1 text-muted"><i class="bi bi-clock"></i> 93 phút | <i class="bi bi-calendar"></i> 13/06/2025</p>
+                <p class="mb-2"><i class="bi bi-star-fill text-warning"></i> <strong>9.5</strong> (14 votes)</p>
+                <p><strong>Quốc gia:</strong> Nhật Bản</p>
+                <p><strong>Nhà sản xuất:</strong> Science SARU</p>
+                <p><strong>Thể loại:</strong> Hoạt Hình</p>
+                <p><strong>Đạo diễn:</strong> Abel, Yamashiro Fuuga</p>
+                <p><strong>Diễn viên:</strong> Ayase Momo, Takakura Ken, Enjoji Jin</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <!-- Lịch chiếu -->
-    @if (Model.ShowtimesByTheater?.Count > 0)
-    {
-        @foreach (var theater in Model.ShowtimesByTheater)
-        {
-            <div class="p-3 border rounded shadow-sm mb-4">
-                <h5 class="fw-bold text-primary">@theater.TheaterName</h5>
-                <div class="d-flex flex-wrap gap-2 mt-2">
-                    @foreach (var time in theater.Showtimes)
-                    {
-                        <a class="btn btn-outline-dark rounded-pill px-3 py-1"
-                           href="/booking/@Model.IdMovie?showtimeId=@time.Id">
-                            @time.StartTime.ToString("HH:mm")
-                        </a>
-                    }
-                </div>
-            </div>
-        }
-    }
-    else
-    {
-        <p class="text-muted">Hiện chưa có lịch chiếu.</p>
-    }
-</section>
 
-<!-- Modal Trailer -->
+<!-- Modal -->
 <div class="modal fade" id="trailerModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content bg-black">
-            <div class="modal-body p-0">
+            <div class="modal-body p-0 position-relative">
+                <button type="button" class="btn-close position-absolute top-0 end-0 m-2" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="ratio ratio-16x9">
-                    <iframe src="@Model.TrailerURL"
-                            title="Trailer"
-                            allowfullscreen
-                            class="w-100 rounded-bottom"></iframe>
+                    <div id="player"></div> <!-- YouTube Player sẽ gắn vào đây -->
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+<div class="movie_content mt-4">
+    <div class="d-flex align-items-center mb-3">
+        <div class="border-start border-4 border-primary me-2" style="height: 1.25rem;"></div>
+        <h5 class="fw-bold mb-0 text-capitalize">Nội dung phim</h5>
+    </div>
+
+    <div class="content-text text-secondary fs-6" style="line-height: 1.8;">
+        <p>
+            <strong>Dan Da Dan: Evil Eye</strong> là
+            <a href="#" class="text-decoration-none text-primary">phim hay</a> hoạt hình đang thu hút đông đảo khán giả toàn cầu.
+        </p>
+
+        <p>
+            Để điều tra vụ việc liên quan tới gia đình Jiji, Momo và Okarun tới nhà của Jiji ở khu suối nước nóng. Trên đường đi,
+            Okarun luôn phiền muộn vì bầu không khí giữa Momo và Jiji. Tuy nhiên, lại bắt đầu cảm mến vì bản tính tốt đẹp của Jiji.
+            Sau khi leo lên ngôi nhà trên núi của Jiji, cả ba ngay lập tức điều tra. Xa xa, có bóng người quan sát họ…
+        </p>
+
+        <p>
+            <strong>Dan Da Dan: Evil Eye</strong>/ <strong>Dan Da Dan: Tà Nhãn</strong> dự kiến khởi chiếu 13.06.2025 tại các
+            <a href="#" class="text-decoration-none text-primary">rạp chiếu phim</a> toàn quốc.
+        </p>
+    </div>
+</div>
+
+    <!-- Lịch chiếu -->
+    <div class="movie_showtime mt-5">
+        <div class="d-flex align-items-center mb-3">
+            <div class="border-start border-4 border-primary me-2" style="height: 1.25rem;"></div>
+            <h5 class="fw-bold mb-0 text-capitalize">Lịch chiếu</h5>
+        </div>
+
+        <!-- Lịch ngày và bộ lọc -->
+        <div class="row align-items-center gy-3">
+            <div class="col-md-7">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary text-white">Thứ Sáu<br>20/06</button>
+                    <button class="btn btn-outline-secondary">Thứ Bảy<br>21/06</button>
+                    <button class="btn btn-outline-secondary">Chủ Nhật<br>22/06</button>
+                </div>
+            </div>
+            <div class="col-md-5 text-md-end">
+                <div class="row g-2">
+                    <div class="col">
+                        <select class="form-select form-select-sm">
+                            <option selected>Toàn quốc</option>
+                            <option>TPHCM</option>
+                            <option>Hà Nội</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <select class="form-select form-select-sm">
+                            <option selected>Tất cả rạp</option>
+                            <option>Galaxy Quang Trung</option>
+                            <option>Galaxy Nguyễn Văn Quá</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách rạp -->
+        <div class="mt-4">
+            <div class="py-4 px-3 bg-light border-top border-bottom mb-3">
+                <h6 class="fw-bold mb-3">Galaxy Quang Trung</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm">09:00</button>
+                </div>
+            </div>
+
+            <div class="py-4 px-3 bg-white border-top border-bottom mb-3">
+                <h6 class="fw-bold mb-3">Galaxy Trung Chánh</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm">09:15</button>
+                </div>
+            </div>
+
+            <div class="py-4 px-3 bg-light border-top border-bottom mb-3">
+                <h6 class="fw-bold mb-3">Galaxy Nguyễn Văn Quá</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm">09:30</button>
+                </div>
+            </div>
+
+            <div class="py-4 px-3 bg-white border-top border-bottom">
+                <h6 class="fw-bold mb-3">Galaxy Trường Chinh</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-outline-primary btn-sm">09:15</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@* <!--movie showtime--> *@
+@* <div class="movie_showtime"> *@
+@*     <div class="showtime_header"> *@
+
+@*     </div> *@
+
+@*     <div class="movie_filter"> *@
+
+@*     </div> *@
+
+@*     <div class="line"></div> *@
+
+@*     <div class="showtime_list"> *@
+@*         <div class="showtime_cinema"></div> *@
+@*         <div class="showtime_cinema"></div> *@
+@*         <div class="showtime_cinema"></div> *@
+@*         <div class="showtime_cinema"></div> *@
+@*     </div> *@
+
+</div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/play-trailer.js" defer></script>
+}
+
