@@ -95,6 +95,9 @@ namespace MovieTicketWebsite.Controllers
                 {
                     dynamic result = JsonConvert.DeserializeObject(responseBody);
                     TempData["ForgotMessage"] = result?.message?.ToString() ?? "Đã gửi yêu cầu khôi phục.";
+
+                    // 👇 THÊM DÒNG NÀY để modal xác nhận hiển thị sau khi gửi email
+                    TempData["OpenConfirmModal"] = true;
                 }
                 else
                 {
@@ -142,6 +145,7 @@ namespace MovieTicketWebsite.Controllers
                     TempData["ConfirmMessage"] = result != null && result.ContainsKey("message")
                         ? result["message"]
                         : "Đổi mật khẩu thành công.";
+
                 }
                 else
                 {
