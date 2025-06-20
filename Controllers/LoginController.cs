@@ -109,6 +109,54 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ConfirmPassword(string email, string newPassword, string otp)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(otp))
+            {
+                TempData["ConfirmMessage"] = "Vui lòng nhập đầy đủ Email, mật khẩu mới và mã OTP.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var requestBody = new
+            {
+                username = email,
+                newPW = newPassword,
+                otp = otp
+            };
+
+            var client = _httpClientFactory.CreateClient();
+            var json = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/confirm-password", content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // ✅ Deserialize an toàn sang Dictionary
+                    var result = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
+
+                    TempData["ConfirmMessage"] = result != null && result.ContainsKey("message")
+                        ? result["message"]
+                        : "Đổi mật khẩu thành công.";
+                }
+                else
+                {
+                    TempData["ConfirmMessage"] = $"Lỗi: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ConfirmMessage"] = "Lỗi kết nối API: " + ex.Message;
+            }
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
 
     }
 }

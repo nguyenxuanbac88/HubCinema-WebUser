@@ -32,3 +32,17 @@
 
 
 </main>
+@if (TempData["OpenConfirmModal"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof openConfirmModal === "function") {
+                openConfirmModal();
+            }
+        });
+    </script>
+}
+
+@Html.Partial("_ConfirmPasswordModal")
+<script src="~/js/ConfirmModalHandler.js"></script>
+
