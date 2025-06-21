@@ -1,7 +1,7 @@
 ﻿.banner-section {
     max-width: 1828px;
-    margin: 0 auto 40px;
-    border-radius: 20px;
+    margin: 0 30px 40px 30px;
+    border-radius: 5px;
     overflow: hidden;
 }
 

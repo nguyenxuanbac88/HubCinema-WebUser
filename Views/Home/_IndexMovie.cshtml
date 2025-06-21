@@ -1,49 +1,64 @@
 ﻿@model List<MovieTicketWebsite.Models.Movie>
 
 <section class="movie-section">
-    <h2 class="section-title">PHIM</h2>
+    <div class="section-header">
+        <h2 class="section-title">PHIM</h2>
+    </div>
 
-    <ul class="nav nav-tabs justify-content-center" id="movieTab">
-        <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#showing">Đang chiếu</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#upcoming">Sắp chiếu</button>
-        </li>
+    <!-- Tabs -->
+    <ul class="tabs">
+        <li class="tab active" data-target="#showing">Đang chiếu</li>
+        <li class="tab" data-target="#upcoming">Sắp chiếu</li>
     </ul>
 
-    <div class="tab-content mt-4">
-        <!-- PHIM ĐANG CHIẾU -->
-        <div class="tab-pane fade show active" id="showing">
+    <!-- Tab nội dung -->
+    <div class="tab-content">
+        <div class="tab-panel show" id="showing">
             <div class="movie-list">
                 @foreach (var movie in Model.Where(m => m.ReleaseDate <= DateTime.Now))
                 {
-                    <div class="movie">
-                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/doraemon.jpg" : movie.CoverURL)"
+                    <div class="movie-item">
+                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/dan-da-dan.jpg" : movie.CoverURL)"
                              alt="@movie.MovieName"
-                             onerror="this.onerror=null; this.src='/images/doraemon.jpg';" />
-                        <h3>@movie.MovieName</h3>
-                        <p>Thể loại: @movie.Genre</p>
-                        <p>Thời lượng: @movie.Duration phút</p>
+                             onerror="this.onerror=null; this.src='/images/dan-da-dan.jpg';" />
+                        <div class="movie-title">@movie.MovieName</div>
+                        <div class="movie-info">
+                            Thể loại: @movie.Genre<br />
+                            Thời lượng: @movie.Duration phút
+                        </div>
                     </div>
                 }
             </div>
         </div>
 
-        <!-- PHIM SẮP CHIẾU -->
-        <div class="tab-pane fade" id="upcoming">
+        <!-- PHIM SẮP CHIẾU (dữ liệu cứng) -->
+        <div class="tab-panel" id="upcoming">
             <div class="movie-list">
-                @foreach (var movie in Model.Where(m => m.ReleaseDate > DateTime.Now))
-                {
-                    <div class="movie">
-                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/doraemon.jpg" : movie.CoverURL)"
-                             alt="@movie.MovieName"
-                             onerror="this.onerror=null; this.src='/images/doraemon.jpg';" />
-                        <h3>@movie.MovieName</h3>
-                        <p>Khởi chiếu: @movie.ReleaseDate.ToString("dd/MM/yyyy")</p>
-                    </div>
-                }
+                <div class="movie-item">
+                    <img src="/images/demon-slayer--kimetsu-no-yaiba-sap-chieu-3.jpg" alt="Thanh Gươm Diệt Quỷ: Vô Hạn Thành" />
+                    <div class="movie-title">Thanh Gươm Diệt Quỷ</div>
+                    <div class="movie-info">Khởi chiếu: 15/08/2025</div>
+                </div>
+
+                <div class="movie-item">
+                    <img src="/images/megan-sap-chieu-1.jpg" alt="Megan 2.0" />
+                    <div class="movie-title">Megan 2.0</div>
+                    <div class="movie-info">Khởi chiếu: 27/06/2025</div>
+                </div>
+
+                <div class="movie-item">
+                    <img src="/images/quan-tai-vo-quy-sap-chieu-2.jpg" alt="Quan Tài Vợ Quỷ" />
+                    <div class="movie-title">Quan Tài Vợ Quỷ</div>
+                    <div class="movie-info">Khởi chiếu: 04/07/2025</div>
+                </div>
+
+                <div class="movie-item">
+                    <img src="/images/zootopia-2-sap-chieu-4.jpg" alt="Zootopia 2" />
+                    <div class="movie-title">Zootopia 2</div>
+                    <div class="movie-info">Khởi chiếu: 28/11/2025</div>
+                </div>
             </div>
         </div>
+    </div>
     </div>
 </section>
