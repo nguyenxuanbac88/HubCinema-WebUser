@@ -24,10 +24,10 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet build API_Project.csproj --configuration Release --no-restore
+      run: dotnet build MovieTicketWebsite.csproj --configuration Release --no-restore
 
     - name: Publish
-      run: dotnet publish API_Project.csproj -c Release -o publish --no-build
+      run: dotnet publish MovieTicketWebsite.csproj -c Release -o publish --no-build
 
     - name: Stop IIS before deploy
       uses: appleboy/ssh-action@v0.1.10
