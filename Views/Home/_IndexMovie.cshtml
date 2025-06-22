@@ -22,6 +22,7 @@
                 @foreach (var movie in showingMovies)
                 {
                     var hiddenClass = count >= 8 ? "movie-hidden" : "";
+                    <a href="@Url.Action("Details", "Movie", new { id = 1 })" class="movie-item-link">
                     <div class="movie-item @hiddenClass">
                         <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/dan-da-dan.jpg" : movie.CoverURL)"
                              alt="@movie.MovieName"
@@ -32,6 +33,7 @@
                             Thời lượng: @movie.Duration phút
                         </div>
                     </div>
+                    </a>
                     count++;
                 }
             </div>

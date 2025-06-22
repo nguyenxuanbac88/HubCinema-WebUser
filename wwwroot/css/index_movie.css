@@ -107,6 +107,13 @@
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
 
+.movie-item-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+
 .movie-title {
     font-weight: 700;
     margin-top: 16px;
