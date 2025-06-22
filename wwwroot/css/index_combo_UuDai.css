@@ -3,12 +3,16 @@
     margin: 38px auto 72px;
 }
 
+
     .combo-section .section-title {
         font-size: 22px;
         font-weight: bold;
         margin-bottom: 30px;
         position: relative;
     }
+combo-section {
+    margin-left: 160px;
+}
 
         .combo-section .section-title::before {
             content: "";
