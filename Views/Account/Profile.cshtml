@@ -1,0 +1,130 @@
+﻿@model UserInfo
+
+<div class="container py-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm p-4 rounded-4">
+                <div class="d-flex align-items-center mb-3 gap-3">
+                    <div class="avatar rounded-circle bg-light border" style="width: 64px; height: 64px;"></div>
+                    <div>
+                        <h6 class="mb-0 fw-semibold text-dark">@Model.FullName</h6>
+                        <small class="text-warning d-block">🎁 @Model.Diem Stars</small>
+                        <small class="text-muted">Mã thành viên: <strong>@Model.MaBarcode</strong></small>
+                    </div>
+                </div>
+
+                <div class="user-meta text-start ps-1 mb-3">
+                    <p class="mb-1 text-muted">Khu vực: <strong>@Model.KhuVuc</strong></p>
+                    <p class="mb-1 text-muted">Hạng: <strong>@(Model.ThuHang ?? "Chưa xác định")</strong></p>
+                    <p class="mb-1 text-muted">Ngày sinh: <strong>@(DateTime.Parse(Model.Dob).ToString("dd/MM/yyyy"))</strong></p>
+                    <p class="mb-0 text-muted">Điểm tích lũy: <strong>@Model.Diem ⭐</strong></p>
+                </div>
+
+                <hr />
+
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="fw-semibold text-dark">Tổng chi tiêu 2025</span>
+                            <span class="rounded-circle border border-primary d-flex justify-content-center align-items-center"
+                                  style="width: 16px; height: 16px; font-size: 10px"
+                                  title="Thông tin">
+                                <svg class="svg-inline--fa fa-info text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512" width="10" height="10"><path fill="currentColor" d="M48 80a48 48..." /></svg>
+                            </span>
+                        </div>
+                        <div class="text-warning fw-bold">
+                            @Model.TongChiTieu.ToString("N0") <span class="fw-normal" style="font-size: 15px">đ</span>
+                        </div>
+                    </div>
+
+                    <div class="position-relative my-3">
+                        <div class="position-absolute translate-middle text-center icon-label" style="left: 0%;">
+                            🏅<div class="small">0 đ</div>
+                        </div>
+                        <div class="position-absolute translate-middle text-center icon-label" style="left: 50%;">
+                            ⭐<div class="small">2tr đ</div>
+                        </div>
+                        <div class="position-absolute translate-middle text-center icon-label" style="left: 100%;">
+                            🍽️<div class="small">4tr đ</div>
+                        </div>
+
+                        <div class="progress bg-light rounded-pill" style="height: 8px;">
+                            @{
+                                var percent = (double)Model.TongChiTieu / 4000000 * 100;
+                            }
+                            <div class="progress-bar bg-primary" style="width: @(percent > 100 ? 100 : percent)%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+                <ul class="list-unstyled mb-0">
+                    <li class="py-2 d-flex justify-content-between align-items-center border-bottom">
+                        <span>HOTLINE hỗ trợ:</span>
+                        <a href="tel:19002224" class="text-primary">19002224</a>
+                    </li>
+                    <li class="py-2 d-flex justify-content-between align-items-center border-bottom">
+                        <span>Email:</span>
+                        <a href="mailto:@Model.Email" class="text-primary">@Model.Email</a>
+                    </li>
+                    <li class="py-2 d-flex justify-content-between align-items-center">
+                        <span>Câu hỏi thường gặp</span>
+                        <span class="text-muted">›</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card shadow-sm p-4 rounded-4">
+                <h5 class="fw-bold mb-4">Thông tin cá nhân</h5>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Họ và tên</label>
+                        <input type="text" class="form-control" value="@Model.FullName" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <div class="input-group">
+                            <input type="email" class="form-control" value="@Model.Email" disabled />
+                            <button class="btn btn-outline-secondary" type="button">Thay đổi</button>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" value="@Model.Phone" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="text" class="form-control" value="@(DateTime.Parse(Model.Dob).ToString("dd/MM/yyyy"))" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Giới tính</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="male" checked="@((Model.Gender == "Nam"))" disabled />
+                            <label class="form-check-label" for="male">Nam</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="female" checked="@((Model.Gender == "Nữ"))" disabled />
+                            <label class="form-check-label" for="female">Nữ</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" value="********" disabled />
+                            <button class="btn btn-outline-secondary" type="button">Đổi mật khẩu</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning text-white px-4">Cập nhật</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
