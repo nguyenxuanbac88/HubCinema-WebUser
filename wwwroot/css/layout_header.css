@@ -184,3 +184,44 @@
         display: none;
     }
 }
+
+/* === Hiệu ứng hover xổ dropdown giống Galaxy === */
+.navbar .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0.5rem;
+    animation: dropdownFade 0.2s ease-in-out;
+}
+
+/* Ẩn mặc định để Bootstrap JS không can thiệp */
+.navbar .dropdown-menu {
+    display: none;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.08) 0px 6px 16px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px, rgba(0, 0, 0, 0.05) 0px 9px 28px 8px;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+/* Style item trong menu xổ ra */
+.dropdown-item {
+    transition: all 0.2s ease-in-out;
+}
+
+    .dropdown-item:hover {
+        background-color: #fb770b1a;
+        color: #f26b38;
+        border-left: 4px solid #fd841f;
+        padding-left: 1.5rem;
+    }
+
+/* Hiệu ứng fade nhẹ khi xổ */
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
