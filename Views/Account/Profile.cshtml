@@ -117,7 +117,8 @@
                         <label class="form-label">Mật khẩu</label>
                         <div class="input-group">
                             <input type="password" class="form-control" value="********" disabled />
-                            <button class="btn btn-outline-secondary" type="button">Đổi mật khẩu</button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="openChangePasswordModal()">Đổi mật khẩu</button>
+
                         </div>
                     </div>
 
@@ -128,3 +129,19 @@
 
     </div>
 </div>
+
+@Html.Partial("_ChangePasswordModal")
+<script>
+    function openChangePasswordModal() {
+        var modal = document.getElementById("changePasswordModal");
+        if (modal) modal.style.display = "flex";
+    }
+
+    function closeChangePasswordModal() {
+        var modal = document.getElementById("changePasswordModal");
+        if (modal) modal.style.display = "none";
+    }
+</script>
+
+
+

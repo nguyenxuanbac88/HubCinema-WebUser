@@ -2,6 +2,7 @@
 using MovieTicketWebsite.Models;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace MovieTicketWebsite.Controllers
 {
@@ -49,5 +50,55 @@ namespace MovieTicketWebsite.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var token = HttpContext.Session.GetString("AccessToken");
+            var email = HttpContext.Session.GetString("UserEmail"); // giả sử đã lưu khi login
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                TempData["ChangePasswordMessage"] = "Không tìm thấy thông tin đăng nhập.";
+                return RedirectToAction("Profile");
+            }
+
+            var requestBody = new
+            {
+                username = email,
+                oldPassword = model.OldPassword,
+                newPassword = model.NewPassword
+            };
+
+            var client = _httpClientFactory.CreateClient();
+            var json = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://api.dvxuanbac.com:2030/api/auth/change-password");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            request.Content = content;
+
+            try
+            {
+                var response = await client.SendAsync(request);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["ChangePasswordMessage"] = "Đổi mật khẩu thành công.";
+                }
+                else
+                {
+                    TempData["ChangePasswordMessage"] = $"Lỗi: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ChangePasswordMessage"] = $"Lỗi: {ex.Message}";
+            }
+
+            return RedirectToAction("Profile");
+        }
+
     }
 }

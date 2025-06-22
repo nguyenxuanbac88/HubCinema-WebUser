@@ -45,6 +45,8 @@ namespace MovieTicketWebsite.Controllers
 
                     // Lưu token vào session
                     HttpContext.Session.SetString("AccessToken", token);
+                    // Lưu email vào session để sử dụng sau này
+                    HttpContext.Session.SetString("UserEmail", email); // ❗ cần cho chức năng đổi mật khẩu
                     TempData["LoginMessage"] = "Đăng nhập thành công.";
                 }
                 else

@@ -1,0 +1,108 @@
+﻿@model MovieTicketWebsite.Models.Cinema
+
+<div class="container py-4">
+    <!-- Banner -->
+    <div class="mb-4">
+        <img src="/images/banner_rap1.jpg" class="img-fluid rounded shadow" alt="Banner Rạp" />
+    </div>
+
+    <!-- Thông tin rạp -->
+    <div class="mb-4">
+        <h5 class="fw-bold">@Model.CinemaName</h5>
+        <p>
+            <strong>Địa chỉ:</strong> @Model.Address<br>
+            <strong>Thành phố:</strong> @Model.City<br>
+            <strong>Hotline:</strong> <a href="tel:19002224">1900 2224</a>
+        </p>
+        <div class="d-flex gap-2">
+            <select class="form-select w-auto">
+                <option>@Model.City</option>
+            </select>
+            <select class="form-select w-auto">
+                <option>@Model.CinemaName</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Tabs phim -->
+    <ul class="nav nav-tabs mb-4" id="movieTabs">
+        <li class="nav-item">
+            <button class="nav-link active">Hôm Nay<br><small>@DateTime.Today.ToString("dd/MM")</small></button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link">Thứ Ba<br><small>@DateTime.Today.AddDays(1).ToString("dd/MM")</small></button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link">Thứ Tư<br><small>@DateTime.Today.AddDays(2).ToString("dd/MM")</small></button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link">Thứ Năm<br><small>@DateTime.Today.AddDays(3).ToString("dd/MM")</small></button>
+        </li>
+    </ul>
+
+    <!-- Danh sách phim -->
+    <div class="row row-cols-2 row-cols-md-4 g-4 mb-5">
+        @* Tạm thời chưa có API phim nên hiển thị demo *@
+        @{
+            var sampleMovies = new[] {
+        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
+        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
+        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
+        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" }
+        };
+        }
+        @foreach (var movie in sampleMovies)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@movie.ImageUrl" class="card-img-top" alt="@movie.Title">
+                    <div class="card-body">
+                        <h6 class="card-title">@movie.Title</h6>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Bảng giá & thông tin chi tiết -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header fw-bold">GIÁ VÉ</div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>SUẤT CHIẾU</th>
+                                <th>THÀNH VIÊN</th>
+                                <th>U22</th>
+                                <th>TRẺ EM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>THỨ 2, 4, 5</td><td>75.000</td><td>55.000</td><td>55.000</td></tr>
+                            <tr><td>SAU 17:00</td><td>80.000</td><td>-</td><td>-</td></tr>
+                            <tr><td>THỨ 3</td><td colspan="3">HAPPY DAY - 55.000</td></tr>
+                            <tr><td>THỨ 6, 7, CN</td><td>85.000</td><td>65.000</td><td>65.000</td></tr>
+                            <tr><td>NGÀY LẺ</td><td>90.000</td><td>-</td><td>-</td></tr>
+                            <tr><td>SUẤT SÁNG</td><td>50.000</td><td>-</td><td>-</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header fw-bold">THÔNG TIN CHI TIẾT</div>
+                <div class="card-body">
+                    <p>
+                        <strong>Địa chỉ:</strong> @Model.Address<br>
+                        <strong>Số điện thoại:</strong> <a href="tel:19002224">1900 2224</a>
+                    </p>
+                    <p>Galaxy Trung Chánh là rạp chiếu phim chuẩn Hollywood tại khu vực Quận 12, TP.HCM...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
