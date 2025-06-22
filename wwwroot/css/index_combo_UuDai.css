@@ -27,7 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    max-width: 1340px; /* 🆕 thêm: đảm bảo 4 item (300 + 40 * 3) vừa đẹp */
+    max-width: 1140px; /* 🆕 thêm: đảm bảo 4 item (300 + 40 * 3) vừa đẹp */
     margin: 0 auto; /* 🆕 thêm: giúp toàn bộ block nằm giữa parent */
     gap: 48px 40px;
     padding: 0 10px;
@@ -35,7 +35,7 @@
 
 /* Mỗi combo giống movie-item */
 .combo {
-    width: 300px;
+    width: 250px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -49,7 +49,7 @@
 
     .combo img {
         width: 100%;
-        height: 300px;
+        height: 250px;
         object-fit: cover;
         border-radius: 12px;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
