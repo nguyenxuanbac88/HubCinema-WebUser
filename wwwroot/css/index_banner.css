@@ -1,14 +1,90 @@
-﻿.banner-section {
-    max-width: 1828px;
-    margin: 0 30px 40px 30px;
-    border-radius: 5px;
-    overflow: hidden;
+﻿body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: sans-serif;
 }
 
-    .banner-section img {
+.banner-slider-outer {
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+.banner-slider {
+    margin: 0 auto;
+    position: relative;
+}
+
+.banner-item {
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+    .banner-item img {
         width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 20px;
+        height: 320px;
         object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
+
+/* dot */
+.slick-dots {
+    bottom: 15px;
+    position: absolute;
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .slick-dots li {
+        list-style: none;
+    }
+
+    .slick-dots button {
+        font-size: 0;
+        line-height: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ccc;
+        border: none;
+    }
+
+    .slick-dots .slick-active button {
+        background: #d18800;
+    }
+
+/* arrows */
+.slick-prev,
+.slick-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    font-size: 20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+/* ✅ Sửa khoảng cách nút gần sát ảnh hơn */
+.slick-prev {
+    left: 15px;
+    /* trước là -20px */
+}
+
+.slick-next {
+    right: 15px;
+    /* trước là -20px */
+}

@@ -14,10 +14,15 @@
     <!-- Tab nội dung -->
     <div class="tab-content">
         <div class="tab-panel show" id="showing">
-            <div class="movie-list">
-                @foreach (var movie in Model.Where(m => m.ReleaseDate <= DateTime.Now))
+            <div class="movie-list movie-limit">
+                @{
+                    var showingMovies = Model.Where(m => m.ReleaseDate <= DateTime.Now).ToList();
+                    int count = 0;
+                }
+                @foreach (var movie in showingMovies)
                 {
-                    <div class="movie-item">
+                    var hiddenClass = count >= 8 ? "movie-hidden" : "";
+                    <div class="movie-item @hiddenClass">
                         <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/dan-da-dan.jpg" : movie.CoverURL)"
                              alt="@movie.MovieName"
                              onerror="this.onerror=null; this.src='/images/dan-da-dan.jpg';" />
@@ -27,9 +32,29 @@
                             Thời lượng: @movie.Duration phút
                         </div>
                     </div>
+                    count++;
                 }
             </div>
+
+            <!-- Nút Xem thêm -->
+            @if (showingMovies.Count > 8)
+            {
+                <div class="film__footer text-center mt-4">
+                    <button id="showMoreBtn"
+                            class="text-[#f26b38] hover:text-white w-40 border border-[#fb9440] hover:bg-[#fb9440] transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center justify-center">
+                        Xem thêm
+                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
+                             class="svg-inline--fa fa-angle-right ml-2" role="img"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                            <path fill="currentColor"
+                                  d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z">
+                            </path>
+                        </svg>
+                    </button>
+                </div>
+            }
         </div>
+
 
         <!-- PHIM SẮP CHIẾU (dữ liệu cứng) -->
         <div class="tab-panel" id="upcoming">

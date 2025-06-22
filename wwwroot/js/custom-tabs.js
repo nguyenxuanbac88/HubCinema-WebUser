@@ -20,3 +20,15 @@
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const showMoreBtn = document.getElementById("showMoreBtn");
+    if (showMoreBtn) {
+        showMoreBtn.addEventListener("click", function () {
+            document.querySelectorAll(".movie-hidden").forEach(el => {
+                el.style.display = "block";
+            });
+            showMoreBtn.style.display = "none"; // Ẩn nút sau khi click
+        });
+    }
+});

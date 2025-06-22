@@ -125,3 +125,35 @@
     line-height: 1.6;
 }
 
+/* Ẩn phim vượt quá 2 hàng (8 phim) */
+.movie-limit .movie-hidden {
+    display: none;
+}
+/* Nút Xem thêm */
+#showMoreBtn {
+    background-color: transparent;
+    color: #f26b38;
+    border: 1px solid #fb9440;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    #showMoreBtn:hover {
+        background-color: #fb9440;
+        color: white;
+        box-shadow: 0 4px 12px rgba(251, 148, 64, 0.3);
+    }
+
+    #showMoreBtn svg {
+        width: 14px;
+        height: 14px;
+    }
+
+
