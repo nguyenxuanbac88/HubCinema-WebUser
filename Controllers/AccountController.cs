@@ -72,7 +72,7 @@ namespace MovieTicketWebsite.Controllers
             var json = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://api.dvxuanbac.com:2030/api/auth/change-password");
+            var request = new HttpRequestMessage(HttpMethod.Post, "http://api.dvxuanbac.com:2030/Api/User/ChangePw");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             request.Content = content;
 
