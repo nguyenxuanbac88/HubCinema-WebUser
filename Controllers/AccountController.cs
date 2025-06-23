@@ -55,9 +55,8 @@ namespace MovieTicketWebsite.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             var token = HttpContext.Session.GetString("AccessToken");
-            var email = HttpContext.Session.GetString("UserEmail"); // giả sử đã lưu khi login
 
-            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(token))
             {
                 TempData["ChangePasswordMessage"] = "Không tìm thấy thông tin đăng nhập.";
                 return RedirectToAction("Profile");
@@ -65,7 +64,6 @@ namespace MovieTicketWebsite.Controllers
 
             var requestBody = new
             {
-                username = email,
                 oldPassword = model.OldPassword,
                 newPassword = model.NewPassword
             };
@@ -99,6 +97,7 @@ namespace MovieTicketWebsite.Controllers
 
             return RedirectToAction("Profile");
         }
+
 
     }
 }
