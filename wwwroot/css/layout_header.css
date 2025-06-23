@@ -1,237 +1,64 @@
-﻿/* ===== TOPBAR ===== */
-.topbar {
-    background: var(--color-topbar-bg);
-    color: var(--color-topbar-text);
-    font-size: 0.9rem;
-    padding: 0.5rem 1rem;
-}
+﻿/* layout_header.css */
 
-    .topbar a {
-        color: var(--color-topbar-text);
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-
-        .topbar a:hover {
-            color: var(--color-topbar-hover);
-        }
-
-    .topbar .ms-auto {
-        padding-right: 2rem;
-    }
-
-    .topbar a.register-link {
-    padding: 0.35rem 1rem;
-    color: var(--color-topbar-text); /* đồng bộ màu chữ */
-    background-color: var(--color-language-active); /* nền vàng */
-    border-radius: 50px;
-    font-weight: 600;
-    border: 1px solid var(--color-border-language);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    text-decoration: none;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.topbar a.register-link:hover {
-    background-color: var(--color-language-hover); /* nền hover */
-    color: var(--color-topbar-hover); /* chữ đỏ khi hover */
-}
-
-
-    .language-switch {
-        display: inline-flex;
-        border-radius: 50px;
-        overflow: hidden;
-        border: 1px solid var(--color-border-language);
-    }
-
-    .language-switch a {
-        padding: 0.35rem 1rem;
-        color: var(--color-topbar-text);
-        background-color: var(--color-language-bg);
-        font-weight: 600;
-    }
-
-        .language-switch a.active {
-            background-color: var(--color-language-active);
-        }
-
-/* ===== NAVBAR ===== */
-.navbar {
-    background-color: var(--color-navbar-bg);
-/*    box-shadow: 0 4px 6px var(--color-navbar-shadow);*/
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-/*.nav-hub .container-fluid {
-    padding-top: 4px;
-    padding-bottom: 4px;
-}*/
-
-/* Logo */
-.navbar-brand {
-    margin-left: 130px !important;
-    margin-right: 160px;
-}
-
+/* Logo - responsive kích thước lớn hơn */
 .logo-hub {
-    width: 180px;
-    object-fit: cover;
-}
-
-/* TICKET Button */
-.btn-ticket {
-    display: inline-block;
-    width: 100px;
-    height: 50px;
-    margin-left: 20px;
-    margin-right: 24px;
-}
-
-    .btn-ticket img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-
-/* Menu chính */
-.navbar .flex-grow-1,
-.menu {
-    margin-left: 150px;
-}
-
-.nav-link {
-    color: #000;
-    font-weight: 600;
-    text-decoration: none;
-    text-transform: none;
-}
-
-    .nav-link:hover,
-    .nav-link.dropdown-toggle:focus {
-        color: #e53935;
-    }
-
-.dropdown-menu {
-    min-width: 200px;
-    font-size: 0.95rem;
-    padding: 8px 0;
-    border-radius: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-.dropdown-item {
-    padding: 8px 16px;
-}
-
-/* Tài khoản */
-.ms-account,
-.account {
-    margin-left: auto;
-    margin-right: 24px;
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-
-.nav-icon-link {
-    color: #000;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    font-weight: 500;
-    gap: 6px;
-}
-
-    .nav-icon-link a:hover {
-        color: var(--color-topbar-hover);
-    }
-
-.account-icon {
-    width: 20px;
-    height: 20px;
+    height: 80px;
     object-fit: contain;
 }
 
-/* ===== RESPONSIVE ===== */
+/* Với thiết bị nhỏ hơn */
 @media (max-width: 768px) {
-    .navbar-brand {
-        margin-left: 1rem !important;
-        margin-right: 1rem !important;
-    }
-
     .logo-hub {
-        height: 60px;
-    }
-
-    .btn-ticket {
-        margin-left: 0;
-        margin-right: 1rem;
-    }
-
-    .ms-account,
-    .account {
-        margin-right: 1rem;
-        gap: 12px;
-    }
-
-    .menu {
-        display: none;
+        height: 50px;
     }
 }
 
-/* === Dropdown giữ hiển thị khi hover vào cả menu lẫn list === */
-.navbar .dropdown:hover > .dropdown-menu,
-.navbar .dropdown-menu:hover {
-    display: block;
-    margin-top: 0.5rem;
-    animation: dropdownFade 0.2s ease-in-out;
+
+/* TICKET button image */
+.btn-ticket img {
+    height: 50px;
+    width: 100px;
+    object-fit: contain;
 }
 
-/* Ẩn mặc định */
-.navbar .dropdown-menu {
-    display: none;
-    border: none;
-    box-shadow: rgba(0, 0, 0, 0.08) 0px 6px 16px, rgba(0, 0, 0, 0.12) 0px 3px 6px -4px, rgba(0, 0, 0, 0.05) 0px 9px 28px 8px;
-    border-radius: 8px;
+/* Ngôn ngữ toggle */
+.language-switch .lang-btn {
     background-color: #fff;
-    z-index: 999;
+    color: #000;
+    border: none;
+    padding: 4px 16px;
+    font-weight: 600;
+    transition: all 0.2s ease-in-out;
+    border-radius: 0;
 }
 
-/* Hover animation cho dropdown item */
-.dropdown-item {
+    .language-switch .lang-btn.active {
+        background-color: #f7d708;
+        color: #000;
+    }
+
+    .language-switch .lang-btn:not(.active):hover {
+        background-color: #eee;
+    }
+
+/* Nút Đăng ký */
+.btn-register {
+    background-color: #f7d708;
+    color: #000;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 30px;
+    border: none;
     transition: all 0.2s ease-in-out;
 }
 
-    .dropdown-item:hover {
-        background-color: #fb770b1a;
-        color: #f26b38;
-        border-left: 4px solid #fd841f;
-        padding-left: 1.5rem;
+    .btn-register:hover {
+        background-color: #ffd900;
+        color: #000;
     }
 
-/* Animation fade */
-@keyframes dropdownFade {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Hover */
+.navbar .nav-link:hover {
+    color: var(--color-topbar-hover);
 }
-
-.navbar .dropdown-menu {
-    display: none;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
-}
-

@@ -1,49 +1,59 @@
-﻿@* HEADER - HubCinema *@
+﻿@* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
 @{
     var token = Context.Session.GetString("AccessToken");
     bool isLoggedIn = !string.IsNullOrEmpty(token);
 }
 
 <!-- Topbar -->
-<div class="topbar d-flex justify-content-end align-items-center px-4 py-2">
-    <div class="language-switch me-4">
-        <a href="#" class="lang active">VN</a><a href="#" class="lang">EN</a>
+<div class="bg-dark text-white py-2 px-4 d-flex justify-content-end align-items-center gap-3">
+    <!-- Language switch -->
+    <div class="language-switch border rounded-pill overflow-hidden d-flex">
+        <button type="button" class="btn btn-sm lang-btn active">VN</button>
+        <button type="button" class="btn btn-sm lang-btn">EN</button>
     </div>
+
+    <!-- Register -->
     @if (!isLoggedIn)
     {
-        <a href="javascript:void(0);" onclick="openRegisterModal()" class="register-link">Đăng ký</a>
+        <a href="javascript:void(0);" onclick="openRegisterModal()" class="btn btn-sm btn-register">Đăng ký</a>
     }
 </div>
 
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg nav-hub">
-    <div class="container-fluid d-flex align-items-center justify-content-between">
-
-        <!-- Logo -->
-        <a class="navbar-brand" href="/">
-            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub" />
+<nav class="navbar navbar-expand-lg bg-white">
+    <div class="container-fluid">
+        <!-- Logo bên trái -->
+        <a class="navbar-brand ms-lg-5 me-4" href="/">
+            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub">
         </a>
 
-        <!-- Ticket Button -->
-        <a href="/dat-ve" class="btn-ticket text-uppercase fw-bold text-dark">
-            <img src="~/images/ticket-button.png" alt="TICKET" />
-        </a>
+        <!-- Toggler cho mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <!-- Menu -->
-        <div class="d-flex align-items-center gap-4">
-            <div class="navbar-dropdown">
-            <div class="dropdown">
-                <a class="nav-link dropdown-toggle" href="#">Phim</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Phim đang chiếu</a></li>
-                    <li><a class="dropdown-item" href="#">Phim sắp chiếu</a></li>
-                </ul>
-            </div>
-            </div>
-            <div class="navbar-dropdown">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#">Rạp</a>
+        <!-- Trung tâm: TICKET + Nav Items -->
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="navbar-nav align-items-center gap-lg-4">
+                <!-- TICKET button -->
+                <li class="nav-item">
+                    <a href="/dat-ve" class="btn-ticket d-none d-lg-block">
+                        <img src="~/images/ticket-button.png" alt="TICKET" style="height: 50px;">
+                    </a>
+                </li>
+
+                <!-- Menu dropdowns -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Phim</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Phim đang chiếu</a></li>
+                        <li><a class="dropdown-item" href="#">Phim sắp chiếu</a></li>
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Rạp</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Tất cả rạp</a></li>
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1">Galaxy Trung Chánh</a></li>
@@ -51,50 +61,43 @@
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3">Galaxy Nguyễn Du</a></li>
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="4">Galaxy Kinh Dương Vương</a></li>
                     </ul>
-                </div>
-            </div>
-            <div class="navbar-dropdown">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#">Sản phẩm</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Sản phẩm</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Bắp nước</a></li>
                     </ul>
-                </div>
-            </div>
-            <div class="navbar-dropdown">
-                <div class="dropdown">
-                    <a class="nav-link dropdown-toggle" href="#">Sự kiện và ưu đãi</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Sự kiện và ưu đãi</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="#">Khuyến mãi</a></li>
                     </ul>
-                </div>
-            </div>
-
-            
-            
+                </li>
+            </ul>
         </div>
 
-        <!-- Account -->
-        <div class="account d-flex gap-3 align-items-center">
+        <!-- Góc phải: Đăng nhập / Thành viên -->
+        <div class="d-flex align-items-center gap-3 me-lg-5" style="margin-left: auto;">
             @if (!isLoggedIn)
             {
-                <a href="javascript:void(0);" onclick="openLoginModal()" class="nav-icon-link d-flex align-items-center gap-1">
-                    <img src="~/images/login.png" class="account-icon" alt="Đăng nhập" />
-                    <span>Đăng nhập</span>
+                <a href="javascript:void(0);" onclick="openLoginModal()" class="d-flex align-items-center text-decoration-none text-dark">
+                    <i class="bi bi-box-arrow-in-right"></i> <span class="ms-1">Đăng nhập</span>
                 </a>
-                
             }
             else
             {
-                <a asp-controller="Account" asp-action="Profile" class="nav-icon-link d-flex align-items-center gap-1">
-                    <img src="~/images/member.png" class="account-icon" alt="Thành viên" />
+                <a asp-controller="Account" asp-action="Profile" class="d-flex align-items-center text-decoration-none text-dark">
+                    <img src="~/images/member.png" class="me-1" style="width: 20px; height: 20px; object-fit: contain;" alt="Thành viên" />
                     <span>Thành viên</span>
                 </a>
-                <form asp-controller="Login" asp-action="Logout" method="post" class="d-inline">
+                <form asp-controller="Login" asp-action="Logout" method="post">
                     <button class="btn btn-sm btn-outline-dark" type="submit">Đăng xuất</button>
                 </form>
             }
         </div>
-
-    </div>
 </nav>
+
+
