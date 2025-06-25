@@ -1,25 +1,22 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    const navbarDropdowns = document.querySelectorAll('.navbar-dropdown');
+    const dropdownItems = document.querySelectorAll('.navbar .dropdown');
 
-    navbarDropdowns.forEach(container => {
-        const dropdown = container.querySelector('.dropdown');
+    dropdownItems.forEach(dropdown => {
+        const toggle = dropdown.querySelector('.nav-link');
         const menu = dropdown.querySelector('.dropdown-menu');
 
-        let timeout;
+        // Bỏ thuộc tính Bootstrap để không bị can thiệp
+        toggle.removeAttribute('data-bs-toggle');
 
-        container.addEventListener('mouseenter', () => {
-            clearTimeout(timeout);
-            menu.style.display = 'block';
-            menu.style.opacity = '1';
-            menu.style.visibility = 'visible';
+        // Gán hiệu ứng
+        dropdown.addEventListener('mouseenter', () => {
+            menu.classList.add('show');
+            toggle.classList.add('show');
         });
 
-        container.addEventListener('mouseleave', () => {
-            timeout = setTimeout(() => {
-                menu.style.display = 'none';
-                menu.style.opacity = '0';
-                menu.style.visibility = 'hidden';
-            }, 200); // nhỏ delay để tránh mất menu khi rê nhanh
+        dropdown.addEventListener('mouseleave', () => {
+            menu.classList.remove('show');
+            toggle.classList.remove('show');
         });
     });
 });
