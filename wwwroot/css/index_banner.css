@@ -1,6 +1,4 @@
 ﻿body {
-    margin: 0;
-    padding: 0;
     background: #fff;
     font-family: sans-serif;
 }
@@ -9,7 +7,7 @@
     width: 100%;
     overflow: hidden;
     background: #fff;
-    padding-bottom: 50px;
+    padding-bottom: 3rem; /* dùng rem cho đồng bộ Bootstrap spacing */
 }
 
 .banner-slider {
@@ -18,46 +16,46 @@
 }
 
 .banner-item {
-    padding: 0 1.5rem;
-    box-sizing: border-box;
+    padding-left: 1rem;
+    padding-right: 1rem;
     transition: transform 0.3s ease;
 }
 
-    .banner-item img {
-        width: 100%;
-        height: 350px;
-        object-fit: fill;
-        border-radius: 12px;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
+.banner-item img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover; /* tốt hơn 'fill' về mặt responsive */
+    border-radius: 0.75rem; /* tương đương rounded-3 */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); /* tương đương shadow-lg */
+}
 
 /* dot */
 .slick-dots {
-    bottom: 15px;
+    bottom: 1rem;
     position: absolute;
     width: 100%;
     display: flex !important;
     justify-content: center;
-    gap: 8px;
+    gap: 0.5rem;
+    padding-left: 0;
 }
 
-    .slick-dots li {
-        list-style: none;
-    }
+.slick-dots li {
+    list-style: none;
+}
 
-    .slick-dots button {
-        font-size: 0;
-        line-height: 0;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ccc;
-        border: none;
-    }
+.slick-dots button {
+    font-size: 0;
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 50%;
+    background: #ccc;
+    border: none;
+}
 
-    .slick-dots .slick-active button {
-        background: #d18800;
-    }
+.slick-dots .slick-active button {
+    background: #d18800;
+}
 
 /* arrows */
 .slick-prev,
@@ -70,22 +68,19 @@
     color: #fff;
     border: none;
     border-radius: 50%;
-    font-size: 20px;
-    width: 40px;
-    height: 40px;
-    line-height: 40px;
+    font-size: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    line-height: 2.5rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.2s;
 }
 
-/* ✅ Sửa khoảng cách nút gần sát ảnh hơn */
 .slick-prev {
-    left: 15px;
-    /* trước là -20px */
+    left: 1rem;
 }
 
 .slick-next {
-    right: 15px;
-    /* trước là -20px */
+    right: 1rem;
 }
