@@ -63,5 +63,26 @@
     color: var(--color-topbar-hover);
 }
 
+#mobileMenu a {
+    text-decoration: none;
+    color: #000;
+    margin-bottom: 8px;
+}
+
+#mobileMenu .accordion-button {
+    font-weight: 600;
+}
+
+.accordion-body a {
+    display: block;
+    padding: 6px 0;
+    color: #000;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .accordion-body a:hover {
+        color: #d18800;
+    }
 
 
