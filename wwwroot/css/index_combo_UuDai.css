@@ -1,44 +1,9 @@
 ﻿.combo-section {
-    width: calc(100% - 100px); /* 50px mỗi bên */
-    margin: 38px auto 72px;
+    margin: 38px 0 72px;
 }
 
-
-    .combo-section .section-title {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 30px;
-        position: relative;
-        margin-left:160px;
-    }
-
-
-        .combo-section .section-title::before {
-            content: "";
-            display: inline-block;
-            width: 5px;
-            height: 22px;
-            background-color: #d18800;
-            position: absolute;
-            left: -12px;
-            top: 2px;
-            border-radius: 2px;
-        }
-
-/* Danh sách combo giống movie-list */
-.combo-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-    max-width: 1140px; /* 🆕 thêm: đảm bảo 4 item (300 + 40 * 3) vừa đẹp */
-    margin: 0 auto; /* 🆕 thêm: giúp toàn bộ block nằm giữa parent */
-    gap: 48px 40px;
-    padding: 0 10px;
-}
-
-/* Mỗi combo giống movie-item */
 .combo {
-    width: 250px;
+    width: 100%; /* Để tương thích col-6, col-md-4, col-lg-3 */
     display: flex;
     flex-direction: column;
     align-items: flex-start;

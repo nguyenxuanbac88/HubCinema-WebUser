@@ -1,91 +1,103 @@
 ﻿@model List<MovieTicketWebsite.Models.Movie>
 
 <section class="movie-section">
-    <div class="section-header">
-        <h2 class="section-title">PHIM</h2>
-    </div>
+    <div class="container">
 
-    <!-- Tabs -->
-    <ul class="tabs">
-        <li class="tab active" data-target="#showing">Đang chiếu</li>
-        <li class="tab" data-target="#upcoming">Sắp chiếu</li>
-    </ul>
+        <!-- Tiêu đề PHIM căn trái theo movie -->
+        <div class="row align-items-center mb-4">
+            <!-- PHIM tiêu đề -->
+            <div class="col-auto d-flex align-items-center">
+                <div style="width: 5px; height: 22px; background-color: #d18800; border-radius: 2px;" class="me-2"></div>
+                <h2 class="section-title m-0 fs-5 fw-bold">PHIM</h2>
+            </div>
+        </div>
 
-    <!-- Tab nội dung -->
-    <div class="tab-content">
-        <div class="tab-panel show" id="showing">
-            <div class="movie-list movie-limit">
-                @{
-                    var showingMovies = Model.Where(m => m.ReleaseDate <= DateTime.Now).ToList();
-                    int count = 0;
-                }
-                @foreach (var movie in showingMovies)
+        <!-- Tabs -->
+        <ul class="tabs">
+            <li class="tab active" data-target="#showing">Đang chiếu</li>
+            <li class="tab" data-target="#upcoming">Sắp chiếu</li>
+        </ul>
+
+        <!-- Tab nội dung -->
+        <div class="tab-content">
+            <div class="tab-panel show" id="showing">
+                <div class="row g-4 movie-limit">
+                    @{
+                        var showingMovies = Model.Where(m => m.ReleaseDate <= DateTime.Now).ToList();
+                        int count = 0;
+                    }
+                    @foreach (var movie in showingMovies)
+                    {
+                        var hiddenClass = count >= 8 ? "movie-hidden" : "";
+                        <div class="col-lg-3 col-md-4 col-6 @hiddenClass">
+                            <a href="@Url.Action("Details", "Movie", new { id = movie.IdMovie })" class="movie-item-link">
+                                <div class="movie-item">
+                                    <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/dan-da-dan.jpg" : movie.CoverURL)"
+                                         alt="@movie.MovieName"
+                                         onerror="this.onerror=null; this.src='/images/dan-da-dan.jpg';" />
+                                    <div class="movie-title">@movie.MovieName</div>
+                                    <div class="movie-info">
+                                        Thể loại: @movie.Genre<br />
+                                        Thời lượng: @movie.Duration phút
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        count++;
+                    }
+                </div>
+
+                @if (showingMovies.Count > 8)
                 {
-                    var hiddenClass = count >= 8 ? "movie-hidden" : "";
-                    <a href="@Url.Action("Details", "Movie", new { id = 1 })" class="movie-item-link">
-                    <div class="movie-item @hiddenClass">
-                        <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/dan-da-dan.jpg" : movie.CoverURL)"
-                             alt="@movie.MovieName"
-                             onerror="this.onerror=null; this.src='/images/dan-da-dan.jpg';" />
-                        <div class="movie-title">@movie.MovieName</div>
-                        <div class="movie-info">
-                            Thể loại: @movie.Genre<br />
-                            Thời lượng: @movie.Duration phút
+                    <div class="film__footer text-center mt-4">
+                        <button id="showMoreBtn" class="btn btn-outline-warning px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                            Xem thêm
+                            <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
+                                 class="svg-inline--fa fa-angle-right" role="img"
+                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14">
+                                <path fill="currentColor"
+                                      d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <!-- PHIM SẮP CHIẾU -->
+            <div class="tab-panel" id="upcoming">
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="movie-item">
+                            <img src="/images/demon-slayer--kimetsu-no-yaiba-sap-chieu-3.jpg" alt="Thanh Gươm Diệt Quỷ" />
+                            <div class="movie-title">Thanh Gươm Diệt Quỷ</div>
+                            <div class="movie-info">Khởi chiếu: 15/08/2025</div>
                         </div>
                     </div>
-                    </a>
-                    count++;
-                }
-            </div>
-
-            <!-- Nút Xem thêm -->
-            @if (showingMovies.Count > 8)
-            {
-                <div class="film__footer text-center mt-4">
-                    <button id="showMoreBtn"
-                            class="text-[#f26b38] hover:text-white w-40 border border-[#fb9440] hover:bg-[#fb9440] transition-all duration-300 focus:ring-1 focus:outline-none focus:ring-[#fb9440] rounded text-sm px-5 py-2.5 text-center inline-flex items-center justify-center">
-                        Xem thêm
-                        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
-                             class="svg-inline--fa fa-angle-right ml-2" role="img"
-                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-                            <path fill="currentColor"
-                                  d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z">
-                            </path>
-                        </svg>
-                    </button>
-                </div>
-            }
-        </div>
-
-
-        <!-- PHIM SẮP CHIẾU (dữ liệu cứng) -->
-        <div class="tab-panel" id="upcoming">
-            <div class="movie-list">
-                <div class="movie-item">
-                    <img src="/images/demon-slayer--kimetsu-no-yaiba-sap-chieu-3.jpg" alt="Thanh Gươm Diệt Quỷ: Vô Hạn Thành" />
-                    <div class="movie-title">Thanh Gươm Diệt Quỷ</div>
-                    <div class="movie-info">Khởi chiếu: 15/08/2025</div>
-                </div>
-
-                <div class="movie-item">
-                    <img src="/images/megan-sap-chieu-1.jpg" alt="Megan 2.0" />
-                    <div class="movie-title">Megan 2.0</div>
-                    <div class="movie-info">Khởi chiếu: 27/06/2025</div>
-                </div>
-
-                <div class="movie-item">
-                    <img src="/images/quan-tai-vo-quy-sap-chieu-2.jpg" alt="Quan Tài Vợ Quỷ" />
-                    <div class="movie-title">Quan Tài Vợ Quỷ</div>
-                    <div class="movie-info">Khởi chiếu: 04/07/2025</div>
-                </div>
-
-                <div class="movie-item">
-                    <img src="/images/zootopia-2-sap-chieu-4.jpg" alt="Zootopia 2" />
-                    <div class="movie-title">Zootopia 2</div>
-                    <div class="movie-info">Khởi chiếu: 28/11/2025</div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="movie-item">
+                            <img src="/images/megan-sap-chieu-1.jpg" alt="Megan 2.0" />
+                            <div class="movie-title">Megan 2.0</div>
+                            <div class="movie-info">Khởi chiếu: 27/06/2025</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="movie-item">
+                            <img src="/images/quan-tai-vo-quy-sap-chieu-2.jpg" alt="Quan Tài Vợ Quỷ" />
+                            <div class="movie-title">Quan Tài Vợ Quỷ</div>
+                            <div class="movie-info">Khởi chiếu: 04/07/2025</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-4 col-6">
+                        <div class="movie-item">
+                            <img src="/images/zootopia-2-sap-chieu-4.jpg" alt="Zootopia 2" />
+                            <div class="movie-title">Zootopia 2</div>
+                            <div class="movie-info">Khởi chiếu: 28/11/2025</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-    </div>
+    </div> <!-- end container -->
 </section>

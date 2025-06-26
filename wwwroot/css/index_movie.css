@@ -78,23 +78,13 @@
     }
 
 
-.movie-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-start; /* 🆕 sửa: canh trái các item */
-    gap: 48px 40px; /* dọc 48px, ngang 40px giống spacing thiết kế */
-    max-width: 1140px; 
-    margin: 0 auto; /* 🆕 thêm: giúp toàn bộ block nằm giữa parent */
-    padding: 0 10px;
-}
-
 .movie-item {
-    width: 250px;
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* text canh trái */
     text-align: left;
     transition: transform 0.2s;
+    width: 100%; /* ✅ thêm dòng này */
 }
 
     .movie-item:hover {
@@ -103,11 +93,12 @@
 
     .movie-item img {
         width: 100%;
-        height: 330px;
+        height: auto;
         object-fit: fill;
         border-radius: 12px;
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s ease;
+        aspect-ratio: 2/3; /* ✅ để giữ tỉ lệ đẹp hơn */
     }
 
         .movie-item img:hover {

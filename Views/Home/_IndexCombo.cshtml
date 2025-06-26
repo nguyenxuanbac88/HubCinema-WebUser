@@ -1,17 +1,27 @@
 ﻿@model List<MovieTicketWebsite.Models.ComboUuDai>
 
 <section class="combo-section">
-    <h2 class="section-title">COMBO ƯU ĐÃI</h2>
-
-    <div class="combo-list">
-        @foreach (var combo in Model)
-        {
-            <div class="combo">
-                <img src="@combo.ImageURL" alt="@combo.FoodName" />
-                <h3>@combo.FoodName</h3>
-                <p>Giá: @combo.Price.ToString("N0")đ</p>
+    <div class="container">
+        <!-- Header COMBO + vạch cam -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto d-flex align-items-center">
+                <div class="me-2" style="width: 5px; height: 22px; background-color: #d18800; border-radius: 2px;"></div>
+                <h2 class="section-title m-0 fs-5 fw-bold">COMBO ƯU ĐÃI</h2>
             </div>
-        }
+        </div>
 
+        <!-- Danh sách combo -->
+        <div class="row g-4">
+            @foreach (var combo in Model)
+            {
+                <div class="col-lg-3 col-md-4 col-6">
+                    <div class="combo">
+                        <img src="@combo.ImageURL" alt="@combo.FoodName" />
+                        <h3>@combo.FoodName</h3>
+                        <p>Giá: @combo.Price.ToString("N0")đ</p>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </section>

@@ -110,6 +110,26 @@ namespace MovieTicketWebsite.Controllers
         }
 
         [HttpPost]
+        public IActionResult CheckOTP(string otp)
+        {
+            // Giả sử bạn đã lưu email và otp tạm thời bằng TempData (hoặc Session nếu muốn bảo mật hơn)
+            var expectedOtp = TempData["ResetOTP"]?.ToString();
+            var email = TempData["ResetEmail"]?.ToString();
+
+            if (string.IsNullOrEmpty(otp) || string.IsNullOrEmpty(expectedOtp) || otp != expectedOtp)
+            {
+                return Json(new { success = false, message = "Mã OTP không đúng hoặc đã hết hạn." });
+            }
+
+            // ✅ Ghi lại thông tin để chuyển sang bước xác nhận mật khẩu
+            TempData["VerifiedEmail"] = email;
+            TempData["VerifiedOTP"] = otp;
+
+            return Json(new { success = true });
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> ConfirmPassword(string email, string newPassword, string otp)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(otp))
