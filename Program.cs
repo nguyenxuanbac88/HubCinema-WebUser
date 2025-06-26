@@ -1,3 +1,5 @@
+using MovieTicketWebsite.middlewares;
+
 namespace MovieTicketWebsite
 {
     public class Program
@@ -28,6 +30,7 @@ namespace MovieTicketWebsite
             app.UseRouting();
 
             app.UseSession();
+            app.UseMiddleware<TokenValidationMiddleware>();
             app.UseAuthorization();
 
             app.MapControllerRoute(

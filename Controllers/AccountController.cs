@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -37,6 +38,12 @@ namespace MovieTicketWebsite.Controllers
                     var jsonString = await response.Content.ReadAsStringAsync();
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(jsonString);
                     return View(userInfo);
+                }
+                else if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    HttpContext.Session.Clear();
+                    TempData["LoginMessage"] = "Phiên đăng nhập đã hết hạn.";
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -96,6 +103,50 @@ namespace MovieTicketWebsite.Controllers
             }
 
             return RedirectToAction("Profile");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            var token = HttpContext.Session.GetString("AccessToken");
+
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["LogoutMessage"] = "Bạn chưa đăng nhập.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/Api/User/Logout", null);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                // ✅ Xóa session sau khi gửi logout API
+                HttpContext.Session.Clear();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
+                    TempData["LogoutMessage"] = result != null && result.ContainsKey("message")
+                        ? result["message"]
+                        : "Đăng xuất thành công.";
+                }
+                else
+                {
+                    TempData["LogoutMessage"] = $"Lỗi đăng xuất: {response.StatusCode}";
+                }
+            }
+            catch (Exception ex)
+            {
+                HttpContext.Session.Clear(); // Dù lỗi vẫn xóa session
+                TempData["LogoutMessage"] = $"Lỗi kết nối API: {ex.Message}";
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
 

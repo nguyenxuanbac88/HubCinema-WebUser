@@ -38,6 +38,13 @@
     @Html.Partial("_Header")
 
     <main>
+        @if (TempData["LogoutMessage"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                @TempData["LogoutMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         @RenderBody()
     </main>
 
@@ -64,6 +71,16 @@
     @* <script src="~/js/ChangePassHandler.js" asp-append-version="true"></script>  *@
     
     @RenderSection("Scripts", required: false)
+    <!-- DEBUG: Hiển thị token đang lưu trong session -->
+    @{
+        var token = Context.Session.GetString("AccessToken");
+    }
+    @if (!string.IsNullOrEmpty(token))
+    {
+        <div style="position: fixed; bottom: 10px; right: 10px; background: #e9ecef; padding: 8px; font-size: 12px; border-radius: 4px; border: 1px solid #ccc; z-index: 9999;">
+            <strong>Token:</strong> @token
+        </div>
+    }
 </body>
 
 </html>
