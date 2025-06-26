@@ -1,0 +1,54 @@
+﻿@model Dictionary<string, List<MovieTicketWebsite.Models.Cinema>>
+
+<section class="py-5" style="background-color: #1e1f21;">
+    <div class="container">
+        <div class="bg-dark text-white rounded-4 p-5 shadow-lg border border-secondary">
+            <h2 class="text-center fw-bold mb-5" style="font-size: 2.5rem; letter-spacing: 1px;">TẤT CẢ CÁC RẠP</h2>
+
+            <div class="accordion accordion-flush" id="cinemaAccordion">
+                @foreach (var group in Model.OrderBy(c => c.Key))
+                {
+                    var collapseId = $"collapse_{group.Key.Replace(" ", "").Replace("́", "").Replace("̀", "").Replace("̣", "")}";
+                    <div class="accordion-item bg-transparent border-bottom border-secondary">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed bg-transparent text-warning fw-semibold"
+                                    type="button"
+                                    data-bs-toggle="collapse"
+                                    data-bs-target="#@collapseId"
+                                    aria-expanded="false"
+                                    aria-controls="@collapseId">
+                                <i class="bi bi-geo-alt-fill me-2"></i> @group.Key
+                            </button>
+                        </h2>
+                        <div id="@collapseId" class="accordion-collapse collapse" data-bs-parent="#cinemaAccordion">
+                            <div class="accordion-body">
+                                <ul class="list-unstyled mb-0">
+                                    @foreach (var cinema in group.Value)
+                                    {
+                                        <li class="py-1">
+                                            <a href="@Url.Action("GetCinema", "Cinema", new { id = cinema.IdCinema })"
+                                               class="text-white text-decoration-none link-hover">
+                                                <i class="bi bi-film me-2"></i> @cinema.CinemaName
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    a.link-hover:hover {
+        color: #ffc107 !important;
+        text-decoration: underline;
+    }
+
+    .accordion-button::after {
+        filter: invert(1); /* chuyển icon xổ xuống thành trắng */
+    }
+</style>

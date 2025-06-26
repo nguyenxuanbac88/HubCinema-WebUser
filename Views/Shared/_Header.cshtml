@@ -57,7 +57,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Rạp</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Tất cả rạp</a></li>
+                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetAllCinemas">Tất cả rạp</a></li>
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1">Galaxy Trung Chánh</a></li>
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="2">Galaxy Nguyễn Văn Quá</a></li>
                         <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3">Galaxy Nguyễn Du</a></li>

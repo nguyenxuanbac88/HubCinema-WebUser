@@ -24,5 +24,24 @@ namespace MovieTicketWebsite.Controllers
 
             return View(cinema);
         }
+
+        public async Task<IActionResult> GetAllCinemas()
+        {
+            var response = await _httpClient.GetAsync("http://api.dvxuanbac.com:2030/api/Public/GetCinemas");
+
+            if (!response.IsSuccessStatusCode)
+                return View("Error"); // hoặc trả lỗi phù hợp
+
+            var json = await response.Content.ReadAsStringAsync();
+            var cinemas = JsonSerializer.Deserialize<List<Cinema>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+            var grouped = cinemas
+                .GroupBy(c => c.City)
+                .OrderBy(g => g.Key)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            return View(grouped);
+        }
+
     }
 }
