@@ -122,7 +122,8 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/Api/User/Logout", null);
+                // ❗ Dùng GET vì API chỉ cho phép GET
+                var response = await client.GetAsync("http://api.dvxuanbac.com:2030/Api/User/Logout");
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 // ✅ Xóa session sau khi gửi logout API
