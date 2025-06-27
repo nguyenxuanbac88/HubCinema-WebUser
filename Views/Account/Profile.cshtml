@@ -2,6 +2,7 @@
 
 <div class="container py-4">
     <div class="row">
+        <!-- Bên trái: Card thông tin -->
         <div class="col-md-4">
             <div class="card shadow-sm p-4 rounded-4">
                 <div class="d-flex align-items-center mb-3 gap-3">
@@ -29,7 +30,7 @@
                             <span class="rounded-circle border border-primary d-flex justify-content-center align-items-center"
                                   style="width: 16px; height: 16px; font-size: 10px"
                                   title="Thông tin">
-                                <svg class="svg-inline--fa fa-info text-primary" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512" width="10" height="10"><path fill="currentColor" d="M48 80a48 48..." /></svg>
+                                <i class="bi bi-info-lg text-primary"></i>
                             </span>
                         </div>
                         <div class="text-warning fw-bold">
@@ -37,15 +38,15 @@
                         </div>
                     </div>
 
-                    <div class="position-relative my-3">
-                        <div class="position-absolute translate-middle text-center icon-label" style="left: 0%;">
-                            🏅<div class="small">0 đ</div>
+                    <div class="position-relative my-3" style="margin-top:10px">
+                        <div class="position-absolute text-center icon-label" style="left: 0%; top: -8px;">
+                            🥉<div class="small">0đ</div>
                         </div>
-                        <div class="position-absolute translate-middle text-center icon-label" style="left: 50%;">
-                            ⭐<div class="small">2tr đ</div>
+                        <div class="position-absolute text-center icon-label" style="left: 50%; top: -8px; transform: translateX(-50%);">
+                            ⭐<div class="small">2trđ</div>
                         </div>
-                        <div class="position-absolute translate-middle text-center icon-label" style="left: 100%;">
-                            🍽️<div class="small">4tr đ</div>
+                        <div class="position-absolute text-center icon-label" style="left: 100%; top: -8px; transform: translateX(-100%);">
+                            🎯<div class="small">4trđ</div>
                         </div>
 
                         <div class="progress bg-light rounded-pill" style="height: 8px;">
@@ -54,7 +55,16 @@
                             }
                             <div class="progress-bar bg-primary" style="width: @(percent > 100 ? 100 : percent)%"></div>
                         </div>
+
+                        <style>
+                            .icon-label .small {
+                                margin-top: 6px;
+                                display: block;
+                                font-size: 13px;
+                            }
+                        </style>
                     </div>
+
                 </div>
 
                 <hr />
@@ -65,7 +75,7 @@
                     </li>
                     <li class="py-2 d-flex justify-content-between align-items-center border-bottom">
                         <span>Email:</span>
-                        <a href="mailto:@Model.Email" class="text-primary">@Model.Email</a>
+                        <a href="hotro@galaxystudio.vn" class="text-primary">hotro@hub.vnl</a>
                     </li>
                     <li class="py-2 d-flex justify-content-between align-items-center">
                         <span>Câu hỏi thường gặp</span>
@@ -74,64 +84,92 @@
                 </ul>
             </div>
         </div>
+
+        <!-- Bên phải: Form -->
         <div class="col-md-8">
             <div class="card shadow-sm p-4 rounded-4">
-                <h5 class="fw-bold mb-4">Thông tin cá nhân</h5>
                 <form>
-                    <div class="mb-3">
-                        <label class="form-label">Họ và tên</label>
-                        <input type="text" class="form-control" value="@Model.FullName" disabled />
-                    </div>
+                    <div class="row g-3">
+                        <!-- Họ và tên -->
+                        <div class="col-md-6">
+                            <label class="form-label">Họ và tên</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-0">
+                                    <i class="bi bi-person-fill"></i>
+                                </span>
+                                <input type="text" class="form-control bg-light border-0" value="@Model.FullName" disabled />
+                            </div>
+                        </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <div class="input-group">
-                            <input type="email" class="form-control" value="@Model.Email" disabled />
-                            <button class="btn btn-outline-secondary" type="button">Thay đổi</button>
+                        <!-- Ngày sinh -->
+                        <div class="col-md-6">
+                            <label class="form-label">Ngày sinh</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-0">
+                                    <i class="bi bi-calendar-event-fill"></i>
+                                </span>
+                                <input type="text" class="form-control bg-light border-0" value="@(DateTime.Parse(Model.Dob).ToString("dd/MM/yyyy"))" disabled />
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-0">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </span>
+                                <input type="email" class="form-control bg-light border-0" value="@Model.Email" disabled />
+                                <span class="input-group-text bg-light border-0 text-warning" style="cursor: pointer;">Thay đổi</span>
+                            </div>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="col-md-6">
+                            <label class="form-label">Số điện thoại</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-0">
+                                    <i class="bi bi-phone-fill"></i>
+                                </span>
+                                <input type="text" class="form-control bg-light border-0" value="@Model.Phone" disabled />
+                            </div>
+                        </div>
+
+                        <!-- Giới tính -->
+                        <div class="col-md-6">
+                            <label class="form-label">Giới tính</label><br />
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="male" disabled checked="@((Model.Gender == "Nam"))" />
+                                <label class="form-check-label" for="male">Nam</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="female" disabled checked="@((Model.Gender == "Nữ"))" />
+                                <label class="form-check-label" for="female">Nữ</label>
+                            </div>
+                        </div>
+
+                        <!-- Mật khẩu -->
+                        <div class="col-md-6">
+                            <label class="form-label">Mật khẩu</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-secondary border-0">
+                                    <i class="bi bi-lock-fill"></i>
+                                </span>
+                                <input type="password" class="form-control bg-light border-0" value="********" disabled />
+                                <span class="input-group-text bg-light border-0 text-warning" style="cursor: pointer;" onclick="openChangePasswordModal()">Thay đổi</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="text" class="form-control" value="@Model.Phone" disabled />
+                    <!-- Button -->
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-warning text-white px-4 rounded">Cập nhật</button>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Ngày sinh</label>
-                        <input type="text" class="form-control" value="@(DateTime.Parse(Model.Dob).ToString("dd/MM/yyyy"))" disabled />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Giới tính</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" id="male" checked="@((Model.Gender == "Nam"))" disabled />
-                            <label class="form-check-label" for="male">Nam</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" id="female" checked="@((Model.Gender == "Nữ"))" disabled />
-                            <label class="form-check-label" for="female">Nữ</label>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Mật khẩu</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" value="********" disabled />
-                            <button type="button" class="btn btn-outline-secondary" onclick="openChangePasswordModal()">Đổi mật khẩu</button>
-
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-warning text-white px-4">Cập nhật</button>
                 </form>
             </div>
         </div>
-
     </div>
 </div>
 
 @Html.Partial("_ChangePasswordModal")
 <script src="~/js/ChangePassHandler.js"></script>
-
-
-
