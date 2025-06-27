@@ -1,0 +1,79 @@
+﻿/* Header bảng màu xanh nhạt */
+.table thead.table-primary th {
+    background-color: #cce0ff !important;
+    color: #000;
+    font-weight: bold;
+    font-size: 1rem;
+    text-align: center;
+}
+
+/* Style chung cho toàn bảng */
+.table-bordered th,
+.table-bordered td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 12px 10px;
+    border: 1px solid #dee2e6;
+    font-size: 1rem;
+}
+
+/* Dòng THỨ 3 - HAPPY DAY */
+.table tbody tr:nth-child(3) {
+    background-color: #ffd966 !important;
+    font-weight: bold;
+}
+
+/* Dòng NGÀY TRI ÂN và SAU 22H */
+.table tbody tr:nth-last-child(2),
+.table tbody tr:nth-last-child(1) {
+    background-color: #f1f1f1 !important;
+    font-weight: bold;
+}
+
+/* Đoạn text ghi chú cuối bảng */
+.text-muted.small {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 1rem;
+    line-height: 1.6;
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 768px) {
+    .table {
+        font-size: 0.9rem;
+    }
+
+        .table th,
+        .table td {
+            padding: 8px 6px;
+        }
+}
+/* Tabs phim */
+.tab-date {
+    border: none;
+    background-color: transparent;
+    padding: 10px 16px;
+    font-weight: 500;
+    color: #333;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+    .tab-date small {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .tab-date.active {
+        background-color: #003b73; /* Xanh đậm Galaxy */
+        color: #fff;
+    }
+
+        .tab-date.active small {
+            color: #fff;
+        }
+.card-img-top {
+    height: 260px;
+    object-fit: cover;
+}

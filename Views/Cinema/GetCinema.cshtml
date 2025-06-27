@@ -1,5 +1,6 @@
 ﻿@model MovieTicketWebsite.Models.Cinema
-
+<link rel="stylesheet" href="~/css/GetCinema.css" />
+<script src="~/js/GetCinema.js"></script>
 <div class="container py-4">
     <!-- Banner -->
     <div class="mb-4">
@@ -23,28 +24,41 @@
             </select>
         </div>
     </div>
+    <!-- Tiêu đề PHIM -->
+    <h5 class="fw-bold border-start border-4 border-primary ps-2 mb-3">PHIM</h5>
 
-    <!-- Tabs phim -->
-    <ul class="nav nav-tabs mb-4" id="movieTabs">
+    <!-- Tabs ngày chiếu -->
+    <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
+
         <li class="nav-item">
-            <button class="nav-link active">Hôm Nay<br><small>@DateTime.Today.ToString("dd/MM")</small></button>
+            <button class="btn tab-date active">Hôm Nay<br><small>@DateTime.Today.ToString("dd/MM")</small></button>
         </li>
         <li class="nav-item">
-            <button class="nav-link">Thứ Ba<br><small>@DateTime.Today.AddDays(1).ToString("dd/MM")</small></button>
+            <button class="btn tab-date">Thứ Bảy<br><small>@DateTime.Today.AddDays(1).ToString("dd/MM")</small></button>
         </li>
         <li class="nav-item">
-            <button class="nav-link">Thứ Tư<br><small>@DateTime.Today.AddDays(2).ToString("dd/MM")</small></button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link">Thứ Năm<br><small>@DateTime.Today.AddDays(3).ToString("dd/MM")</small></button>
+            <button class="btn tab-date">Chủ Nhật<br><small>@DateTime.Today.AddDays(2).ToString("dd/MM")</small></button>
         </li>
     </ul>
+    
 
     <!-- Danh sách phim -->
-    <div class="row row-cols-2 row-cols-md-4 g-4 mb-5">
+    <div class="row row-cols-2 row-cols-md-6 g-4 mb-5">
         @* Tạm thời chưa có API phim nên hiển thị demo *@
         @{
             var sampleMovies = new[] {
+        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
+        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
+        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
+        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
+        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
+        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
+        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
+        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
+        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
+        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
+        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
+        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
         new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
         new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
         new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
@@ -64,30 +78,71 @@
         }
     </div>
 
-    <!-- Bảng giá & thông tin chi tiết -->
     <div class="row g-4 mb-5">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header fw-bold">GIÁ VÉ</div>
                 <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="table-primary">
                             <tr>
                                 <th>SUẤT CHIẾU</th>
-                                <th>THÀNH VIÊN</th>
+                                <th>THÀNH VIÊN / NGƯỜI LỚN</th>
                                 <th>U22</th>
-                                <th>TRẺ EM</th>
+                                <th>TRẺ EM / NGƯỜI CAO TUỔI</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td>THỨ 2, 4, 5</td><td>75.000</td><td>55.000</td><td>55.000</td></tr>
-                            <tr><td>SAU 17:00</td><td>80.000</td><td>-</td><td>-</td></tr>
-                            <tr><td>THỨ 3</td><td colspan="3">HAPPY DAY - 55.000</td></tr>
-                            <tr><td>THỨ 6, 7, CN</td><td>85.000</td><td>65.000</td><td>65.000</td></tr>
-                            <tr><td>NGÀY LẺ</td><td>90.000</td><td>-</td><td>-</td></tr>
-                            <tr><td>SUẤT SÁNG</td><td>50.000</td><td>-</td><td>-</td></tr>
+                            <tr>
+                                <td>THỨ 2, 4, 5 - TRƯỚC 17:00</td>
+                                <td>70.000</td>
+                                <td>55.000</td>
+                                <td>55.000</td>
+                            </tr>
+                            <tr>
+                                <td>THỨ 2, 4, 5 - SAU 17:00</td>
+                                <td>80.000</td>
+                                <td>55.000</td>
+                                <td>55.000</td>
+                            </tr>
+                            <tr>
+                                <td>THỨ 3 - HAPPY DAY</td>
+                                <td>55.000</td>
+                                <td>55.000</td>
+                                <td>55.000</td>
+                            </tr>
+                            <tr>
+                                <td>THỨ 6, 7, CN - TRƯỚC 17:00</td>
+                                <td>85.000</td>
+                                <td>65.000</td>
+                                <td>65.000</td>
+                            </tr>
+                            <tr>
+                                <td>THỨ 6, 7, CN - SAU 17:00</td>
+                                <td>95.000</td>
+                                <td>65.000</td>
+                                <td>65.000</td>
+                            </tr>
+                            <tr>
+                                <td>NGÀY LỄ</td>
+                                <td>95.000</td>
+                                <td>95.000</td>
+                                <td>65.000</td>
+                            </tr>
+                            <tr>
+                                <td>NGÀY TRI ÂN</td>
+                                <td colspan="3">50.000</td>
+                            </tr>
+                            <tr>
+                                <td>SAU 22H (THÀNH VIÊN)</td>
+                                <td colspan="3">60.000</td>
+                            </tr>
                         </tbody>
                     </table>
+                    <p class="text-muted small">
+                        * Giá vé ngày lễ áp dụng cho các ngày lễ tết theo quy định, bao gồm cả sneakshow/suất chiếu sớm<br>
+                        * U22 áp dụng cho học sinh – sinh viên dưới 22 tuổi (phải xuất trình thẻ)
+                    </p>
                 </div>
             </div>
         </div>
@@ -97,12 +152,15 @@
                 <div class="card-header fw-bold">THÔNG TIN CHI TIẾT</div>
                 <div class="card-body">
                     <p>
-                        <strong>Địa chỉ:</strong> @Model.Address<br>
+                        <strong>Địa chỉ:</strong> 119B Nguyễn Văn Quá, Phường Đông Hưng Thuận, Quận 12<br>
                         <strong>Số điện thoại:</strong> <a href="tel:19002224">1900 2224</a>
                     </p>
-                    <p>Galaxy Trung Chánh là rạp chiếu phim chuẩn Hollywood tại khu vực Quận 12, TP.HCM...</p>
+                    <iframe src="https://www.google.com/maps?q=Galaxy+Nguyễn+Văn+Quá&output=embed" width="100%" height="200" frameborder="0" style="border:0;" allowfullscreen></iframe>
+                    <p class="mt-3">
+                        Tọa lạc ở 119B Nguyễn Văn Quá, Hub Nguyễn Văn Quá sở hữu vị trí “vàng” gần cầu Chợ Cầu, hết sức thuận tiện cho việc đi lại và thưởng thức phim hay. Cũng như các rạp Hub Cinema khác, Hub Nguyễn Văn Quá được đầu tư công nghệ hiện đại, thiết bị tân tiến và xây dựng đúng theo tiêu chuẩn quốc tế. Với 7 phòng chiếu, Hub Nguyễn Văn Quá trình chiếu đủ hai định dạng 2D & 3D phục vụ tối đa nhu cầu của khách hàng. Màn hình sắc nét và hệ thống âm thanh vòm Dolby 7.1 hiện đại sẽ mang đến những trải nghiệm sống động như thật. Từ nay, có thêm một địa chỉ để thưởng thức những bộ phim mới xuất sắc trong và ngoài nước rồi nhé. Nhanh chân đến ngay Hub Nguyễn Văn Quá - 119B Nguyễn Văn Quá để nhận ưu đãi nào các bạn!
+                    </p>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
