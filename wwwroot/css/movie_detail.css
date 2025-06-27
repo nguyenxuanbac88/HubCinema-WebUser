@@ -59,6 +59,17 @@
     color: #0d6efd;
     text-decoration: none;
 }
+.badge-tag {
+    display: inline-block;
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+}
 
 
 @media (min-width: 992px) {
