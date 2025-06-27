@@ -1,37 +1,27 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    const confirmForm = document.getElementById("confirmPasswordForm");
-    const resultDiv = document.getElementById("confirmResult");
+﻿// ✅ Hàm mở modal: đã đúng
+window.openConfirmPasswordModal = function () {
+    const modal = document.getElementById('confirmPasswordModal');
+    if (modal) {
+        modal.style.display = 'block';
+    } else {
+        console.warn('Không tìm thấy confirmPasswordModal');
+    }
+};
 
-    confirmForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        resultDiv.classList.add("d-none");
+// ✅ Gán hàm đóng modal vào window
+window.closeConfirmPasswordModal = function () {
+    const modal = document.getElementById('confirmPasswordModal');
+    if (modal) {
+        modal.style.display = 'none';
+        const pwInput = modal.querySelector('input[name="newPassword"]');
+        if (pwInput) pwInput.value = '';
+    }
+};
 
-        const newPassword = document.getElementById("newPassword").value;
-
-        const res = await fetch("http://api.dvxuanbac.com:2030/api/auth/confirm-password", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: window.username,
-                otp: window.verifiedOtp,
-                newPW: newPassword,
-                otpToken: window.otpToken
-            })
-        });
-
-        const data = await res.json();
-
-        if (res.ok && data.message.includes("thành công")) {
-            resultDiv.textContent = data.message;
-            resultDiv.className = "alert alert-success mt-3";
-        } else {
-            resultDiv.textContent = data.message || "Đổi mật khẩu thất bại.";
-            resultDiv.className = "alert alert-danger mt-3";
-        }
-
-        resultDiv.classList.remove("d-none");
-    });
-
-    window.openConfirmPasswordModal = () => document.getElementById("confirmPasswordModal").style.display = "flex";
-    window.closeConfirmPasswordModal = () => document.getElementById("confirmPasswordModal").style.display = "none";
+// ✅ Xử lý bấm ra ngoài để đóng modal
+document.addEventListener('click', function (event) {
+    const modal = document.getElementById('confirmPasswordModal');
+    if (modal && modal.style.display === 'block' && event.target === modal) {
+        window.closeConfirmPasswordModal();
+    }
 });
