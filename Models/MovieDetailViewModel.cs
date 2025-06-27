@@ -16,5 +16,10 @@
         public string Actors { get; set; }
 
         public List<TheaterShowtimes> ShowtimesByTheater { get; set; } // gộp phần lịch chiếu
+
+        // ✅ Thêm các thuộc tính mới
+        public List<string> Regions { get; set; } = new();
+        public List<CinemaInfo> Cinemas { get; set; } = new();
+        public List<DateTime> AvailableDates { get; set; } = new();
     }
 }

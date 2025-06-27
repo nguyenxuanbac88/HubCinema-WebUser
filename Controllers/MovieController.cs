@@ -16,28 +16,98 @@ namespace MovieTicketWebsite.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var client = _httpClientFactory.CreateClient();
+
+            // 1. Lấy thông tin phim
             var movieResponse = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Public/GetMovieById/{id}");
             var movie = JsonConvert.DeserializeObject<MovieDetailViewModel>(movieResponse);
-
-            // ✅ Convert URL trailer về dạng embeddable
             movie.TrailerURL = ConvertYoutubeUrlToEmbed(movie.TrailerURL);
-            // (Gợi ý) Gán giả dữ liệu lịch chiếu
-            movie.ShowtimesByTheater = new List<TheaterShowtimes>
-        {
-            new TheaterShowtimes
+
+            // 2. Lấy regions + cinemas
+            var filterDataResp = await client.GetStringAsync("http://api.dvxuanbac.com:2030/api/Schedule/filter-data");
+            dynamic filterData = JsonConvert.DeserializeObject(filterDataResp);
+
+            var regions = new List<string>();
+            var cinemas = new List<CinemaInfo>();
+
+            try
             {
-                TheaterName = "Galaxy Trung Chánh",
-                Showtimes = new List<ShowtimeItem>
+                var rawRegions = filterData?.data?.regions as IEnumerable<dynamic>;
+                if (rawRegions != null)
+                    regions = rawRegions.Select(r => r?.ToString()).OfType<string>().ToList();
+
+                var rawCinemas = filterData?.data?.cinemas as IEnumerable<dynamic>;
+                if (rawCinemas != null)
                 {
-                    new ShowtimeItem { Id = 1, StartTime = DateTime.Today.AddHours(14) },
-                    new ShowtimeItem { Id = 2, StartTime = DateTime.Today.AddHours(17) },
-                    new ShowtimeItem { Id = 3, StartTime = DateTime.Today.AddHours(20) }
+                    cinemas = rawCinemas.Select(c => new CinemaInfo
+                    {
+                        MaRap = (int)c.maRap,
+                        TenRap = (string)c.tenRap,
+                        Region = (string)c.region
+                    }).ToList();
                 }
             }
-        };
+            catch
+            {
+                // fallback nếu dữ liệu API lỗi format
+                regions = new();
+                cinemas = new();
+            }
+
+            // 3. Lấy danh sách ngày có lịch chiếu
+            var dateList = new List<DateTime>();
+            try
+            {
+                var datesResp = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Schedule/dates?maPhim={id}");
+                dynamic datesData = JsonConvert.DeserializeObject(datesResp);
+                var rawDates = datesData?.data as IEnumerable<dynamic>;
+                if (rawDates != null)
+                    dateList = rawDates.Select(d => DateTime.Parse((string)d)).ToList();
+            }
+            catch
+            {
+                dateList = new();
+            }
+
+            // 4. Lấy lịch chiếu cho ngày đầu tiên (nếu có)
+            var showtimes = new List<TheaterShowtimes>();
+            if (dateList.Any())
+            {
+                try
+                {
+                    string firstDate = dateList.First().ToString("yyyy-MM-dd");
+                    var showtimeResp = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Schedule?maPhim={id}&date={firstDate}");
+                    dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
+
+                    var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
+                    if (rawShowtimes != null)
+                    {
+                        showtimes = rawShowtimes.Select(t => new TheaterShowtimes
+                        {
+                            TheaterName = (string)t.tenRap,
+                            Showtimes = ((IEnumerable<dynamic>)t.gioChieu).Select(g => new ShowtimeItem
+                            {
+                                Id = 0,
+                                StartTime = DateTime.Today.Add(TimeSpan.Parse((string)g))
+                            }).ToList()
+                        }).ToList();
+                    }
+                }
+                catch
+                {
+                    showtimes = new();
+                }
+            }
+
+            // 5. Gán dữ liệu về ViewModel
+            movie.Regions = regions ?? new();
+            movie.Cinemas = cinemas ?? new();
+            movie.AvailableDates = dateList ?? new();
+            movie.ShowtimesByTheater = showtimes ?? new();
 
             return View(movie);
         }
+
+
 
         private string ConvertYoutubeUrlToEmbed(string url)
         {

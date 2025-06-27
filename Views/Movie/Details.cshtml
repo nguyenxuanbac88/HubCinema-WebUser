@@ -116,66 +116,88 @@
             <h5 class="fw-bold mb-0 text-capitalize">Lịch chiếu</h5>
         </div>
 
-        <!-- Lịch ngày và bộ lọc -->
+        <!-- Bộ lọc ngày + vùng + rạp -->
         <div class="row align-items-center gy-3">
             <div class="col-md-7">
-                <div class="d-flex gap-2">
-                    <button class="btn btn-primary text-white">Thứ Sáu<br>20/06</button>
-                    <button class="btn btn-outline-secondary">Thứ Bảy<br>21/06</button>
-                    <button class="btn btn-outline-secondary">Chủ Nhật<br>22/06</button>
+                <div class="d-flex gap-2 flex-wrap" id="date-buttons">
+                    @{
+                        var availableDates = Model.AvailableDates as List<DateTime> ?? new List<DateTime>();
+                    }
+                    @if (availableDates.Count > 0)
+                    {
+                        foreach (var date in availableDates)
+                        {
+                            var firstDate = availableDates.FirstOrDefault();
+                            var isActive = date == firstDate;
+                            <button class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")"
+                                    data-date="@date.ToString("yyyy-MM-dd")"
+                                    data-movie-id="@Model.IdMovie">
+
+                                @date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))<br />
+                                @date.ToString("dd/MM")
+                            </button>
+                        }
+                    }
+
                 </div>
             </div>
             <div class="col-md-5 text-md-end">
                 <div class="row g-2">
                     <div class="col">
                         <select class="form-select form-select-sm">
-                            <option selected>Toàn quốc</option>
-                            <option>TPHCM</option>
-                            <option>Hà Nội</option>
+                            @foreach (var region in Model.Regions)
+                            {
+                                <option>@region</option>
+                            }
                         </select>
                     </div>
                     <div class="col">
                         <select class="form-select form-select-sm">
                             <option selected>Tất cả rạp</option>
-                            <option>Galaxy Quang Trung</option>
-                            <option>Galaxy Nguyễn Văn Quá</option>
+                            @foreach (var rap in Model.Cinemas)
+                            {
+                                <option>@rap.TenRap</option>
+                            }
                         </select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Danh sách rạp -->
+        <!-- Danh sách lịch chiếu theo rạp -->
         <div class="mt-4">
-            <div class="py-4 px-3 bg-light border-top border-bottom mb-3">
-                <h6 class="fw-bold mb-3">Galaxy Quang Trung</h6>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary btn-sm">09:00</button>
-                </div>
-            </div>
+            @{
+                var theaters = Model.ShowtimesByTheater as List<MovieTicketWebsite.Models.TheaterShowtimes> ?? new();
+            }
 
-            <div class="py-4 px-3 bg-white border-top border-bottom mb-3">
-                <h6 class="fw-bold mb-3">Galaxy Trung Chánh</h6>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary btn-sm">09:15</button>
-                </div>
-            </div>
+            @if (theaters.Count > 0)
+            {
+                var index = 0;
+                foreach (var theater in theaters)
+                {
+                    var bgClass = index % 2 == 0 ? "bg-light" : "bg-white";
+                    <div class="py-4 px-3 @bgClass border-top border-bottom mb-3">
+                        <h6 class="fw-bold mb-3">@theater.TheaterName</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            @foreach (var show in theater.Showtimes)
+                            {
+                                <button class="btn btn-outline-primary btn-sm">
+                                    @show.StartTime.ToString("HH:mm")
+                                </button>
+                            }
+                        </div>
+                    </div>
+                    index++;
+                }
+            }
+            else
+            {
+                <div class="text-center text-muted py-4">Không có lịch chiếu cho ngày hiện tại.</div>
+            }
 
-            <div class="py-4 px-3 bg-light border-top border-bottom mb-3">
-                <h6 class="fw-bold mb-3">Galaxy Nguyễn Văn Quá</h6>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary btn-sm">09:30</button>
-                </div>
-            </div>
-
-            <div class="py-4 px-3 bg-white border-top border-bottom">
-                <h6 class="fw-bold mb-3">Galaxy Trường Chinh</h6>
-                <div class="d-flex flex-wrap gap-2">
-                    <button class="btn btn-outline-primary btn-sm">09:15</button>
-                </div>
-            </div>
         </div>
     </div>
+
 @* <!--movie showtime--> *@
 @* <div class="movie_showtime"> *@
 @*     <div class="showtime_header"> *@
@@ -197,9 +219,11 @@
 
 </div>
 
-</div>
 
 @section Scripts {
     <script src="~/js/play-trailer.js" defer></script>
+    <script src="~/js/movie-showtime.js" defer></script>
 }
+
+
 
