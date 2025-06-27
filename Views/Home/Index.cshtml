@@ -5,44 +5,64 @@
     @await Html.PartialAsync("_IndexMovie", Model.Movies)
     @await Html.PartialAsync("_IndexCombo", Model.Combos)
 
-    @if (TempData["RegisterMessage"] != null)
-    {
-        <script>
-            const encodedMsg = "@TempData["RegisterMessage"]";
+    
+</main>
+@section Scripts {
+@if (TempData["RegisterMessage"] != null)
+{
+    <script>
+        const encodedMsg = "@TempData["RegisterMessage"]";
+        const txt = document.createElement("textarea");
+        txt.innerHTML = encodedMsg;
+        alert(txt.value);
+    </script>
+}
+
+@if (TempData["ForgotMessage"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const encodedMsg = "@TempData["ForgotMessage"]";
             const txt = document.createElement("textarea");
             txt.innerHTML = encodedMsg;
             alert(txt.value);
-        </script>
-    }
+            if (typeof openForgotModal === "function") openForgotModal();
+        });
+    </script>
+}
+@if (TempData["OTPResult"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const txt = document.createElement("textarea");
+            txt.innerHTML = "@TempData["OTPResult"]";
+            alert(txt.value);
+        });
+    </script>
+}
 
-    @if (TempData["ForgotMessage"] != null)
-    {
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const encodedMsg = "@TempData["ForgotMessage"]";
-                const txt = document.createElement("textarea");
-                txt.innerHTML = encodedMsg;
-                alert(txt.value);
-                if (typeof openForgotModal === "function") openForgotModal();
-            });
-        </script>
-    }
-
-
-
-
-</main>
 @if (TempData["OpenConfirmModal"] != null)
 {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            if (typeof openConfirmModal === "function") {
-                openConfirmModal();
+            if (typeof openConfirmPasswordModal === "function") {
+                openConfirmPasswordModal();
             }
         });
     </script>
 }
 
-@Html.Partial("_ConfirmPasswordModal")
+@if (TempData["OpenOtpModal"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const otpModal = new bootstrap.Modal(document.getElementById('otpCheckModal'));
+            otpModal.show();
+        });
+    </script>
+}
+
+
+}
 
 

@@ -52,6 +52,9 @@
     @Html.Partial("_LoginModal")
     @Html.Partial("_RegisterModal")
     @Html.Partial("_ForgotModal")
+    @Html.Partial("_ConfirmPasswordModal")
+    @Html.Partial("_OTPCheckModal")
+
 
 
     <!-- ✅ JS nên nằm sau khi modal đã tồn tại -->
@@ -64,7 +67,7 @@
     <script src="~/js/Register.js" asp-append-version="true"></script>
     <script src="~/js/ForgetPass.js" asp-append-version="true"></script>
     <script src="~/js/BannerHandler.js" asp-append-version="true"></script>
-    <script src="~/js/ConfirmModalHandler.js" asp-append-version="true"></script>
+    <script src="~/js/ConfirmModalHandler.js" asp-append-version="true"></script> 
     <script src="~/js/custom-tabs.js" asp-append-version="true"></script>
     <script src="~/js/hoverDropdown.js" asp-append-version="true"></script>
     <script src="~/js/password-toggle.js" asp-append-version="true"></script>
@@ -73,16 +76,6 @@
     @* <script src="~/js/ChangePassHandler.js" asp-append-version="true"></script>  *@
     
     @RenderSection("Scripts", required: false)
-    <!-- DEBUG: Hiển thị token đang lưu trong session -->
-    @* @{ *@
-    @*     var token = Context.Session.GetString("AccessToken"); *@
-    @* } *@
-    @* @if (!string.IsNullOrEmpty(token)) *@
-    @* { *@
-    @*     <div style="position: fixed; bottom: 10px; right: 10px; background: #e9ecef; padding: 8px; font-size: 12px; border-radius: 4px; border: 1px solid #ccc; z-index: 9999;"> *@
-    @*         <strong>Token:</strong> @token *@
-    @*     </div> *@
-    @* } *@
 </body>
 
 </html>
