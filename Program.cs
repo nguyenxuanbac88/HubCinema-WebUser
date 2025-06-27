@@ -1,4 +1,4 @@
-using MovieTicketWebsite.middlewares;
+﻿using MovieTicketWebsite.middlewares;
 
 namespace MovieTicketWebsite
 {
@@ -10,9 +10,10 @@ namespace MovieTicketWebsite
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
             builder.Services.AddHttpClient();
             builder.Services.AddSession();
+
+            builder.Services.AddHttpContextAccessor(); // ✅ Thêm dòng này
 
             var app = builder.Build();
 

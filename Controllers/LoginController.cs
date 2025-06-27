@@ -91,11 +91,16 @@ namespace MovieTicketWebsite.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     dynamic result = JsonConvert.DeserializeObject(responseBody);
-                    TempData["ForgotMessage"] = result?.message?.ToString() ?? "Đã gửi yêu cầu khôi phục.";
 
-                    // 👇 THÊM DÒNG NÀY để modal xác nhận hiển thị sau khi gửi email
-                    TempData["OpenConfirmModal"] = true;
+                    TempData["ForgotMessage"] = result?.message?.ToString() ?? "Đã gửi yêu cầu khôi phục.";
+                    TempData["ResetEmail"] = email;
+
+                    string otpToken = result?.otpToken?.ToString(); // Ép kiểu tường minh
+                    HttpContext.Session.SetString("OtpToken", otpToken);
+
+                    TempData["OpenOtpModal"] = true;
                 }
+
                 else
                 {
                     TempData["ForgotMessage"] = $"Lỗi: {response.StatusCode}";
@@ -109,24 +114,71 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [HttpPost]
-        public IActionResult CheckOTP(string otp)
-        {
-            // Giả sử bạn đã lưu email và otp tạm thời bằng TempData (hoặc Session nếu muốn bảo mật hơn)
-            var expectedOtp = TempData["ResetOTP"]?.ToString();
-            var email = TempData["ResetEmail"]?.ToString();
 
-            if (string.IsNullOrEmpty(otp) || string.IsNullOrEmpty(expectedOtp) || otp != expectedOtp)
+        [HttpPost]
+        public async Task<IActionResult> CheckOTP(string otp)
+        {
+            if (string.IsNullOrEmpty(otp))
             {
-                return Json(new { success = false, message = "Mã OTP không đúng hoặc đã hết hạn." });
+                TempData["OTPResult"] = "Vui lòng nhập mã OTP.";
+                TempData["OpenOtpModal"] = true;
+                return RedirectToAction("Index", "Home");
             }
 
-            // ✅ Ghi lại thông tin để chuyển sang bước xác nhận mật khẩu
-            TempData["VerifiedEmail"] = email;
-            TempData["VerifiedOTP"] = otp;
+            var email = TempData["ResetEmail"]?.ToString();
+            var otpToken = HttpContext.Session.GetString("OtpToken");
 
-            return Json(new { success = true });
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otpToken))
+            {
+                TempData["OTPResult"] = "Thiếu thông tin email hoặc OTP token.";
+                TempData["OpenOtpModal"] = true;
+                return RedirectToAction("Index", "Home");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+
+            var requestBody = new
+            {
+                username = email,
+                otp = otp,
+                otpToken = otpToken
+            };
+
+            var json = JsonConvert.SerializeObject(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/check-otp", content);
+                var responseBody = await response.Content.ReadAsStringAsync();
+
+                if (response.IsSuccessStatusCode)
+                {
+                    dynamic result = JsonConvert.DeserializeObject(responseBody);
+                    string message = result?.message?.ToString();
+
+                    HttpContext.Session.SetString("VerifiedEmail", email);
+                    HttpContext.Session.SetString("VerifiedOTP", otp);
+
+                    TempData["OTPResult"] = message ?? "Mã OTP hợp lệ.";
+                    TempData["OpenConfirmModal"] = true; // ✅ trigger mở ConfirmPasswordModal
+                }
+                else
+                {
+                    TempData["OTPResult"] = "Mã OTP không hợp lệ.";
+                    TempData["OpenOtpModal"] = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["OTPResult"] = "Lỗi kết nối: " + ex.Message;
+                TempData["OpenOtpModal"] = true;
+            }
+
+            return RedirectToAction("Index", "Home");
         }
+
+
 
 
         [HttpPost]
@@ -138,11 +190,20 @@ namespace MovieTicketWebsite.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
+            var otpToken = HttpContext.Session.GetString("OtpToken");
+
+            if (string.IsNullOrEmpty(otpToken))
+            {
+                TempData["ConfirmMessage"] = "Mã OTP token không tồn tại hoặc đã hết hạn.";
+                return RedirectToAction("Index", "Home");
+            }
+
             var requestBody = new
             {
                 username = email,
                 newPW = newPassword,
-                otp = otp
+                otp = otp,
+                otpToken = otpToken // ✅ bổ sung đúng theo API
             };
 
             var client = _httpClientFactory.CreateClient();
@@ -156,13 +217,16 @@ namespace MovieTicketWebsite.Controllers
 
                 if (response.IsSuccessStatusCode)
                 {
-                    // ✅ Deserialize an toàn sang Dictionary
                     var result = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
 
                     TempData["ConfirmMessage"] = result != null && result.ContainsKey("message")
                         ? result["message"]
                         : "Đổi mật khẩu thành công.";
 
+                    // ✅ Dọn session sau khi thành công
+                    HttpContext.Session.Remove("OtpToken");
+                    HttpContext.Session.Remove("VerifiedEmail");
+                    HttpContext.Session.Remove("VerifiedOTP");
                 }
                 else
                 {
@@ -176,7 +240,6 @@ namespace MovieTicketWebsite.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
 
 
     }

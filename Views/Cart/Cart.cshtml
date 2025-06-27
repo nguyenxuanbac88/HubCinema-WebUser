@@ -1,0 +1,77 @@
+﻿@model List<MovieTicketWebsite.Models.CartItem>
+@{
+    ViewData["Title"] = "Giỏ hàng";
+    decimal total = Model.Sum(item => item.Price * item.Quantity);
+}
+
+<section class="container py-5">
+    <h4 class="mb-4 fw-bold">Sản phẩm | Giỏ hàng</h4>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Giỏ hàng của bạn đang trống.</div>
+    }
+    else
+    {
+        <div class="row">
+            <!-- Danh sách sản phẩm -->
+            <div class="col-lg-8">
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3 shadow-sm">
+                        <div class="row g-0 align-items-center p-3">
+                            <div class="col-3">
+                                <img src="@item.ImageUrl" alt="@item.ProductName" class="img-fluid rounded">
+                            </div>
+                            <div class="col-6">
+                                <h6 class="fw-bold">@item.ProductName</h6>
+                                <p class="text-muted mb-1">@item.Description</p>
+
+                                <form method="post" asp-action="DecreaseQuantity" asp-controller="Cart" class="d-inline">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">-</button>
+                                </form>
+
+                                <span class="mx-2 fw-bold">@item.Quantity</span>
+
+                                <form method="post" asp-action="IncreaseQuantity" asp-controller="Cart" class="d-inline">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm">+</button>
+                                </form>
+                            </div>
+                            <div class="col-2 text-end">
+                                <p class="fw-bold text-danger">@string.Format("{0:N0} ₫", item.Price * item.Quantity)</p>
+                            </div>
+                            <div class="col-1 text-end">
+                                <form method="post" asp-action="RemoveItem" asp-controller="Cart">
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <button type="submit" class="btn btn-link text-danger" title="Xóa sản phẩm">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Tổng tiền & nút hành động -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm p-4">
+                    <h5 class="fw-bold mb-3">Tổng tiền</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Số tiền thanh toán</span>
+                        <span class="fw-bold text-danger">@string.Format("{0:N0} ₫", total)</span>
+                    </div>
+
+                    <button class="btn btn-warning w-100 fw-bold mb-2">Đặt hàng</button>
+                    <a href="/" class="btn btn-outline-dark w-100 mb-2">Tiếp tục mua sắm</a>
+
+                    <form method="post" asp-action="ClearCart" asp-controller="Cart">
+                        <button type="submit" class="btn btn-outline-secondary w-100">Xóa giỏ hàng</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</section>
