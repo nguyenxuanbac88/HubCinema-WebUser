@@ -121,21 +121,25 @@
             <div class="col-md-7">
                 <div class="d-flex gap-2 flex-wrap" id="date-buttons">
                     @{
-                        var availableDates = Model.AvailableDates as List<DateTime> ?? new List<DateTime>();
+                        var availableDates = Model.AvailableDates as List<DateTime> ?? new();
+                        var selectedDate = Model.SelectedDate.Date;
                     }
+
                     @if (availableDates.Count > 0)
                     {
                         foreach (var date in availableDates)
                         {
-                            var firstDate = availableDates.FirstOrDefault();
-                            var isActive = date == firstDate;
-                            <button class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")"
-                                    data-date="@date.ToString("yyyy-MM-dd")"
-                                    data-movie-id="@Model.IdMovie">
+                            var isActive = date.Date == selectedDate;
 
-                                @date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))<br />
-                                @date.ToString("dd/MM")
-                            </button>
+                            <form method="get" asp-controller="Movie" asp-action="Details" class="d-inline">
+                                <input type="hidden" name="id" value="@Model.IdMovie" />
+                                <input type="hidden" name="selectedDate" value="@date.ToString("yyyy-MM-dd")" />
+
+                                <button type="submit" class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")">
+                                    @date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))<br />
+                                    @date.ToString("dd/MM")
+                                </button>
+                            </form>
                         }
                     }
 
@@ -165,9 +169,11 @@
         </div>
 
         <!-- Danh sách lịch chiếu theo rạp -->
+        <!-- Danh sách lịch chiếu theo rạp -->
         <div class="mt-4">
             @{
                 var theaters = Model.ShowtimesByTheater as List<MovieTicketWebsite.Models.TheaterShowtimes> ?? new();
+                // KHÔNG cần lại dòng: var selectedDate = ...
             }
 
             @if (theaters.Count > 0)
@@ -175,11 +181,21 @@
                 var index = 0;
                 foreach (var theater in theaters)
                 {
+                    // Lọc các suất chiếu đúng ngày
+                    var showtimesInSelectedDate = theater.Showtimes
+                    .Where(s => s.NgayChieu.Date == Model.SelectedDate.Date) // dùng Model.SelectedDate trực tiếp
+                    .ToList();
+
+                    if (showtimesInSelectedDate.Count == 0)
+                    {
+                        continue; // bỏ qua rạp không có suất chiếu trong ngày được chọn
+                    }
+
                     var bgClass = index % 2 == 0 ? "bg-light" : "bg-white";
                     <div class="py-4 px-3 @bgClass border-top border-bottom mb-3">
                         <h6 class="fw-bold mb-3">@theater.TheaterName</h6>
                         <div class="d-flex flex-wrap gap-2">
-                            @foreach (var show in theater.Showtimes)
+                            @foreach (var show in showtimesInSelectedDate)
                             {
                                 <button class="btn btn-outline-primary btn-sm">
                                     @show.StartTime.ToString("HH:mm")
@@ -194,8 +210,9 @@
             {
                 <div class="text-center text-muted py-4">Không có lịch chiếu cho ngày hiện tại.</div>
             }
-
         </div>
+
+
     </div>
 
 @* <!--movie showtime--> *@

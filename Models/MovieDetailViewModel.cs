@@ -21,5 +21,7 @@
         public List<string> Regions { get; set; } = new();
         public List<CinemaInfo> Cinemas { get; set; } = new();
         public List<DateTime> AvailableDates { get; set; } = new();
+        public DateTime SelectedDate { get; set; }
+
     }
 }
