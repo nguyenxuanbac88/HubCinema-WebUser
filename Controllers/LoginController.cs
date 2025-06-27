@@ -93,11 +93,12 @@ namespace MovieTicketWebsite.Controllers
                     dynamic result = JsonConvert.DeserializeObject(responseBody);
 
                     TempData["ForgotMessage"] = result?.message?.ToString() ?? "Đã gửi yêu cầu khôi phục.";
-                    TempData["ResetEmail"] = email;
+                    HttpContext.Session.SetString("ResetEmail", email); // Trong ForgotPassword
 
                     string otpToken = result?.otpToken?.ToString(); // Ép kiểu tường minh
                     HttpContext.Session.SetString("OtpToken", otpToken);
 
+                    TempData["CloseForgotModal"] = true;
                     TempData["OpenOtpModal"] = true;
                 }
 
@@ -125,7 +126,7 @@ namespace MovieTicketWebsite.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            var email = TempData["ResetEmail"]?.ToString();
+            var email = HttpContext.Session.GetString("ResetEmail"); // Trong CheckOTP
             var otpToken = HttpContext.Session.GetString("OtpToken");
 
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otpToken))
@@ -162,6 +163,7 @@ namespace MovieTicketWebsite.Controllers
 
                     TempData["OTPResult"] = message ?? "Mã OTP hợp lệ.";
                     TempData["OpenConfirmModal"] = true; // ✅ trigger mở ConfirmPasswordModal
+
                 }
                 else
                 {
