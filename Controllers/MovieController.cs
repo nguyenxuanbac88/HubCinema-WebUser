@@ -13,7 +13,7 @@ namespace MovieTicketWebsite.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        public async Task<IActionResult> Details(int id, string? selectedDate)
+        public async Task<IActionResult> Details(int id)
         {
             var client = _httpClientFactory.CreateClient();
 
@@ -48,7 +48,6 @@ namespace MovieTicketWebsite.Controllers
             }
             catch
             {
-                // fallback nếu dữ liệu API lỗi format
                 regions = new();
                 cinemas = new();
             }
@@ -68,18 +67,8 @@ namespace MovieTicketWebsite.Controllers
                 dateList = new();
             }
 
-            // Chọn ngày:
-            DateTime selected = dateList.FirstOrDefault(); // fallback mặc định
-            if (!string.IsNullOrEmpty(selectedDate) && DateTime.TryParse(selectedDate, out DateTime parsedDate))
-            {
-                if (dateList.Contains(parsedDate))
-                {
-                    selected = parsedDate;
-                }
-            }
-
-            // 4. Lấy lịch chiếu cho tất cả các ngày có lịch chiếu
-            var showtimes = new List<TheaterShowtimes>();
+            // 4. Lấy tất cả lịch chiếu cho mỗi ngày
+            var showtimeMap = new Dictionary<string, List<TheaterShowtimes>>();
             if (dateList.Any())
             {
                 foreach (var date in dateList)
@@ -91,48 +80,54 @@ namespace MovieTicketWebsite.Controllers
                         dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
 
                         var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
+                        var dailyShowtimes = new List<TheaterShowtimes>();
+
                         if (rawShowtimes != null)
                         {
                             foreach (var t in rawShowtimes)
                             {
-                                var existingTheater = showtimes.FirstOrDefault(s => s.TheaterName == (string)t.tenRap);
+                                var theater = dailyShowtimes.FirstOrDefault(s => s.TheaterName == (string)t.tenRap);
                                 var times = ((IEnumerable<dynamic>)t.gioChieu).Select(g => new ShowtimeItem
                                 {
                                     Id = 0,
                                     StartTime = date.Date + TimeSpan.Parse((string)g),
-                                    NgayChieu = date.Date // Gán ngày chiếu rõ ràng
-
+                                    NgayChieu = date.Date
                                 }).ToList();
 
-                                if (existingTheater != null)
-                                {
-                                    existingTheater.Showtimes.AddRange(times);
-                                }
+                                if (theater != null)
+                                    theater.Showtimes.AddRange(times);
                                 else
-                                {
-                                    showtimes.Add(new TheaterShowtimes
+                                    dailyShowtimes.Add(new TheaterShowtimes
                                     {
                                         TheaterName = (string)t.tenRap,
+                                        Region = (string)t.region,      // <== Lấy từ API
+                                        CinemaId = (int)t.maRap,        // <== Lấy từ API
                                         Showtimes = times
                                     });
-                                }
+
                             }
                         }
+
+                        showtimeMap[formattedDate] = dailyShowtimes;
                     }
-                    catch
-                    {
-                        continue;
-                    }
+                    catch { continue; }
                 }
             }
 
+            // 5. Chọn ngày mặc định (ngày đầu tiên có lịch)
+            DateTime selected = dateList.FirstOrDefault();
 
-            // 5. Gán dữ liệu về ViewModel
-            movie.Regions = regions ?? new();
-            movie.Cinemas = cinemas ?? new();
-            movie.AvailableDates = dateList ?? new();
-            movie.ShowtimesByTheater = showtimes ?? new();
-            movie.SelectedDate = selected; // gán ngày người dùng chọn
+            // 6. Gán dữ liệu vào ViewModel
+            movie.Regions = regions;
+            movie.Cinemas = cinemas;
+            movie.AvailableDates = dateList;
+            movie.SelectedDate = selected;
+            movie.AllShowtimes = showtimeMap;
+
+            // Tùy chọn: nếu muốn giữ lại hiển thị hôm nay trong phần đầu tiên
+            movie.ShowtimesByTheater = showtimeMap.TryGetValue(selected.ToString("yyyy-MM-dd"), out var todayList)
+                ? todayList
+                : new();
 
             return View(movie);
         }

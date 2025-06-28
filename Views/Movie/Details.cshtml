@@ -1,4 +1,5 @@
-﻿
+﻿@using Newtonsoft.Json
+@using Newtonsoft.Json.Serialization
 <!-- Banner -->
 <div class="banner position-relative bg-black overflow-hidden" style="height: 500px;">
     <img src="~/images/default-banner-detail.jpg" alt="banner dan da dan"
@@ -121,99 +122,67 @@
             <div class="col-md-7">
                 <div class="d-flex gap-2 flex-wrap" id="date-buttons">
                     @{
-                        var availableDates = Model.AvailableDates as List<DateTime> ?? new();
+                        var availableDates = Model.AvailableDates ?? new List<DateTime>();
                         var selectedDate = Model.SelectedDate.Date;
                     }
 
-                    @if (availableDates.Count > 0)
+                    @foreach (var date in availableDates)
                     {
-                        foreach (var date in availableDates)
-                        {
-                            var isActive = date.Date == selectedDate;
-
-                            <form method="get" asp-controller="Movie" asp-action="Details" class="d-inline">
-                                <input type="hidden" name="id" value="@Model.IdMovie" />
-                                <input type="hidden" name="selectedDate" value="@date.ToString("yyyy-MM-dd")" />
-
-                                <button type="submit" class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")">
-                                    @date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))<br />
-                                    @date.ToString("dd/MM")
-                                </button>
-                            </form>
-                        }
+                        var isActive = date.Date == selectedDate;
+                        <button type="button" class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")"
+                                data-date="@date.ToString("yyyy-MM-dd")">
+                            @date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))<br />
+                            @date.ToString("dd/MM")
+                        </button>
                     }
-
                 </div>
             </div>
+
             <div class="col-md-5 text-md-end">
                 <div class="row g-2">
                     <div class="col">
-                        <select class="form-select form-select-sm">
+                        <select id="region-select" class="form-select form-select-sm">
+                            
                             @foreach (var region in Model.Regions)
                             {
-                                <option>@region</option>
+                                <option value="@region">@region</option>
                             }
                         </select>
                     </div>
                     <div class="col">
-                        <select class="form-select form-select-sm">
-                            <option selected>Tất cả rạp</option>
-                            @foreach (var rap in Model.Cinemas)
+                        <select id="cinema-select" class="form-select form-select-sm">
+                            <option value="">Tất cả rạp</option>
+                            @foreach (var cinema in Model.Cinemas)
                             {
-                                <option>@rap.TenRap</option>
+                                <option value="@cinema.MaRap" data-region="@cinema.Region">
+                                    @cinema.TenRap
+                                </option>
                             }
                         </select>
+
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Danh sách lịch chiếu theo rạp -->
-        <!-- Danh sách lịch chiếu theo rạp -->
-        <div class="mt-4">
-            @{
-                var theaters = Model.ShowtimesByTheater as List<MovieTicketWebsite.Models.TheaterShowtimes> ?? new();
-                // KHÔNG cần lại dòng: var selectedDate = ...
-            }
-
-            @if (theaters.Count > 0)
-            {
-                var index = 0;
-                foreach (var theater in theaters)
-                {
-                    // Lọc các suất chiếu đúng ngày
-                    var showtimesInSelectedDate = theater.Showtimes
-                    .Where(s => s.NgayChieu.Date == Model.SelectedDate.Date) // dùng Model.SelectedDate trực tiếp
-                    .ToList();
-
-                    if (showtimesInSelectedDate.Count == 0)
-                    {
-                        continue; // bỏ qua rạp không có suất chiếu trong ngày được chọn
-                    }
-
-                    var bgClass = index % 2 == 0 ? "bg-light" : "bg-white";
-                    <div class="py-4 px-3 @bgClass border-top border-bottom mb-3">
-                        <h6 class="fw-bold mb-3">@theater.TheaterName</h6>
-                        <div class="d-flex flex-wrap gap-2">
-                            @foreach (var show in showtimesInSelectedDate)
-                            {
-                                <button class="btn btn-outline-primary btn-sm">
-                                    @show.StartTime.ToString("HH:mm")
-                                </button>
-                            }
-                        </div>
-                    </div>
-                    index++;
-                }
-            }
-            else
-            {
-                <div class="text-center text-muted py-4">Không có lịch chiếu cho ngày hiện tại.</div>
-            }
+        <div class="mt-4" id="showtime-list">
+            <!-- Dữ liệu sẽ được render bằng JS -->
         </div>
-
-
     </div>
+
+    <!-- Dữ liệu showtimes JSON -->
+    <script type="application/json" id="all-showtimes-data">
+        @Html.Raw(JsonConvert.SerializeObject(
+                     Model.AllShowtimes,
+                     new JsonSerializerSettings
+            {
+                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
+            }))
+    </script>
+
+
+
 
 @* <!--movie showtime--> *@
 @* <div class="movie_showtime"> *@
@@ -240,6 +209,7 @@
 @section Scripts {
     <script src="~/js/play-trailer.js" defer></script>
     <script src="~/js/movie-showtime.js" defer></script>
+
 }
 
 

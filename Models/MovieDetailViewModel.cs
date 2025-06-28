@@ -23,5 +23,6 @@
         public List<DateTime> AvailableDates { get; set; } = new();
         public DateTime SelectedDate { get; set; }
 
+        public Dictionary<string, List<TheaterShowtimes>> AllShowtimes { get; set; }
     }
 }
