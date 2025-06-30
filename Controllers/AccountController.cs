@@ -10,10 +10,12 @@ namespace MovieTicketWebsite.Controllers
     public class AccountController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _baseApiUrl;
 
-        public AccountController(IHttpClientFactory httpClientFactory)
+        public AccountController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         [HttpGet]
@@ -32,7 +34,7 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.GetAsync("http://api.dvxuanbac.com:2030/Api/User/GetInfo");
+                var response = await client.GetAsync($"{_baseApiUrl}/user/getinfo"); // ✅ sử dụng baseUrl
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonString = await response.Content.ReadAsStringAsync();
@@ -79,7 +81,8 @@ namespace MovieTicketWebsite.Controllers
             var json = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            var request = new HttpRequestMessage(HttpMethod.Post, "http://api.dvxuanbac.com:2030/Api/User/ChangePw");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseApiUrl}/user/changepw");
+
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             request.Content = content;
 
@@ -123,7 +126,8 @@ namespace MovieTicketWebsite.Controllers
             try
             {
                 // ❗ Dùng GET vì API chỉ cho phép GET
-                var response = await client.GetAsync("http://api.dvxuanbac.com:2030/Api/User/Logout");
+                var response = await client.GetAsync($"{_baseApiUrl}/user/logout");
+
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 // ✅ Xóa session sau khi gửi logout API

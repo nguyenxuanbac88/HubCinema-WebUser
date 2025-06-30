@@ -7,10 +7,12 @@ namespace MovieTicketWebsite.Controllers
     public class RegisterController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _baseApiUrl;
 
-        public RegisterController(IHttpClientFactory httpClientFactory)
+        public RegisterController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         [HttpPost]
@@ -32,7 +34,7 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/register", content);
+                var response = await client.PostAsync($"{_baseApiUrl}/auth/register", content);
                 var responseString = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
