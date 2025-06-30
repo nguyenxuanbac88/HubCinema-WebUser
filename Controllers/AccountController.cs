@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
-using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Text;
 
 namespace MovieTicketWebsite.Controllers
 {
@@ -34,11 +32,11 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.GetAsync($"{_baseApiUrl}/user/getinfo"); // ✅ sử dụng baseUrl
+                var response = await client.GetAsync($"{_baseApiUrl}/user/getinfo");
+
                 if (response.IsSuccessStatusCode)
                 {
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(jsonString);
+                    var userInfo = await response.Content.ReadFromJsonAsync<UserInfo>();
                     return View(userInfo);
                 }
                 else if (response.StatusCode == HttpStatusCode.Unauthorized)
@@ -78,13 +76,13 @@ namespace MovieTicketWebsite.Controllers
             };
 
             var client = _httpClientFactory.CreateClient();
-            var json = JsonConvert.SerializeObject(requestBody);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            var content = JsonContent.Create(requestBody); // ✅ dùng System.Net.Http.Json
 
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseApiUrl}/user/changepw");
-
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            request.Content = content;
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseApiUrl}/user/changepw")
+            {
+                Headers = { Authorization = new AuthenticationHeaderValue("Bearer", token) },
+                Content = content
+            };
 
             try
             {
@@ -108,7 +106,6 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Profile");
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
@@ -125,17 +122,13 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                // ❗ Dùng GET vì API chỉ cho phép GET
                 var response = await client.GetAsync($"{_baseApiUrl}/user/logout");
 
-                var responseBody = await response.Content.ReadAsStringAsync();
-
-                // ✅ Xóa session sau khi gửi logout API
+                var result = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>(); // ✅ dùng ReadFromJsonAsync
                 HttpContext.Session.Clear();
 
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = JsonConvert.DeserializeObject<Dictionary<string, string>>(responseBody);
                     TempData["LogoutMessage"] = result != null && result.ContainsKey("message")
                         ? result["message"]
                         : "Đăng xuất thành công.";
@@ -147,13 +140,11 @@ namespace MovieTicketWebsite.Controllers
             }
             catch (Exception ex)
             {
-                HttpContext.Session.Clear(); // Dù lỗi vẫn xóa session
+                HttpContext.Session.Clear();
                 TempData["LogoutMessage"] = $"Lỗi kết nối API: {ex.Message}";
             }
 
             return RedirectToAction("Index", "Home");
         }
-
-
     }
 }
