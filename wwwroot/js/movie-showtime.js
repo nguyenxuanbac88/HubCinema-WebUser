@@ -1,94 +1,89 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const dateButtons = document.getElementById("date-buttons");
-    const regionSelect = document.querySelector("select#region-select");
-    const cinemaSelect = document.querySelector("select#cinema-select");
-    const showtimeContainer = document.querySelector(".movie_showtime .mt-4");
-    const allShowtimesJson = document.getElementById("all-showtimes-data")?.textContent;
+    const allShowtimesEl = document.getElementById("all-showtimes-data");
+    if (!allShowtimesEl) return;
 
-    if (!dateButtons || !showtimeContainer || !allShowtimesJson) return;
+    const allShowtimes = JSON.parse(allShowtimesEl.textContent);
+    const showtimeContainer = document.getElementById("showtime-list");
+    const dateButtons = document.querySelectorAll("#date-buttons button");
+    const regionSelect = document.getElementById("region-select");
+    const cinemaSelect = document.getElementById("cinema-select");
 
-    const allShowtimes = JSON.parse(allShowtimesJson);
-
-    let selectedDate = dateButtons.querySelector(".btn-primary")?.getAttribute("data-date");
-    let selectedRegion = "";
-    let selectedCinema = "";
-
-    function renderShowtimes() {
-        const theaters = allShowtimes[selectedDate] || [];
-        let html = "";
-
-        const filteredTheaters = theaters.filter(theater => {
-            const matchRegion = !selectedRegion || theater.region === selectedRegion;
-            const matchCinema = !selectedCinema || theater.cinemaId.toString() === selectedCinema;
-            return matchRegion && matchCinema;
-        });
-
-        if (filteredTheaters.length === 0) {
-            showtimeContainer.innerHTML = `<div class="text-center text-muted py-4">Không có lịch chiếu cho lựa chọn này.</div>`;
+    function renderShowtimes(showtimes) {
+        if (!showtimes.length) {
+            showtimeContainer.innerHTML = '<div class="text-muted">Không có suất chiếu nào.</div>';
             return;
         }
 
-        filteredTheaters.forEach((theater, index) => {
-            const bgClass = index % 2 === 0 ? "bg-light" : "bg-white";
-            html += `<div class="py-4 px-3 ${bgClass} border-top border-bottom mb-3">
-                        <h6 class="fw-bold mb-3">${theater.theaterName}</h6>
-                        <div class="d-flex flex-wrap gap-2">`;
-
-            (theater.showtimes || []).forEach(show => {
-                const time = new Date(show.startTime).toLocaleTimeString([], {
-                    hour: '2-digit', minute: '2-digit', hour12: false
-                });
-                html += `<button class="btn btn-outline-primary btn-sm">${time}</button>`;
-            });
-
-            html += `</div></div>`;
+        const grouped = {};
+        showtimes.forEach(item => {
+            const key = `${item.tenRap}__${item.maRap}`;
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(...item.gioChieu);
         });
+
+        let html = '';
+        for (const [key, gioChieuList] of Object.entries(grouped)) {
+            const [tenRap] = key.split('__');
+            html += `
+                <div class="mb-4">
+                    <h6 class="fw-bold">${tenRap}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        ${gioChieuList.map(g => `<span class="badge bg-secondary">${g}</span>`).join("")}
+                    </div>
+                </div>
+            `;
+        }
 
         showtimeContainer.innerHTML = html;
     }
 
-    // Chọn ngày
-    dateButtons.querySelectorAll("button").forEach(btn => {
-        btn.addEventListener("click", () => {
-            dateButtons.querySelectorAll("button").forEach(b => {
-                b.classList.remove("btn-primary", "text-white");
-                b.classList.add("btn-outline-secondary");
-            });
+    function applyFilters() {
+        const selectedDate = document.querySelector("#date-buttons button.btn-primary")?.dataset.date;
+        const selectedRegion = regionSelect.value;
+        const selectedCinema = cinemaSelect.value;
 
+        const filtered = allShowtimes.filter(item => {
+            const matchDate = item.date === selectedDate;
+            const matchRegion = selectedRegion
+                ? item.regions && item.regions.includes(selectedRegion)
+                : true;
+            const matchCinema = selectedCinema ? item.maRap == selectedCinema : true;
+            return matchDate && matchRegion && matchCinema;
+        });
+
+        renderShowtimes(filtered);
+    }
+
+
+    // Ngày
+    dateButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            dateButtons.forEach(b => b.classList.remove("btn-primary", "text-white"));
             btn.classList.add("btn-primary", "text-white");
             btn.classList.remove("btn-outline-secondary");
-
-            selectedDate = btn.getAttribute("data-date");
-            renderShowtimes();
+            applyFilters();
         });
     });
 
-    // Chọn vùng (region)
-    regionSelect?.addEventListener("change", () => {
-        selectedRegion = regionSelect.value;
+    // Region
+    regionSelect.addEventListener("change", () => {
+        const selectedRegion = regionSelect.value;
 
-        // Ẩn rạp không thuộc vùng đã chọn
-        Array.from(cinemaSelect.options).forEach(option => {
-            if (!option.value) return; // bỏ qua "Tất cả rạp"
-            const region = option.dataset.region;
-            option.hidden = selectedRegion && region !== selectedRegion;
+        Array.from(cinemaSelect.options).forEach(opt => {
+            const optRegion = opt.getAttribute("data-region");
+            opt.hidden = selectedRegion && optRegion !== selectedRegion;
         });
 
-        // Reset nếu rạp đang chọn không nằm trong vùng mới
-        if (cinemaSelect.selectedOptions[0]?.hidden) {
-            cinemaSelect.value = "";
-            selectedCinema = "";
-        }
+        const currentCinema = cinemaSelect.value;
+        const isVisible = cinemaSelect.querySelector(`option[value="${currentCinema}"]:not([hidden])`);
+        if (!isVisible) cinemaSelect.value = "";
 
-        renderShowtimes();
+        applyFilters();
     });
 
-    // Chọn rạp
-    cinemaSelect?.addEventListener("change", () => {
-        selectedCinema = cinemaSelect.value;
-        renderShowtimes();
-    });
+    // Rạp
+    cinemaSelect.addEventListener("change", applyFilters);
 
-    // Render lần đầu
-    renderShowtimes();
+    // Lần đầu
+    applyFilters();
 });

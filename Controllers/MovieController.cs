@@ -7,127 +7,89 @@ namespace MovieTicketWebsite.Controllers
     public class MovieController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _baseApiUrl;
 
-        public MovieController(IHttpClientFactory httpClientFactory)
+        public MovieController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         public async Task<IActionResult> Details(int id)
         {
             var client = _httpClientFactory.CreateClient();
 
-            // 1. Lấy thông tin phim
-            var movieResponse = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Public/GetMovieById/{id}");
+            // Lấy thông tin phim
+            var movieResponse = await client.GetStringAsync($"{_baseApiUrl}/Public/GetMovieById/{id}");
             var movie = JsonConvert.DeserializeObject<MovieDetailViewModel>(movieResponse);
             movie.TrailerURL = ConvertYoutubeUrlToEmbed(movie.TrailerURL);
 
-            // 2. Lấy regions + cinemas
-            var filterDataResp = await client.GetStringAsync("http://api.dvxuanbac.com:2030/api/Schedule/filter-data");
+            // Lấy regions + cinemas
+            var filterDataResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/filter-data");
             dynamic filterData = JsonConvert.DeserializeObject(filterDataResp);
 
-            var regions = new List<string>();
-            var cinemas = new List<CinemaInfo>();
+            var regions = ((IEnumerable<dynamic>)filterData?.data?.regions)
+                ?.Select(r => r?.ToString()).OfType<string>().ToList() ?? new();
 
-            try
-            {
-                var rawRegions = filterData?.data?.regions as IEnumerable<dynamic>;
-                if (rawRegions != null)
-                    regions = rawRegions.Select(r => r?.ToString()).OfType<string>().ToList();
-
-                var rawCinemas = filterData?.data?.cinemas as IEnumerable<dynamic>;
-                if (rawCinemas != null)
+            var cinemas = ((IEnumerable<dynamic>)filterData?.data?.cinemas)
+                ?.Select(c => new CinemaInfo
                 {
-                    cinemas = rawCinemas.Select(c => new CinemaInfo
-                    {
-                        MaRap = (int)c.maRap,
-                        TenRap = (string)c.tenRap,
-                        Region = (string)c.region
-                    }).ToList();
-                }
-            }
-            catch
-            {
-                regions = new();
-                cinemas = new();
-            }
+                    MaRap = (int)c.maRap,
+                    TenRap = (string)c.tenRap,
+                    Region = (string)c.region
+                }).ToList() ?? new();
 
-            // 3. Lấy danh sách ngày có lịch chiếu
+            // Lấy danh sách ngày chiếu
             var dateList = new List<DateTime>();
             try
             {
-                var datesResp = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Schedule/dates?maPhim={id}");
+                var datesResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/dates?maPhim={id}");
                 dynamic datesData = JsonConvert.DeserializeObject(datesResp);
                 var rawDates = datesData?.data as IEnumerable<dynamic>;
-                if (rawDates != null)
-                    dateList = rawDates.Select(d => DateTime.Parse((string)d)).ToList();
+                dateList = rawDates?.Select(d => DateTime.Parse((string)d)).ToList() ?? new();
             }
-            catch
-            {
-                dateList = new();
-            }
+            catch { }
 
-            // 4. Lấy tất cả lịch chiếu cho mỗi ngày
-            var showtimeMap = new Dictionary<string, List<TheaterShowtimes>>();
-            if (dateList.Any())
+            // Chuẩn bị allShowtimes
+            var allShowtimes = new List<object>();
+            foreach (var date in dateList)
             {
-                foreach (var date in dateList)
+                var formattedDate = date.ToString("yyyy-MM-dd");
+                var showtimeResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule?maPhim={id}&date={formattedDate}");
+                dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
+
+                var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
+                if (rawShowtimes != null)
                 {
-                    try
+                    foreach (var item in rawShowtimes)
                     {
-                        string formattedDate = date.ToString("yyyy-MM-dd");
-                        var showtimeResp = await client.GetStringAsync($"http://api.dvxuanbac.com:2030/api/Schedule?maPhim={id}&date={formattedDate}");
-                        dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
+                        var gioChieuList = ((IEnumerable<dynamic>)item.gioChieu)
+                            .Select(g => g.ToString())
+                            .ToList();
 
-                        var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
-                        var dailyShowtimes = new List<TheaterShowtimes>();
-
-                        if (rawShowtimes != null)
+                        allShowtimes.Add(new
                         {
-                            foreach (var t in rawShowtimes)
-                            {
-                                var theater = dailyShowtimes.FirstOrDefault(s => s.TheaterName == (string)t.tenRap);
-                                var times = ((IEnumerable<dynamic>)t.gioChieu).Select(g => new ShowtimeItem
-                                {
-                                    Id = 0,
-                                    StartTime = date.Date + TimeSpan.Parse((string)g),
-                                    NgayChieu = date.Date
-                                }).ToList();
+                            maRap = (int)item.maRap,
+                            tenRap = (string)item.tenRap,
+                            regions = new List<string>
+{
+    (string)item.region ?? cinemas.FirstOrDefault(c => c.MaRap == (int)item.maRap)?.Region,
+    "Toàn quốc"
+},
 
-                                if (theater != null)
-                                    theater.Showtimes.AddRange(times);
-                                else
-                                    dailyShowtimes.Add(new TheaterShowtimes
-                                    {
-                                        TheaterName = (string)t.tenRap,
-                                        Region = (string)t.region,      // <== Lấy từ API
-                                        CinemaId = (int)t.maRap,        // <== Lấy từ API
-                                        Showtimes = times
-                                    });
-
-                            }
-                        }
-
-                        showtimeMap[formattedDate] = dailyShowtimes;
+                            date = formattedDate,
+                            gioChieu = gioChieuList
+                        });
                     }
-                    catch { continue; }
                 }
             }
 
-            // 5. Chọn ngày mặc định (ngày đầu tiên có lịch)
-            DateTime selected = dateList.FirstOrDefault();
-
-            // 6. Gán dữ liệu vào ViewModel
+            // Gán vào ViewModel
             movie.Regions = regions;
             movie.Cinemas = cinemas;
             movie.AvailableDates = dateList;
-            movie.SelectedDate = selected;
-            movie.AllShowtimes = showtimeMap;
-
-            // Tùy chọn: nếu muốn giữ lại hiển thị hôm nay trong phần đầu tiên
-            movie.ShowtimesByTheater = showtimeMap.TryGetValue(selected.ToString("yyyy-MM-dd"), out var todayList)
-                ? todayList
-                : new();
+            movie.SelectedDate = dateList.FirstOrDefault();
+            movie.AllShowtimesRawJson = JsonConvert.SerializeObject(allShowtimes); // thêm property này
 
             return View(movie);
         }

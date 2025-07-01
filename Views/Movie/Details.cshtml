@@ -142,7 +142,6 @@
                 <div class="row g-2">
                     <div class="col">
                         <select id="region-select" class="form-select form-select-sm">
-                            
                             @foreach (var region in Model.Regions)
                             {
                                 <option value="@region">@region</option>
@@ -159,57 +158,28 @@
                                 </option>
                             }
                         </select>
-
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Danh sách lịch chiếu theo rạp -->
+        <!-- Danh sách lịch chiếu -->
         <div class="mt-4" id="showtime-list">
-            <!-- Dữ liệu sẽ được render bằng JS -->
+            <!-- Sẽ được render bằng JS -->
         </div>
     </div>
 
-    <!-- Dữ liệu showtimes JSON -->
+    <!-- Dữ liệu showtimes (dạng JSON) -->
     <script type="application/json" id="all-showtimes-data">
-        @Html.Raw(JsonConvert.SerializeObject(
-                     Model.AllShowtimes,
-                     new JsonSerializerSettings
-            {
-                ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
-            }))
+        @Html.Raw(Model.AllShowtimesRawJson)
     </script>
-
-
-
-
-@* <!--movie showtime--> *@
-@* <div class="movie_showtime"> *@
-@*     <div class="showtime_header"> *@
-
-@*     </div> *@
-
-@*     <div class="movie_filter"> *@
-
-@*     </div> *@
-
-@*     <div class="line"></div> *@
-
-@*     <div class="showtime_list"> *@
-@*         <div class="showtime_cinema"></div> *@
-@*         <div class="showtime_cinema"></div> *@
-@*         <div class="showtime_cinema"></div> *@
-@*         <div class="showtime_cinema"></div> *@
-@*     </div> *@
 
 </div>
 
 
 @section Scripts {
     <script src="~/js/play-trailer.js" defer></script>
-    <script src="~/js/movie-showtime.js" defer></script>
-
+    <script src="~/js/movie-showtime.js" asp-append-version="true"></script>
 }
 
 

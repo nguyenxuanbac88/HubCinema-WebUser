@@ -24,5 +24,7 @@
         public DateTime SelectedDate { get; set; }
 
         public Dictionary<string, List<TheaterShowtimes>> AllShowtimes { get; set; }
+        public string AllShowtimesRawJson { get; set; } // để xuất ra <script> trong Razor View
+
     }
 }
