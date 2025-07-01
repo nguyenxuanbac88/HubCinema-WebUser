@@ -2,7 +2,7 @@
 window.openConfirmPasswordModal = function () {
     const modal = document.getElementById('confirmPasswordModal');
     if (modal) {
-        modal.style.display = 'block';
+        modal.style.display = 'flex';
     } else {
         console.warn('Không tìm thấy confirmPasswordModal');
     }

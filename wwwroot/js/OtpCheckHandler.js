@@ -1,35 +1,39 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
-    const otpForm = document.getElementById("otpCheckForm");
-    const errorDiv = document.getElementById("otpError");
-
-    otpForm.addEventListener("submit", async function (e) {
+﻿
+    document.getElementById("otpForm").addEventListener("submit", async function (e) {
         e.preventDefault();
-        errorDiv.classList.add("d-none");
 
-        const otp = document.getElementById("inputOtp").value;
+    const form = e.target;
+    const formData = new FormData(form);
 
-        const res = await fetch("http://api.dvxuanbac.com:2030/api/auth/check-otp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                username: window.username,
-                otp: otp,
-                otpToken: window.otpToken
-            })
+    const response = await fetch(form.action, {
+        method: "POST",
+    body: formData
         });
 
-        const data = await res.json();
+    const result = await response.json();
 
-        if (res.ok && data.message.includes("hợp lệ")) {
-            window.verifiedOtp = otp;
-            closeOTPCheckModal();
-            openConfirmPasswordModal();
+    const errorDiv = document.getElementById("otpError");
+    const successDiv = document.getElementById("otpSuccess");
+
+    if (result.success) {
+        errorDiv.style.display = "none";
+    successDiv.textContent = result.message;
+    successDiv.style.display = "block";
+
+            // Ẩn modal OTP sau 1 giây và mở modal đặt lại mật khẩu
+            setTimeout(() => {
+        closeOtpModal();
+
+    if (typeof openConfirmPasswordModal === "function") {
+        openConfirmPasswordModal();
+                }
+            }, 1000);
         } else {
-            errorDiv.textContent = data.message || "OTP không đúng.";
-            errorDiv.classList.remove("d-none");
+        successDiv.style.display = "none";
+    errorDiv.textContent = result.message;
+    errorDiv.style.display = "block";
         }
     });
 
-    window.openOTPCheckModal = () => document.getElementById("otpCheckModal").style.display = "flex";
-    window.closeOTPCheckModal = () => document.getElementById("otpCheckModal").style.display = "none";
-});
+    
+
