@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -69,33 +70,29 @@ namespace MovieTicketWebsite.Controllers
                 return RedirectToAction("Profile");
             }
 
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
             var requestBody = new
             {
                 oldPassword = model.OldPassword,
                 newPassword = model.NewPassword
             };
 
-            var client = _httpClientFactory.CreateClient();
-            var content = JsonContent.Create(requestBody); // ✅ dùng System.Net.Http.Json
-
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_baseApiUrl}/user/changepw")
-            {
-                Headers = { Authorization = new AuthenticationHeaderValue("Bearer", token) },
-                Content = content
-            };
-
             try
             {
-                var response = await client.SendAsync(request);
-                var responseBody = await response.Content.ReadAsStringAsync();
+                var response = await client.PostAsJsonAsync($"{_baseApiUrl}/user/changepw", requestBody);
 
-                if (response.IsSuccessStatusCode)
+                var responseBody = await response.Content.ReadAsStringAsync();
+                dynamic result = JsonConvert.DeserializeObject(responseBody);
+
+                if (response.IsSuccessStatusCode && result.status == 1)
                 {
                     TempData["ChangePasswordMessage"] = "Đổi mật khẩu thành công.";
                 }
                 else
                 {
-                    TempData["ChangePasswordMessage"] = $"Lỗi: {response.StatusCode}";
+                    TempData["ChangePasswordMessage"] = $" {result.message}";
                 }
             }
             catch (Exception ex)
@@ -105,6 +102,7 @@ namespace MovieTicketWebsite.Controllers
 
             return RedirectToAction("Profile");
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
