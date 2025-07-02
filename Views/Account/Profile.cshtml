@@ -120,7 +120,7 @@
                                     <i class="bi bi-envelope-fill"></i>
                                 </span>
                                 <input type="email" class="form-control bg-light border-0" value="@Model.Email" disabled />
-                                <span class="input-group-text bg-light border-0 text-warning" style="cursor: pointer;">Thay đổi</span>
+                                <span class="input-group-text bg-light border-0 text-warning" style="cursor: pointer;" onclick="openChangeEmailModal()">Thay đổi</span>
                             </div>
                         </div>
 
@@ -171,5 +171,19 @@
     </div>
 </div>
 
+
 @Html.Partial("_ChangePasswordModal")
+@Html.Partial("_ChangeEmail")
+@Html.Partial("_ConfirmChangeEmail")
 <script src="~/js/ChangePassHandler.js"></script>
+@if (TempData["OpenConfirmChangeEmailModal"] != null)
+{
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (typeof openConfirmChangeEmailModal === "function") {
+                openConfirmChangeEmailModal(); // ✅ mở modal
+            }
+        });
+    </script>
+}
+}

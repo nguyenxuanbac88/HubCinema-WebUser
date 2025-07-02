@@ -1,0 +1,84 @@
+﻿@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var otpToken = HttpContextAccessor.HttpContext?.Session.GetString("OtpChangeEmailToken");
+}
+
+<div id="confirmChangeEmailModal" class="custom-modal-overlay" style="display:none;">
+    <div class="custom-modal-box">
+        <button class="custom-modal-close" onclick="closeConfirmChangeEmailModal()">×</button>
+
+        <div class="text-center mb-4">
+            <img src="/images/hub_logo_new.png" width="150" alt="Confirm OTP" />
+            <h4 class="fw-bold mt-2">Xác Nhận OTP</h4>
+        </div>
+
+        <form asp-controller="Account" asp-action="ConfirmChangeEmail" method="post">
+            <input type="hidden" name="otpToken" value="@otpToken" />
+
+            <div class="form-group mb-3">
+                <div class="d-flex justify-content-between gap-2">
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                    <input type="text" maxlength="1" class="form-control text-center otp-digit-confirm" inputmode="numeric" pattern="\d*" />
+                </div>
+                <input type="hidden" id="otpConfirmChange" name="otp" />
+            </div>
+
+            <button type="submit" class="btn w-100 text-white fw-bold" style="background: #E48600;">
+                XÁC NHẬN
+            </button>
+        </form>
+
+        @if (TempData["ConfirmEmailMessage"] != null)
+        {
+            <div class="alert alert-info alert-dismissible fade show mt-3" role="alert">
+                @TempData["ConfirmEmailMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    window.openConfirmChangeEmailModal = function () {
+        document.getElementById("confirmChangeEmailModal").style.display = "flex";
+    }
+
+    window.closeConfirmChangeEmailModal = function () {
+        document.getElementById("confirmChangeEmailModal").style.display = "none";
+    }
+        const otpDigitsConfirm = document.querySelectorAll('.otp-digit-confirm');
+        const hiddenOtpInputConfirm = document.getElementById('otpConfirmChange');
+
+        otpDigitsConfirm.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
+                if (!/^\d$/.test(value)) {
+                    e.target.value = '';
+                    return;
+                }
+
+                if (index < otpDigitsConfirm.length - 1) {
+                    otpDigitsConfirm[index + 1].focus();
+                }
+
+                updateOtpConfirmHidden();
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    if (input.value === '' && index > 0) {
+                        otpDigitsConfirm[index - 1].focus();
+                    }
+                }
+            });
+        });
+
+        function updateOtpConfirmHidden() {
+            const otpValue = Array.from(otpDigitsConfirm).map(input => input.value).join('');
+            hiddenOtpInputConfirm.value = otpValue;
+        }
+</script>

@@ -144,5 +144,94 @@ namespace MovieTicketWebsite.Controllers
 
             return RedirectToAction("Index", "Home");
         }
+        [HttpPost]
+        public async Task<IActionResult> ChangeEmail(string emailNew)
+        {
+            var token = HttpContext.Session.GetString("AccessToken");
+            if (string.IsNullOrEmpty(token))
+            {
+                TempData["ChangeEmailMessage"] = "Không tìm thấy thông tin đăng nhập.";
+                return RedirectToAction("Profile");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            var requestBody = new { emailNew = emailNew };
+
+            try
+            {
+                var response = await client.PostAsJsonAsync($"{_baseApiUrl}/user/changeemail", requestBody);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<Dictionary<string, object>>(responseBody);
+
+                if (response.IsSuccessStatusCode && result.ContainsKey("otpToken"))
+                {
+                    string otpToken = result["otpToken"]?.ToString();
+                    if (!string.IsNullOrEmpty(otpToken))
+                    {
+                        HttpContext.Session.SetString("OtpChangeEmailToken", otpToken);
+                    }
+
+                    TempData["ChangeEmailMessage"] = "Đã gửi mã OTP đến email mới.";
+                    TempData["OpenConfirmChangeEmailModal"] = "true";
+                }
+                else
+                {
+                    TempData["ChangeEmailMessage"] = result.ContainsKey("message") ? result["message"]?.ToString() : "Có lỗi xảy ra.";
+                }
+            }
+
+            catch (Exception ex)
+            {
+                TempData["ChangeEmailMessage"] = $"Lỗi kết nối: {ex.Message}";
+            }
+
+            return RedirectToAction("Profile");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmChangeEmail(string otp)
+        {
+            var token = HttpContext.Session.GetString("AccessToken");
+            var otpToken = HttpContext.Session.GetString("OtpChangeEmailToken");
+
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(otpToken) || string.IsNullOrEmpty(otp))
+            {
+                TempData["ConfirmEmailMessage"] = "Thiếu thông tin xác thực.";
+                return RedirectToAction("Profile");
+            }
+
+            var requestBody = new { otpToken = otpToken, otp = otp };
+
+            var client = _httpClientFactory.CreateClient();
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            try
+            {
+                var response = await client.PostAsJsonAsync($"{_baseApiUrl}/user/confirmchangeemail", requestBody);
+                var responseBody = await response.Content.ReadAsStringAsync();
+                dynamic result = JsonConvert.DeserializeObject(responseBody);
+
+                if (response.IsSuccessStatusCode && result.status == 1)
+                {
+                    TempData["ConfirmEmailMessage"] = "Thay đổi email thành công.";
+                    HttpContext.Session.Remove("OtpChangeEmailToken");
+                }
+                else
+                {
+                    TempData["ConfirmEmailMessage"] = $"Lỗi: {result.message}";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ConfirmEmailMessage"] = $"Lỗi kết nối: {ex.Message}";
+            }
+
+            return RedirectToAction("Profile");
+        }
+
+
     }
 }

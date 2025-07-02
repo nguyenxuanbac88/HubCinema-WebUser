@@ -1,7 +1,9 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const message = '@(TempData["ChangePasswordMessage"] ?? "").Trim()';
     if (message !== '') {
-        openChangePasswordModal();
+        // Hiển thị thông báo dạng toast hoặc alert nếu muốn
+        console.log("ChangePasswordMessage:", message);
+        // KHÔNG mở modal ở đây
     }
 });
 function openChangePasswordModal() {
