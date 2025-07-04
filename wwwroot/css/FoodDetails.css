@@ -1,0 +1,36 @@
+﻿.product-image {
+    border: 2px solid #E48600;
+    border-radius: 10px;
+    padding: 10px;
+    width: 100%;
+}
+
+.quantity-box {
+    width: 120px;
+}
+
+.btn-buy-now {
+    background-color: #E48600;
+    color: white;
+    min-width: 200px;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+    .btn-buy-now:hover {
+        background-color: #d85f1a;
+        color: white;
+    }
+
+.price-text {
+    font-size: 1.5rem;
+    color: ##E48600;
+    font-weight: 600;
+}
+
+.product-description {
+    font-size: 1rem;
+}

@@ -1,0 +1,39 @@
+﻿@model List<MovieTicketWebsite.Models.FoodViewModel>
+<!-- Dùng container-fluid và padding để giữ lề trái -->
+<div class="container-fluid px-5 py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("ListFood", "Food")">Sản phẩm</a></li>
+            
+        </ol>
+    </nav>
+    <h2 class="fw-bold mb-4">Thực phẩm & Combo</h2>
+
+    <div class="row gx-4 gy-4">
+        @foreach (var food in Model)
+        {
+            <div class="col-lg-3 col-md-4 col-sm-6">
+                <div class="card product-card h-100">
+                    <!-- Hình + overlay -->
+                    <div class="product-image-wrapper">
+                        <img src="@food.ImageUrl" alt="@food.FoodName" class="product-img" />
+                        <a href="@Url.Action("FoodDetails", "Food", new { id = food.IdFood })" class="overlay-hover">
+                            <i class="bi bi-eye me-2"></i> Xem chi tiết
+                        </a>
+                    </div>
+
+                    <!-- Nội dung -->
+                    <div class="card-body text-start">
+                        <h6 class="card-title mb-1 fw-semibold">@food.FoodName</h6>
+                        <p class="text-danger fw-bold mb-2">@string.Format("{0:N0} ₫", food.Price)</p>
+                        <div class="d-flex gap-2">
+                            <a href="#" class="btn btn-buy-now w-100 text-center">Mua ngay</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
