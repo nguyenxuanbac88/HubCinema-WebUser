@@ -23,7 +23,13 @@
         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
         transition: box-shadow 0.3s ease;
     }
-
+@media (max-width: 576px) {
+    .combo img {
+        object-fit: contain;
+        max-height: 200px;
+        padding: 10px;
+    }
+}
         .combo img:hover {
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
         }
