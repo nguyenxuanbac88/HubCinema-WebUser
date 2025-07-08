@@ -16,7 +16,9 @@
             {
                 <div class="col-lg-3 col-md-4 col-6">
                     <div class="combo">
-                        <img src="@combo.ImageURL" alt="@combo.FoodName" />
+                         <a href="@Url.Action("ListFood", "Food")">
+                            <img src="@combo.ImageURL" alt="@combo.FoodName" class="img-fluid mb-2" />
+                        </a>
                         <h3>@combo.FoodName</h3>
                         <p>Giá: @combo.Price.ToString("N0")đ</p>
                     </div>
