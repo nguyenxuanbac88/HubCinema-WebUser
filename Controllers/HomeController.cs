@@ -44,4 +44,8 @@ public class HomeController : Controller
 
         return View(model);
     }
+    public IActionResult promotion()
+    {
+        return View();
+    }
 }
