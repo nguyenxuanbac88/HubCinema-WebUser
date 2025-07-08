@@ -7,15 +7,17 @@ namespace MovieTicketWebsite.Controllers
     public class CinemaController : Controller
     {
         private readonly HttpClient _httpClient;
+        private readonly string _baseApiUrl;
 
-        public CinemaController(IHttpClientFactory httpClientFactory)
+        public CinemaController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClient = httpClientFactory.CreateClient();
+            _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         public async Task<IActionResult> GetCinema(int id)
         {
-            var response = await _httpClient.GetAsync($"http://web.dvxuanbac.com:2030/api/Public/GetCinemaById/{id}");
+            var response = await _httpClient.GetAsync($"{_baseApiUrl}/Public/GetCinemaById/{id}");
             if (!response.IsSuccessStatusCode)
                 return NotFound("Cinema not found");
 
@@ -27,7 +29,7 @@ namespace MovieTicketWebsite.Controllers
 
         public async Task<IActionResult> GetAllCinemas()
         {
-            var response = await _httpClient.GetAsync("http://api.dvxuanbac.com:2030/api/Public/GetCinemas");
+            var response = await _httpClient.GetAsync($"{_baseApiUrl}/Public/GetCinemas");
 
             if (!response.IsSuccessStatusCode)
                 return View("Error"); // hoặc trả lỗi phù hợp

@@ -8,10 +8,12 @@ namespace MovieTicketWebsite.Controllers
     public class LoginController : Controller
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _baseApiUrl;
 
-        public LoginController(IHttpClientFactory httpClientFactory)
+        public LoginController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
+            _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         [HttpPost]
@@ -30,17 +32,23 @@ namespace MovieTicketWebsite.Controllers
             };
 
             var client = _httpClientFactory.CreateClient();
+            //chuyển đối tượng loginModel (chứa email và password) thành một chuỗi JSON.
             var jsonContent = JsonConvert.SerializeObject(loginModel);
+            // tạo một đối tượng StringContent chứa dữ liệu JSON (biến jsonContent) với mã hóa UTF-8 và đặt header
+            // Content-Type là "application/json". Đối tượng content này sẽ được dùng làm nội dung (body) của HTTP POST
+            // request khi gửi thông tin đăng nhập đến API.
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/login", content);
+                var response = await client.PostAsync($"{_baseApiUrl}/auth/login", content);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
                 {
+                    //sử dụng thư viện Newtonsoft.Json để chuyển đổi (deserialize) chuỗi JSON (responseBody) nhận được từ API thành một đối tượng động (dynamic).
                     dynamic result = JsonConvert.DeserializeObject(responseBody);
+                    //Nếu result khác null, nó sẽ lấy thuộc tính token từ đối tượng result. Nếu result là null, kết quả sẽ là null mà không gây lỗi.
                     string token = result?.token;
 
                     // Lưu token vào session
@@ -85,7 +93,7 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/forgot-password", content);
+                var response = await client.PostAsync($"{_baseApiUrl}/auth/forgot-password", content);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -150,7 +158,7 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/check-otp", content);
+                var response = await client.PostAsync($"{_baseApiUrl}/auth/check-otp", content);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)
@@ -214,7 +222,7 @@ namespace MovieTicketWebsite.Controllers
 
             try
             {
-                var response = await client.PostAsync("http://api.dvxuanbac.com:2030/api/auth/confirm-password", content);
+                var response = await client.PostAsync($"{_baseApiUrl}/auth/confirm-password", content);
                 var responseBody = await response.Content.ReadAsStringAsync();
 
                 if (response.IsSuccessStatusCode)

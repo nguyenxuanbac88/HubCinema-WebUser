@@ -5,16 +5,18 @@ using Newtonsoft.Json;
 public class HomeController : Controller
 {
     private readonly HttpClient _httpClient;
+    private readonly string _baseApiUrl;
 
-    public HomeController(IHttpClientFactory httpClientFactory)
+    public HomeController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClient = httpClientFactory.CreateClient();
+        _baseApiUrl = configuration["ApiSettings:BaseUrl"];
     }
 
     public async Task<IActionResult> Index()
     {
-        var movieUrl = "http://api.dvxuanbac.com:2030/api/Public/GetMovies";
-        var foodUrl = "http://api.dvxuanbac.com:2030/api/Public/GetFoods";
+        var movieUrl = $"{_baseApiUrl}/Public/GetMovies";
+        var foodUrl = $"{_baseApiUrl}/Public/GetFoods";
 
         List<Movie> movies = new();
         List<ComboUuDai> combos = new();
