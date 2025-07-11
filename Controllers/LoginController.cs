@@ -70,6 +70,14 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult GetJwt()
+        {
+            var token = HttpContext.Session.GetString("AccessToken");
+            if (string.IsNullOrEmpty(token)) return Unauthorized();
+            return Ok(new { token });
+        }
+
 
 
         [HttpPost]
