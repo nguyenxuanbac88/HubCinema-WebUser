@@ -10,7 +10,7 @@
 }
 
 .custom-modal-box {
-    background: url('/images/background.jpg') no-repeat center center;
+    background-color:white;
     background-size: cover;
     border-radius: 10px;
     padding: 30px;

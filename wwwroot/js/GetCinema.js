@@ -1,13 +1,33 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
-    const tabs = document.querySelectorAll(".tab-date");
+    const tabButtons = document.querySelectorAll(".tab-date");
+    const movieCards = document.querySelectorAll(".movie-card");
 
-    tabs.forEach(tab => {
-        tab.addEventListener("click", function () {
-            // Xoá class active khỏi tất cả
-            tabs.forEach(t => t.classList.remove("active"));
+    if (tabButtons.length > 0) {
+        const firstTab = tabButtons[0];
+        const defaultDate = firstTab.getAttribute("data-date");
 
-            // Thêm class active vào tab đang click
-            this.classList.add("active");
+        // 1. Hiển thị ngày mặc định (tab đầu tiên)
+        filterCardsByDate(defaultDate);
+        tabButtons.forEach(btn => btn.classList.remove("active"));
+        firstTab.classList.add("active");
+
+        // 2. Gắn sự kiện click cho từng tab
+        tabButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const date = button.getAttribute("data-date");
+
+                tabButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+
+                filterCardsByDate(date);
+            });
         });
-    });
+    }
+
+    function filterCardsByDate(date) {
+        movieCards.forEach(card => {
+            const cardDate = card.getAttribute("data-date");
+            card.style.display = (cardDate === date) ? "block" : "none";
+        });
+    }
 });

@@ -1,4 +1,8 @@
 ﻿@model MovieTicketWebsite.Models.Cinema
+@{
+    var movieShowList = ViewBag.MovieShowList as List<MovieWithShowtimes>;
+    var selectedDate = ViewBag.SelectedDate as string;
+}
 <link rel="stylesheet" href="~/css/GetCinema.css" />
 <script src="~/js/GetCinema.js"></script>
 <script src="~/js/BannerHandler.js"></script>
@@ -42,54 +46,63 @@
 
     <!-- Tabs ngày chiếu -->
     <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
+        @{
+            var availableDates = ViewBag.AvailableDates as List<string> ?? new();
+             selectedDate = ViewBag.SelectedDate as string;
 
-        <li class="nav-item">
-            <button class="btn tab-date active">Hôm Nay<br><small>@DateTime.Today.ToString("dd/MM")</small></button>
-        </li>
-        <li class="nav-item">
-            <button class="btn tab-date">Thứ Bảy<br><small>@DateTime.Today.AddDays(1).ToString("dd/MM")</small></button>
-        </li>
-        <li class="nav-item">
-            <button class="btn tab-date">Chủ Nhật<br><small>@DateTime.Today.AddDays(2).ToString("dd/MM")</small></button>
-        </li>
+            foreach (var dateStr in availableDates)
+            {
+                var date = DateTime.Parse(dateStr);
+                var isToday = date.Date == DateTime.Today;
+                var label = isToday ? "Hôm Nay" : date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"));
+                var shortDate = date.ToString("dd/MM");
+
+                <li class="nav-item">
+                    <button class="btn tab-date @(selectedDate == dateStr ? "active" : "")" data-date="@dateStr">
+                        @label<br /><small>@shortDate</small>
+                    </button>
+                </li>
+            }
+        }
     </ul>
+
+
     
 
     <!-- Danh sách phim -->
-    <div class="row row-cols-2 row-cols-md-6 g-4 mb-5">
-        @* Tạm thời chưa có API phim nên hiển thị demo *@
-        @{
-            var sampleMovies = new[] {
-        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
-        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
-        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
-        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
-        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
-        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
-        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
-        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
-        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
-        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
-        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
-        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" },
-        new { Title = "Bí Kíp Luyện Rồng", ImageUrl = "/images/dan-da-dan.jpg" },
-        new { Title = "Trạng Quỳnh", ImageUrl = "/images/bo-ngu-sieu-dang.jpg" },
-        new { Title = "Bóng Ma Cõi Mạng", ImageUrl = "/images/duoi-day-ho.jpg" },
-        new { Title = "Colorful Stage", ImageUrl = "/images/doraemon.jpg" }
-        };
-        }
-        @foreach (var movie in sampleMovies)
+    <div id="movieList" class="row row-cols-2 row-cols-md-6 g-4 mb-5">
+        @foreach (var movie in movieShowList)
         {
-            <div class="col">
-                <div class="card h-100">
-                    <img src="@movie.ImageUrl" class="card-img-top" alt="@movie.Title">
-                    <div class="card-body">
-                        <h6 class="card-title">@movie.Title</h6>
+            foreach (var entry in movie.ShowtimesByDate)
+            {
+                var date = entry.Key;
+                var showListByTheater = entry.Value;
+
+                // Tổng hợp toàn bộ giờ chiếu từ các rạp/phòng
+                var allShowtimes = showListByTheater
+                .SelectMany(t => t.Showtimes)
+                .Where(g => !string.IsNullOrWhiteSpace(g))
+                .ToList();
+
+                if (!allShowtimes.Any()) continue; // Bỏ qua nếu không có giờ chiếu
+
+                <div class="col movie-card" data-date="@date">
+                    <div class="card h-100">
+                        <img src="@movie.PosterUrl" class="card-img-top" alt="@movie.MovieTitle" />
+                        <div class="card-body">
+                            <h6 class="card-title">@movie.MovieTitle</h6>
+                            <p class="card-text text-muted">
+                                Giờ chiếu: @string.Join(", ", allShowtimes)
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }
     </div>
+
+
+
 
     <div class="row g-4 mb-5">
         <div class="col-md-6">
