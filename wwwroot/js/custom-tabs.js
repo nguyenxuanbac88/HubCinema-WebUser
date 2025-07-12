@@ -24,11 +24,19 @@
 document.addEventListener("DOMContentLoaded", function () {
     const showMoreBtn = document.getElementById("showMoreBtn");
     if (showMoreBtn) {
+        let expanded = false;
+
         showMoreBtn.addEventListener("click", function () {
             document.querySelectorAll(".movie-hidden").forEach(el => {
-                el.style.display = "block";
+                el.style.display = expanded ? "none" : "block";
             });
-            showMoreBtn.style.display = "none"; // Ẩn nút sau khi click
+
+            showMoreBtn.innerHTML = expanded
+                ? `Xem thêm <svg ...icon...></svg>`
+                : `Rút gọn`;
+
+            expanded = !expanded;
         });
     }
 });
+
