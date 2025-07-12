@@ -46,7 +46,26 @@ namespace MovieTicketWebsite.Controllers
                 var datesResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/dates?maPhim={id}");
                 dynamic datesData = JsonConvert.DeserializeObject(datesResp);
                 var rawDates = datesData?.data as IEnumerable<dynamic>;
-                dateList = rawDates?.Select(d => DateTime.Parse((string)d)).ToList() ?? new();
+                // Pseudocode:
+                // 1. Check if rawDates is not null.
+                // 2. Convert rawDates to a list of string or dynamic.
+                // 3. For each item, parse to DateTime safely (handle nulls and invalid formats).
+                // 4. If parsing fails, skip that item.
+
+                dateList = new List<DateTime>();
+                if (rawDates != null)
+                {
+                    foreach (var d in rawDates)
+                    {
+                        if (d == null) continue;
+                        // Fix for CS8197: Explicitly specify the type of the out variable 'dt' in DateTime.TryParse.
+                        if (DateTime.TryParse(d.ToString(), out DateTime dt))
+                        {
+                            dateList.Add(dt);
+                        }
+                    }
+
+                }
             }
             catch { }
 
@@ -64,22 +83,34 @@ namespace MovieTicketWebsite.Controllers
                     foreach (var item in rawShowtimes)
                     {
                         var gioChieuList = ((IEnumerable<dynamic>)item.gioChieu)
-                            .Select(g => g.ToString())
+                            .Select(g => new
+                            {
+                                gioChieu = (string)g.gioChieu,
+                                suatChieu = (int)g.suatChieu
+                            })
                             .ToList();
 
-                        allShowtimes.Add(new
+                        // Log giá trị của gioChieuList
+                        Console.WriteLine("gioChieuList: " + JsonConvert.SerializeObject(gioChieuList));
+
+
+
+                        var showtimeObj = new
                         {
                             maRap = (int)item.maRap,
                             tenRap = (string)item.tenRap,
                             regions = new List<string>
-{
-    (string)item.region ?? cinemas.FirstOrDefault(c => c.MaRap == (int)item.maRap)?.Region,
-    "Toàn quốc"
-},
-
+                            {
+                                (string)item.region ?? cinemas.FirstOrDefault(c => c.MaRap == (int)item.maRap)?.Region,
+                                "Toàn quốc"
+                            },
                             date = formattedDate,
                             gioChieu = gioChieuList
-                        });
+                        };
+
+                        allShowtimes.Add(showtimeObj);
+                        // Log giá trị của showtimeObj
+                        Console.WriteLine("showtimeObj: " + JsonConvert.SerializeObject(showtimeObj));
                     }
                 }
             }

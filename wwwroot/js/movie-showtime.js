@@ -28,13 +28,26 @@
                 <div class="mb-4">
                     <h6 class="fw-bold">${tenRap}</h6>
                     <div class="d-flex flex-wrap gap-2">
-                        ${gioChieuList.map(g => `<span class="badge bg-secondary">${g}</span>`).join("")}
+                        ${gioChieuList.map(g => 
+                            `<span class="badge bg-secondary showtime-badge" data-suat-chieu="${g.suatChieu}">${g.gioChieu}</span>`
+                        ).join("")}
                     </div>
                 </div>
             `;
         }
 
         showtimeContainer.innerHTML = html;
+
+        // Gắn sự kiện click cho từng giờ chiếu
+        showtimeContainer.querySelectorAll('.showtime-badge').forEach(el => {
+            el.addEventListener('click', function () {
+                const suatChieu = this.getAttribute('data-suat-chieu');
+                if (suatChieu) {
+                    window.location.href = `/Seat/Matrix/${suatChieu}`;
+
+                }
+            });
+        });
     }
 
     function applyFilters() {
@@ -53,7 +66,6 @@
 
         renderShowtimes(filtered);
     }
-
 
     // Ngày
     dateButtons.forEach(btn => {

@@ -4,7 +4,7 @@ function onYouTubeIframeAPIReady() {
     player = new YT.Player('player', {
         videoId: 'EQ9CGrgIq9M',
         playerVars: {
-            autoplay: 1,
+            autoplay: 0, // Không tự động phát
             controls: 1,
             rel: 0,
             modestbranding: 1
@@ -27,11 +27,9 @@ document.addEventListener("DOMContentLoaded", function () {
         modal.show();
     });
 
-    // Khi modal hiển thị -> phát video
+    // Khi modal hiển thị -> KHÔNG tự động phát video
     modalElement.addEventListener("shown.bs.modal", function () {
-        if (player && player.playVideo) {
-            player.playVideo();
-        }
+        // Không gọi player.playVideo() ở đây
     });
 
     // Khi modal đóng -> dừng video
@@ -40,4 +38,6 @@ document.addEventListener("DOMContentLoaded", function () {
             player.stopVideo();
         }
     });
+
+    // Khi user nhấn nút play trong iframe, video sẽ phát bình thường
 });
