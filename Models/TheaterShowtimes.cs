@@ -11,6 +11,6 @@ namespace MovieTicketWebsite.Models
         public string TheaterName { get; set; } = string.Empty;
 
         [JsonPropertyName("gioChieu")]
-        public List<string> Showtimes { get; set; } = new(); // dạng chuỗi giờ: "13:00"
+        public List<GioChieuDto> Showtimes { get; set; } = new(); 
     }
 }

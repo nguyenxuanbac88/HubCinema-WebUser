@@ -81,7 +81,8 @@
                 // Tổng hợp toàn bộ giờ chiếu từ các rạp/phòng
                 var allShowtimes = showListByTheater
                 .SelectMany(t => t.Showtimes)
-                .Where(g => !string.IsNullOrWhiteSpace(g))
+                .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
+                .Select(g => g.StartTime)
                 .ToList();
 
                 if (!allShowtimes.Any()) continue; // Bỏ qua nếu không có giờ chiếu
