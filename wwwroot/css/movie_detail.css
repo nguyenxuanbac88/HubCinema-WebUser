@@ -64,13 +64,18 @@
     background-color: #fff;
     color: #000;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    text-decoration: none; /* ✅ bỏ gạch chân */
     padding: 4px 10px;
     font-size: 14px;
     line-height: 1.4;
     white-space: nowrap;
 }
-
+    .badge-tag:hover {
+        background-color: #0d6efd;
+        border-color: #0a58ca;
+        cursor: pointer;
+        color: #fff;
+    }
 
 @media (min-width: 992px) {
     .play-icon {

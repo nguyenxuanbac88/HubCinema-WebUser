@@ -82,20 +82,33 @@
                 var allShowtimes = showListByTheater
                 .SelectMany(t => t.Showtimes)
                 .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
-                .Select(g => g.StartTime)
-                .ToList();
+                .Select(g => new GioChieuDto
+                    {
+                        MaSuat = g.MaSuat,
+                        StartTime = g.StartTime
+                    }).ToList();
+
 
                 if (!allShowtimes.Any()) continue; // Bỏ qua nếu không có giờ chiếu
 
                 <div class="col movie-card" data-date="@date">
                     <div class="card h-100">
                         <img src="@movie.PosterUrl" class="card-img-top" alt="@movie.MovieTitle" />
-                        <div class="card-body">
+                        <div class="card-body text-center">
                             <h6 class="card-title">@movie.MovieTitle</h6>
-                            <p class="card-text text-muted">
-                                Giờ chiếu: @string.Join(", ", allShowtimes)
-                            </p>
+                            <div class="showtime-buttons d-flex flex-wrap gap-2 mt-2">
+                                @foreach (var time in allShowtimes)
+                                {
+                                    <a asp-controller="Seat"
+                                       asp-action="Matrix"
+                                       asp-route-id="@time.MaSuat"
+                                       class="badge-tag showtime-badge">
+                                        @time.StartTime
+                                    </a>
+                                }
+                            </div>
                         </div>
+
                     </div>
                 </div>
             }

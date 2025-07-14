@@ -29,7 +29,7 @@
                     <h6 class="fw-bold">${tenRap}</h6>
                     <div class="d-flex flex-wrap gap-2">
                         ${gioChieuList.map(g => 
-                            `<span class="badge bg-secondary showtime-badge" data-suat-chieu="${g.suatChieu}">${g.gioChieu}</span>`
+                            `<span class="badge-tag showtime-badge" data-suat-chieu="${g.suatChieu}">${g.gioChieu}</span>`
                         ).join("")}
                     </div>
                 </div>
