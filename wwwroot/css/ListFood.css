@@ -72,3 +72,6 @@
         background-color: #E48600;
         color: white;
     }
+.food-hidden {
+    display: none;
+}
