@@ -32,7 +32,9 @@
     layout.forEach((row) => {
         const rowDiv = document.createElement("div");
         rowDiv.className = "seat-row";
-        rowDiv.style.gridTemplateColumns = `24px repeat(${maxCols}, 1fr) 24px`;
+        rowDiv.style.gridTemplateColumns = `20px repeat(${maxCols}, 22px) 20px`;
+
+
 
         // Lấy tên hàng (bỏ qua null)
         const rowLetter = row.find(s => s)?.[0] ?? "";
@@ -51,24 +53,36 @@
             if (!seat) {
                 seatEl.className = "seat empty";
             } else if (seat.includes('+')) {
-                // Ghế đôi
                 seatEl.className = "seat double-seat";
-                seatEl.textContent = seat.replace('+', ' + ');
                 seatEl.dataset.id = seat;
-                seatEl.classList.add("available");
 
-                // Không chia đôi ghế nữa
+                const seatNums = seat.split('+').map(s => s.replace(/^[A-Z]/, ""));
+
+                const span1 = document.createElement("span");
+                span1.textContent = seatNums[0];
+                span1.style.marginRight = "2px";
+
+                const span2 = document.createElement("span");
+                span2.textContent = seatNums[1];
+                span2.style.marginLeft = "2px";
+
+                seatEl.appendChild(span1);
+                seatEl.appendChild(span2);
+
                 if (confirmed.includes(seat)) {
                     seatEl.classList.add("confirmed");
                 } else if (held.includes(seat)) {
                     seatEl.classList.add("held");
                 } else {
+                    seatEl.classList.add("available");
                     seatEl.addEventListener("click", () => {
                         seatEl.classList.toggle("selected");
                     });
                 }
+
             } else {
-                const seatNumber = seat.slice(1);
+                // 👇 Phần này bị bạn lỡ xóa – xử lý ghế đơn
+                const seatNumber = seat.replace(/^[A-Z]/, "");
                 seatEl.className = "seat";
                 seatEl.textContent = seatNumber;
                 seatEl.dataset.id = seat;
@@ -76,6 +90,7 @@
                 const rowChar = seat[0];
                 const typeInfo = prices[rowChar] || {};
                 seatEl.title = `${seat} - ${typeInfo.seatType || "Ghế"} - ${typeInfo.price?.toLocaleString()}đ`;
+
                 if (typeInfo.seatType === "VIP") {
                     seatEl.classList.add("vip");
                 }
@@ -93,6 +108,7 @@
 
             rowDiv.appendChild(seatEl);
         }
+
 
         // Label phải
         const labelRight = document.createElement("div");

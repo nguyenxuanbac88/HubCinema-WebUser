@@ -1,94 +1,129 @@
-﻿/* Ma trận ghế */
+﻿/* ==== Tổng container sơ đồ ==== */
 .seat-matrix {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 12px;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 0;
     background-color: #fff;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-    font-size: 12px;
+    border-radius: 8px;
     max-width: 100%;
-    overflow-x: auto;
+    margin: auto;
+    font-size: 11px;
 }
 
-/* Dòng hàng ghế */
+/* ==== Mỗi hàng ghế ==== */
 .seat-row {
     display: grid;
-    grid-template-columns: 20px repeat(25, 20px) 20px;
-    column-gap: 4px;
-    align-items: center;
-}
-
-/* Nhãn A-Z */
-.seat-label {
-    font-size: 14px;
-    color: #333;
-    font-weight: 500;
-    text-align: center;
-}
-
-/* Ô ghế thường */
-.seat {
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    display: flex;
+    grid-template-columns: 20px repeat(25, 22px) 20px; /* 25 ghế + 2 nhãn */
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    column-gap: 6px;
+    margin-bottom: 2px;
+}
+
+/* ==== Nhãn hàng (A–P) ==== */
+.seat-label {
+    width: 20px;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 500;
+    color: #888;
+}
+
+/* ==== Ghế đơn ==== */
+.seat {
+    width: 22px;
+    height: 22px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 10px;
+    line-height: 20px;
+    text-align: center;
     cursor: pointer;
     user-select: none;
-    transition: 0.2s;
+    transition: all 0.2s ease;
 }
 
-/* Ghế đôi: nối 2 cột */
-.double-seat {
-    grid-column: span 2;
-    background-color: #e6f7ff;
-    border-color: #3399ff;
-    font-size: 10px;
+    /* ==== Ghế đôi ==== */
+    .seat.double-seat {
+        width: 46px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 2px;
+        background-color: #e0f0ff;
+        border: 1px solid #3399ff;
+        font-size: 10px;
+        color: #000;
+        border-radius: 4px;
+        white-space: nowrap;
+        line-height: 22px;
+    }
+
+
+
+    /* ==== Ghế VIP ==== */
+    .seat.vip {
+        background-color: #fffbe6;
+        border: 2px solid gold;
+    }
+
+    /* ==== Ghế đã bán ==== */
+    .seat.confirmed {
+        background-color: #ccc !important;
+        border-color: #aaa !important;
+        color: #888;
+        cursor: not-allowed;
+    }
+
+    /* ==== Ghế đang giữ ==== */
+    .seat.held {
+        background-color: #999 !important;
+        border-color: #666 !important;
+        color: #fff;
+        cursor: not-allowed;
+    }
+
+    /* ==== Ghế đơn đang chọn ==== */
+    .seat.selected:not(.double-seat) {
+        background-color: #fd7e14;
+        border-color: #fd7e14;
+        color: #fff;
+    }
+
+    /* ==== Ghế đôi đang chọn ==== */
+    .seat.double-seat.selected {
+        background-color: #fd7e14 !important;
+        border-color: #3399ff !important;
+        color: #fff !important;
+    }
+
+    /* ==== Ghế rỗng (null) ==== */
+    .seat.empty {
+        background-color: transparent;
+        border: none;
+        cursor: default;
+    }
+
+/* ==== Màn hình ==== */
+.screen-label {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    color: #ccc;
+    margin-top: 20px;
+    position: relative;
 }
 
-/* Ghế trống hover */
-.seat.available:hover {
-    background-color: #b3e5fc;
-    border-color: #29b6f6;
-}
-
-/* Ghế đang chọn */
-.seat.selected {
-    background-color: #ff8000;
-    border-color: #ff8000;
-    color: white;
-}
-
-/* Ghế đã đặt */
-.seat.confirmed {
-    background-color: #ccc;
-    cursor: not-allowed;
-    color: #666;
-}
-
-/* Ghế đang giữ */
-.seat.held {
-    background-color: #fdd835;
-    cursor: not-allowed;
-    color: #000;
-}
-
-/* Ghế VIP */
-.seat.vip {
-    background-color: #fff3cd;
-    border-color: #ffc107;
-}
-
-/* Ghế rỗng */
-.seat.empty {
-    background-color: transparent;
-    border: none;
-    pointer-events: none;
-}
+    .screen-label::after {
+        content: "";
+        display: block;
+        height: 4px;
+        width: 80%;
+        max-width: 600px;
+        margin: 6px auto 0;
+        background-color: #fd7e14;
+        border-radius: 2px;
+    }

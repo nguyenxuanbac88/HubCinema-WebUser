@@ -11,12 +11,15 @@
         </div>
 
         <!-- Danh sách combo -->
-        <div class="row g-4">
-            @foreach (var combo in Model)
+        <div class="row g-4 combo-limit">
+            @for (int i = 0; i < Model.Count; i++)
             {
-                <div class="col-lg-3 col-md-4 col-6">
+                var combo = Model[i];
+                var hiddenClass = i >= 4 ? "combo-hidden" : "";
+
+                <div class="col-lg-3 col-md-4 col-6 @hiddenClass">
                     <div class="combo">
-                         <a href="@Url.Action("ListFood", "Food")">
+                        <a href="@Url.Action("ListFood", "Food")">
                             <img src="@combo.ImageURL" alt="@combo.FoodName" class="img-fluid mb-2" />
                         </a>
                         <h3>@combo.FoodName</h3>
@@ -25,5 +28,42 @@
                 </div>
             }
         </div>
+
+        @if (Model.Count > 4)
+        {
+            <div class="text-center mt-4">
+                <button id="toggleComboBtn" class="btn btn-outline-warning px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                    <span class="toggle-text">Xem thêm</span>
+                    <svg class="toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14">
+                        <path fill="currentColor" d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
+                    </svg>
+                </button>
+            </div>
+        }
     </div>
 </section>
+<style>
+    .combo-hidden {
+        display: none;
+    }
+
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleComboBtn");
+        if (!toggleBtn) return;
+
+        const comboItems = document.querySelectorAll(".combo-hidden");
+        const toggleText = toggleBtn.querySelector(".toggle-text");
+        const toggleIcon = toggleBtn.querySelector(".toggle-icon");
+
+        let isExpanded = false;
+
+        toggleBtn.addEventListener("click", function () {
+            isExpanded = !isExpanded;
+            comboItems.forEach(el => el.style.display = isExpanded ? "block" : "none");
+            toggleText.textContent = isExpanded ? "Thu gọn" : "Xem thêm";
+            toggleIcon.style.transform = isExpanded ? "rotate(90deg)" : "rotate(0)";
+        });
+    });
+</script>

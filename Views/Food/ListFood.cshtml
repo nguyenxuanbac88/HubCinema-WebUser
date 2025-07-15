@@ -10,21 +10,14 @@
 
     <h2 class="fw-bold mb-4">Thực phẩm & Combo</h2>
 
-    <div class="row gx-4 gy-4 food-limit">
-        @{
-            int foodCount = 0;
-            foreach (var food in Model)
-            {
-                var hiddenClass = foodCount >= 4 ? "food-hidden" : "";
-            }
-        }
-
+    <div class="row gx-4 gy-4">
         @for (int i = 0; i < Model.Count; i++)
         {
             var food = Model[i];
-            var hiddenClass = i >= 4 ? "food-hidden" : "";
+            var isHidden = i >= 4;
+            var style = isHidden ? "display: none;" : "";
 
-            <div class="col-lg-3 col-md-4 col-sm-6 @hiddenClass">
+            <div class="col-lg-3 col-md-4 col-sm-6 food-item" style="@style">
                 <div class="card product-card h-100">
                     <div class="product-image-wrapper">
                         <img src="@food.ImageUrl" alt="@food.FoodName" class="product-img" />
@@ -46,14 +39,15 @@
 
     @if (Model.Count > 4)
     {
-        <div class="food__footer text-center mt-4">
+        <div class="text-center mt-4">
             <button id="toggleFoodBtn" class="btn btn-outline-warning px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
                 <span class="toggle-text">Xem thêm</span>
                 <svg class="toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14">
                     <path fill="currentColor" d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z" />
                 </svg>
             </button>
-
         </div>
     }
+
 </div>
+

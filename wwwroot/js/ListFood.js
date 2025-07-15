@@ -1,13 +1,25 @@
-﻿const toggleBtn = document.getElementById("toggleFoodBtn");
-const toggleText = toggleBtn.querySelector(".toggle-text");
+﻿
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleBtn = document.getElementById("toggleFoodBtn");
+    if (!toggleBtn) return;
 
-let expanded = false;
+    const foodItems = document.querySelectorAll(".food-item");
+    const toggleText = toggleBtn.querySelector(".toggle-text");
+    const toggleIcon = toggleBtn.querySelector(".toggle-icon");
 
-toggleBtn.addEventListener("click", function () {
-    document.querySelectorAll(".food-hidden").forEach(el => {
-        el.style.display = expanded ? "none" : "block";
+    let isExpanded = false;
+
+    toggleBtn.addEventListener("click", function () {
+        isExpanded = !isExpanded;
+
+            foodItems.forEach((el, index) => {
+                if (index >= 4) {
+        el.style.display = isExpanded ? "block" : "none";
+                }
+            });
+
+    toggleText.textContent = isExpanded ? "Thu gọn" : "Xem thêm";
+    toggleIcon.style.transform = isExpanded ? "rotate(90deg)" : "rotate(0)";
+        });
     });
 
-    toggleText.textContent = expanded ? "Xem thêm" : "Rút gọn";
-    expanded = !expanded;
-});

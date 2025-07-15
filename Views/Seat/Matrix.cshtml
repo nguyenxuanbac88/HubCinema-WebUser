@@ -3,7 +3,7 @@
 <div class="bg-light">
     <div class="container py-2">
         <h2 class="text-center fw-bold mb-4">Sơ đồ ghế</h2>
-
+        
         <!-- Ma trận ghế -->
         <div class="d-flex justify-content-center">
             <div id="seat-matrix"
@@ -11,7 +11,7 @@
                  data-id-suat-chieu="@Model">
             </div>
         </div>
-
+        <div class="screen-label">Màn hình</div>
         <!-- Chú thích loại ghế -->
         <div class="d-flex flex-wrap gap-3 justify-content-center mt-4 small text-muted">
             <div><span class="seat confirmed me-1"></span> Ghế đã bán</div>
@@ -20,8 +20,9 @@
             <div><span class="seat me-1"></span> Ghế đơn</div>
             <div><span class="seat double-seat me-1"></span> Ghế đôi</div>
         </div>
+        
     </div>
-
+    
     <!-- Script xử lý ghế -->
     <script src="~/js/seat-matrix-bootstrap.js" asp-append-version="true"></script>
 </div>
