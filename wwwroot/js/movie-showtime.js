@@ -43,7 +43,9 @@
             el.addEventListener('click', function () {
                 const suatChieu = this.getAttribute('data-suat-chieu');
                 if (suatChieu) {
-                    window.location.href = `/Seat/Matrix/${suatChieu}`;
+                    window.location.href = `/Movie/ChonGhe/${suatChieu}`;
+
+
 
                 }
             });

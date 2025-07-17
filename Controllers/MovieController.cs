@@ -122,8 +122,72 @@ namespace MovieTicketWebsite.Controllers
             movie.SelectedDate = dateList.FirstOrDefault();
             movie.AllShowtimesRawJson = JsonConvert.SerializeObject(allShowtimes); // thêm property này
 
+            // Lấy thông tin của một suất chiếu đầu tiên nếu có
+            var firstShowtime = allShowtimes
+                .SelectMany(s => ((IEnumerable<dynamic>)((dynamic)s).gioChieu)
+                    .Select(g => new
+                    {
+                        SuatChieuId = (int)g.suatChieu,
+                        GioChieu = g.gioChieu.ToString(),
+                        NgayChieu = ((dynamic)s).date,
+                        TenRap = (string)((dynamic)s).tenRap,
+                        TenPhong = "Phòng 1" // Bạn cần thay bằng thông tin thật nếu có
+                    }))
+                .FirstOrDefault();
+
+            if (firstShowtime != null)
+            {
+                var ngay = DateTime.Parse(firstShowtime.NgayChieu);
+                var gio = TimeSpan.Parse(firstShowtime.GioChieu);
+
+                var seatModel = new SeatSelectionViewModel
+                {
+                    MovieTitle = movie.MovieName,
+                    PosterUrl = movie.CoverURL,
+                    CinemaName = firstShowtime.TenRap,
+                    RoomName = firstShowtime.TenPhong,
+                    ShowTime = ngay.Date.Add(gio),
+                    ShowId = firstShowtime.SuatChieuId
+                    // Không cần gán Seats
+                };
+
+                TempData["SeatInfo"] = JsonConvert.SerializeObject(seatModel);
+                TempData.Keep("SeatInfo");
+            }
+
+
             return View(movie);
         }
+
+
+
+
+        public IActionResult ChonGhe(int id)
+        {
+            // Lấy dữ liệu đã lưu từ TempData
+            if (TempData["SeatInfo"] is string json)
+            {
+                var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
+                if (model != null)
+                {
+                    model.ShowId = id; // Cập nhật lại ShowId nếu cần
+
+                    TempData["SeatSelectionData"] = JsonConvert.SerializeObject(model);
+                    TempData.Keep("SeatSelectionData");
+                    return RedirectToAction("Matrix", "Seat", new { id });
+                }
+            }
+
+            // Nếu không có dữ liệu thì chỉ tạo model đơn giản
+            var fallbackModel = new SeatSelectionViewModel { ShowId = id };
+            TempData["SeatSelectionData"] = JsonConvert.SerializeObject(fallbackModel);
+            TempData.Keep("SeatSelectionData");
+
+            return RedirectToAction("Matrix", "Seat", new { id });
+        }
+
+
+
 
 
 

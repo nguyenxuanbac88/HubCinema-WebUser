@@ -1,0 +1,35 @@
+﻿@model MovieTicketWebsite.Models.Vnpay.PaymentResponseModel
+
+@{
+    ViewData["Title"] = "Vé của bạn";
+    var qrImageUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={Model.TransactionId}";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg p-4 rounded-4 border-success border-2">
+                <h2 class="text-center mb-4 text-success fw-bold">🎟️ Vé xem phim</h2>
+
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <p><strong>📌 Mã giao dịch:</strong> @Model.TransactionId</p>
+                        <p><strong>🎬 Phim:</strong> @Model.OrderDescription</p>
+                        <p><strong>💳 Phương thức:</strong> @Model.PaymentMethod</p>
+                        <p><strong>🧾 Mã thanh toán:</strong> @Model.PaymentId</p>
+                        <p><strong>✅ Trạng thái:</strong> <span class="text-success fw-bold">Thành công</span></p>
+                        <p><strong>💰 Số tiền:</strong> @string.Format("{0:N0}", Model.Amount) VND</p>
+                    </div>
+                    <div class="col-6 text-center">
+                        <img src="@qrImageUrl" alt="QR Code" class="img-fluid rounded" />
+                        <p class="mt-2 text-muted">Quét mã để kiểm tra vé</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="/" class="btn btn-outline-success px-4 py-2 fw-bold">Quay về trang chủ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

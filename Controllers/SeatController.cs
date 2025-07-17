@@ -1,13 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MovieTicketWebsite.Models;
+using Newtonsoft.Json;
 
 namespace MovieTicketWebsite.Controllers
 {
     public class SeatController : Controller
     {
-        public IActionResult Matrix([FromRoute(Name = "id")] int suatChieu)
+        public IActionResult Matrix(int id)
         {
-            Console.WriteLine("idSuatChieu = " + suatChieu);
-            return View(suatChieu); // => sẽ render View/Seat/Matrix.cshtml
+            if (TempData["SeatSelectionData"] is string json)
+            {
+                var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
+                return View(model);
+            }
+
+            return NotFound();
         }
+
     }
 }

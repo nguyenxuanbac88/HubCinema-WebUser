@@ -1,28 +1,64 @@
-﻿@model int
+﻿@model MovieTicketWebsite.Models.SeatSelectionViewModel
 
 <div class="bg-light">
-    <div class="container py-2">
-        <h2 class="text-center fw-bold mb-4">Sơ đồ ghế</h2>
-        
-        <!-- Ma trận ghế -->
-        <div class="d-flex justify-content-center">
-            <div id="seat-matrix"
-                 class="seat-matrix py-4"
-                 data-id-suat-chieu="@Model">
+    <div class="container py-4">
+        <h2 class="text-center fw-bold mb-4">Chọn ghế</h2>
+
+        <div class="d-flex gap-4">
+            <!-- 🔹 Cột trái: Box thông tin phim -->
+            <div class="movie-info-box bg-white border rounded p-3 shadow-sm" style="width: 280px;">
+                <img src="@Model.PosterUrl" class="img-fluid mb-3 rounded" alt="@Model.MovieTitle" />
+                <h5 class="fw-bold">@Model.MovieTitle</h5>
+                @* <p class="mb-1"><strong>Định dạng:</strong> @Model.Format</p> *@
+                <p class="mb-1"><strong>Rạp:</strong> @Model.CinemaName</p>
+                <p class="mb-1"><strong>Phòng:</strong> @Model.RoomName</p>
+                <p class="mb-1"><strong>Suất chiếu:</strong> @Model.ShowTime.ToString("HH:mm - dd/MM/yyyy")</p>
+            </div>
+
+            <!-- 🔸 Cột phải: Sơ đồ ghế -->
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-center">
+                    <div id="seat-matrix"
+                         class="seat-matrix"
+                         data-id-suat-chieu="@Model.ShowId">
+                    </div>
+                </div>
+
+                <div class="screen-label">Màn hình</div>
+
+                <!-- Ghi chú -->
+                <div class="d-flex flex-wrap gap-3 justify-content-center mt-4 small text-muted">
+                    <div><span class="seat confirmed me-1"></span> Ghế đã bán</div>
+                    <div><span class="seat selected me-1"></span> Ghế đang chọn</div>
+                    <div><span class="seat vip me-1"></span> Ghế VIP</div>
+                    <div><span class="seat me-1"></span> Ghế đơn</div>
+                    <div><span class="seat double-seat me-1"></span> Ghế đôi</div>
+                </div>
+
+                <!-- Tổng tiền + Nút đặt vé -->
+                <div class="text-center mt-4">
+                    <!-- Tổng tiền -->
+                    <div class="text-center mt-4">
+                        <h5 class="fw-bold">Tổng cộng: <span id="totalAmount">0</span> VNĐ</h5>
+                    </div>
+
+                    <form asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" method="post">
+                        <input type="hidden" name="OrderType" value="ticket" />
+                        <input type="hidden" name="OrderDescription" value="@Model.MovieTitle - @Model.ShowTime.ToString("dd/MM/yyyy HH:mm")" />
+                        <input type="hidden" name="Name" value="Khách hàng" />
+                        <input type="hidden" name="Amount" id="totalAmountInputVnpay" />
+                        <button type="submit" class="btn btn-success px-4 py-2 fw-bold" id="btnDatVeVnpay">
+                            Thanh toán qua VNPAY
+                        </button>
+                    </form>
+
+
+                </div>
+
             </div>
         </div>
-        <div class="screen-label">Màn hình</div>
-        <!-- Chú thích loại ghế -->
-        <div class="d-flex flex-wrap gap-3 justify-content-center mt-4 small text-muted">
-            <div><span class="seat confirmed me-1"></span> Ghế đã bán</div>
-            <div><span class="seat selected me-1"></span> Ghế đang chọn</div>
-            <div><span class="seat vip me-1"></span> Ghế VIP</div>
-            <div><span class="seat me-1"></span> Ghế đơn</div>
-            <div><span class="seat double-seat me-1"></span> Ghế đôi</div>
-        </div>
-        
     </div>
-    
-    <!-- Script xử lý ghế -->
+
+    <!-- Không sửa JS -->
     <script src="~/js/seat-matrix-bootstrap.js" asp-append-version="true"></script>
 </div>

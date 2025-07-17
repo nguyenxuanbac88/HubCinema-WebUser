@@ -1,4 +1,5 @@
 ﻿using MovieTicketWebsite.middlewares;
+using MovieTicketWebsite.Services.VNPay;
 
 namespace MovieTicketWebsite
 {
@@ -8,12 +9,18 @@ namespace MovieTicketWebsite
         {
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
+
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient();
             builder.Services.AddSession();
 
             builder.Services.AddHttpContextAccessor(); // ✅ Thêm dòng này
+
 
             var app = builder.Build();
 
