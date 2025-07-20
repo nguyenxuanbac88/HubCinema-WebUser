@@ -66,6 +66,7 @@
                 } else {
                     seatEl.classList.add("available");
                     seatEl.addEventListener("click", () => {
+                        if (!canSelectSeat(seatEl)) return;
                         seatEl.classList.toggle("selected");
                         updateTotal();
                     });
@@ -96,6 +97,7 @@
                 } else {
                     seatEl.classList.add("available");
                     seatEl.addEventListener("click", () => {
+                        if (!canSelectSeat(seatEl)) return;
                         seatEl.classList.toggle("selected");
                         updateTotal();
                     });
@@ -114,6 +116,59 @@
 
         seatMatrix.appendChild(rowDiv);
     });
+    function canSelectSeat(seatEl) {
+        const rowEl = seatEl.closest(".seat-row");
+        const seatsInRow = Array.from(rowEl.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
+
+        const index = seatsInRow.indexOf(seatEl);
+
+        // Nếu đang chọn thì tính như "sắp bỏ chọn"
+        const selectedCount = document.querySelectorAll(".seat.selected").length;
+        const isCurrentlySelected = seatEl.classList.contains("selected");
+        const isMaxLimit = selectedCount > 8 && !isCurrentlySelected;
+        if (isMaxLimit) {
+            alert("Bạn chỉ được chọn tối đa 8 ghế mỗi lần.");
+            return false;
+        }
+
+        // Nếu click để chọn (chưa có class "selected")
+        if (!isCurrentlySelected) {
+            // giả lập tình trạng mới nếu chọn ghế này
+            seatEl.classList.add("selected");
+
+            const selectedSeats = new Set(
+                seatsInRow
+                    .filter(s => s.classList.contains("selected") || s.classList.contains("confirmed") || s.classList.contains("held"))
+                    .map(s => s.dataset.id)
+            );
+
+            let valid = true;
+            for (let i = 1; i < seatsInRow.length - 1; i++) {
+                const left = seatsInRow[i - 1];
+                const middle = seatsInRow[i];
+                const right = seatsInRow[i + 1];
+
+                const isLeftSelected = selectedSeats.has(left.dataset.id);
+                const isMiddleEmpty = !selectedSeats.has(middle.dataset.id);
+                const isRightSelected = selectedSeats.has(right.dataset.id);
+
+                if (isLeftSelected && isRightSelected && isMiddleEmpty && !middle.classList.contains("confirmed") && !middle.classList.contains("held")) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            seatEl.classList.remove("selected");
+
+            if (!valid) {
+                alert("Không được để trống một ghế giữa các ghế đã chọn hoặc đã bán.");
+            }
+
+            return valid;
+        }
+
+        return true;
+    }
 
     function updateTotal() {
         const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
