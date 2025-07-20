@@ -72,8 +72,20 @@ public class HomeController : Controller
         return View(model);
     }
 
-    public IActionResult promotion()
+    public async Task<IActionResult> Promotion()
     {
-        return View();
+        var newsUrl = $"{_baseApiUrl}/News";
+        List<News> newsList = new();
+
+        var response = await _httpClient.GetAsync(newsUrl);
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+        }
+
+        return View(newsList); 
     }
+
+
 }

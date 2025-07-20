@@ -49,6 +49,5 @@ namespace MovieTicketWebsite.Controllers
 
             return View(news);
         }
-
     }
 }
