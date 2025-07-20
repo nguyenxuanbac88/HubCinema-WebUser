@@ -13,13 +13,30 @@ public class HomeController : Controller
         _baseApiUrl = configuration["ApiSettings:BaseUrl"];
     }
 
+    public async Task<IActionResult> ShowNews()
+    {
+        var newsUrl = $"{_baseApiUrl}/News";
+        List<News> newsList = new();
+
+        var response = await _httpClient.GetAsync(newsUrl);
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+        }
+
+        return PartialView("_IndexNews", newsList);
+    }
+
     public async Task<IActionResult> Index()
     {
         var movieUrl = $"{_baseApiUrl}/Public/GetMovies";
         var foodUrl = $"{_baseApiUrl}/Public/GetFoods";
+        var newsUrl = $"{_baseApiUrl}/News";
 
         List<Movie> movies = new();
         List<ComboUuDai> combos = new();
+        List<News> newsList = new();
 
         // Gọi API phim
         var movieResponse = await _httpClient.GetAsync(movieUrl);
@@ -37,15 +54,24 @@ public class HomeController : Controller
             combos = JsonConvert.DeserializeObject<List<ComboUuDai>>(json);
         }
 
-        // Truyền xuống view model
+        // Gọi API news
+        var newsResponse = await _httpClient.GetAsync(newsUrl);
+        if (newsResponse.IsSuccessStatusCode)
+        {
+            var json = await newsResponse.Content.ReadAsStringAsync();
+            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+        }
+
         var model = new HomeIndexViewModel
         {
             Movies = movies,
-            Combos = combos
+            Combos = combos,
+            News = newsList
         };
 
         return View(model);
     }
+
     public IActionResult promotion()
     {
         return View();

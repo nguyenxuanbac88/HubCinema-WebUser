@@ -1,0 +1,149 @@
+﻿@model MovieTicketWebsite.Models.News
+@{
+    ViewData["Title"] = Model.Title;
+    var relatedNews = ViewBag.RelatedNews as List<MovieTicketWebsite.Models.News>;
+    var showingMovies = ViewBag.ShowingMovies as List<MovieTicketWebsite.Models.Movie>;
+}
+
+<div class="container my-5">
+    <div class="row gx-5">
+        <!-- Nội dung bài viết -->
+        <div class="col-lg-9">
+            <h2 class="fw-bold mb-3">@Model.Title</h2>
+
+            <div class="news-content mb-4">
+                @Html.Raw(Model.Content)
+            </div>
+
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-4">← Quay lại trang chủ</a>
+
+            <!-- Tin liên quan -->
+            @if (relatedNews != null && relatedNews.Any())
+            {
+                <div class="mt-5">
+                    <h5 class="fw-bold mb-3 text-uppercase">Tin liên quan</h5>
+
+                    <div class="position-relative">
+                        <div class="related-slider d-flex overflow-hidden">
+                            @foreach (var news in relatedNews)
+                            {
+                                <div class="related-card flex-shrink-0">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <img src="@news.Thumbnail" class="card-img-top related-img" alt="@news.Title" />
+                                        <div class="card-body p-2">
+                                            <h6 class="card-title text-truncate" title="@news.Title">@news.Title</h6>
+                                            <a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Nút điều hướng -->
+                        <button class="btn btn-dark btn-sm position-absolute top-50 start-0 translate-middle-y z-2" id="prevBtn"><i class="bi bi-chevron-left"></i></button>
+                        <button class="btn btn-dark btn-sm position-absolute top-50 end-0 translate-middle-y z-2" id="nextBtn"><i class="bi bi-chevron-right"></i></button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Cột phải: Phim đang chiếu -->
+        <div class="col-lg-3">
+            <div class="sticky-top" style="top: 80px;">
+                <h6 class="fw-bold text-uppercase mb-3">Phim đang chiếu</h6>
+                <div class="row">
+                    @if (showingMovies != null && showingMovies.Any())
+                    {
+                        @foreach (var movie in showingMovies)
+                        {
+                            <div class="col-6 col-md-12 mb-3">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <img src="@movie.CoverURL" class="card-img-top movie-img rounded-top" alt="@movie.MovieName" />
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title fs-6 mb-0 text-truncate" title="@movie.MovieName">@movie.MovieName</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+<style>
+    .object-fit-cover {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    .news-content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 1rem auto;
+        border-radius: 8px;
+    }
+
+    .news-content p {
+        line-height: 1.8;
+        margin-bottom: 1rem;
+    }
+
+    .related-slider {
+        gap: 1rem;
+        scroll-behavior: smooth;
+        transition: transform 0.3s ease;
+    }
+
+    .related-card {
+        width: 220px;
+    }
+
+    .related-img {
+        height: 130px;
+        object-fit: cover;
+        border-top-left-radius: 0.375rem;
+        border-top-right-radius: 0.375rem;
+    }
+
+    .btn.z-2 {
+        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+    }
+
+        .btn.z-2:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+    .movie-img {
+        height: 330px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 0.9rem;
+    }
+</style>
+
+<!-- JS -->
+@section Scripts {
+    <script>
+        const slider = document.querySelector('.related-slider');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
+        nextBtn.addEventListener('click', () => {
+            slider.scrollBy({ left: 240, behavior: 'smooth' });
+        });
+
+        prevBtn.addEventListener('click', () => {
+            slider.scrollBy({ left: -240, behavior: 'smooth' });
+        });
+    </script>
+}

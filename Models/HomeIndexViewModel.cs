@@ -4,5 +4,6 @@
     {
         public List<Movie> Movies { get; set; }
         public List<ComboUuDai> Combos { get; set; }
+        public List<News> News { get; set; }
     }
 }

@@ -1,0 +1,39 @@
+﻿@model List<MovieTicketWebsite.Models.News>
+
+<link rel="stylesheet" href="~/css/news-slider.css" />
+
+<section class="news-section container my-5 position-relative">
+    <div class="row align-items-center mb-3">
+        <div class="col-auto d-flex align-items-center">
+            <div class="me-2" style="width: 5px; height: 22px; background-color: #d18800; border-radius: 2px;"></div>
+            <h2 class="section-title m-0 fs-5 fw-bold">TIN TỨC MỚI</h2>
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button class="btn btn-light shadow-sm position-absolute top-50 start-0 translate-middle-y z-2 rounded-circle news-prev" style="width: 40px; height: 40px;">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    <button class="btn btn-light shadow-sm position-absolute top-50 end-0 translate-middle-y z-2 rounded-circle news-next" style="width: 40px; height: 40px;">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+
+    <div class="news-carousel">
+        @foreach (var news in Model)
+        {
+            <div class="news-card">
+                <a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id">
+                    <img src="@news.Thumbnail" alt="@news.Title" class="img-fluid rounded" />
+                </a>
+                <div class="card-body">
+                    <div class="card-title text-truncate" title="@news.Title">@news.Title</div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<script src="~/js/news-slider.js"></script>
