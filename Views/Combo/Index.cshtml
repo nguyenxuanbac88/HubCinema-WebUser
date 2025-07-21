@@ -104,32 +104,118 @@
             totalSpan.textContent = total.toLocaleString();
         }
 
-        document.getElementById("continueBtn")?.addEventListener("click", async () => {
-            const quantities = document.querySelectorAll(".quantity");
-            const foods = [];
+        // document.getElementById("continueBtn")?.addEventListener("click", async () => {
+        //     const quantities = document.querySelectorAll(".quantity");
+        //     const foods = [];
 
-            quantities.forEach(qty => {
-                const quantity = parseInt(qty.value);
-                if (quantity > 0) {
-                    foods.push({
-                        idFood: parseInt(qty.dataset.id),
-                        price: parseFloat(qty.dataset.price),
-                        quantity
-                    });
-                }
-            });
+        //     quantities.forEach(qty => {
+        //         const quantity = parseInt(qty.value);
+        //         if (quantity > 0) {
+        //             foods.push({
+        //                 idFood: parseInt(qty.dataset.id),
+        //                 price: parseFloat(qty.dataset.price),
+        //                 quantity
+        //             });
+        //         }
+        //     });
 
-            await fetch("/Combo/SaveComboSelection", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ foods })
-            });
+        //     await fetch("/Combo/SaveComboSelection", {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         body: JSON.stringify({ foods })
+        //     });
 
-            window.location.href = "/Checkout/Index";
-        });
+        //     window.location.href = "/Checkout/Index";
+        // });
 
         document.addEventListener("DOMContentLoaded", () => {
             updateSummary();
         });
     </script>
 }
+
+
+<div class="modal" tabindex="-1" id="ageConfirmModal" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+            <div class="fw-bold text-white bg-warning rounded-pill px-3 py-1 mx-auto mb-3" style="width: fit-content;">
+                <span id="ageRatingLabel">T?</span>
+            </div>
+            <h5 class="fw-bold mb-2">Xác nhận mua vé cho người có độ tuổi phù hợp</h5>
+            <p class="text-muted small">
+                Tôi xác nhận mua vé phim này cho người có độ tuổi từ
+                <span id="ageLimitText">?</span> trở lên và đồng ý cung cấp giấy tờ tùy thân để xác minh độ tuổi.
+            </p>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <button class="btn btn-outline-secondary" id="btnAgeDecline">Từ chối</button>
+                <button class="btn btn-warning" id="btnAgeAccept">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ageRating = "@(ViewBag.AgeRestriction ?? "")".toUpperCase();
+    const continueBtn = document.getElementById("continueBtn");
+    const ageConfirmModal = document.getElementById("ageConfirmModal");
+
+    const ageLimitMap = {
+        "P": 0,
+        "K": 0,
+        "T13": 13,
+        "C13": 13,
+        "C16": 16,
+        "C18": 18
+    };
+
+    continueBtn?.addEventListener("click", () => {
+        const limit = ageLimitMap[ageRating];
+        if (limit && limit > 0) {
+            document.getElementById("ageRatingLabel").textContent = ageRating;
+            document.getElementById("ageLimitText").textContent = `${limit} tuổi`;
+            ageConfirmModal.style.display = "flex";
+        } else {
+            submitComboOrder(); // không giới hạn tuổi
+        }
+    });
+
+    document.getElementById("btnAgeAccept").addEventListener("click", () => {
+        ageConfirmModal.style.display = "none";
+        submitComboOrder();
+    });
+
+    document.getElementById("btnAgeDecline").addEventListener("click", () => {
+        ageConfirmModal.style.display = "none";
+    });
+
+    async function submitComboOrder() {
+        const quantities = document.querySelectorAll(".quantity");
+        const foods = [];
+
+        quantities.forEach(qty => {
+            const quantity = parseInt(qty.value);
+            if (quantity > 0) {
+                foods.push({
+                    idFood: parseInt(qty.dataset.id),
+                    price: parseFloat(qty.dataset.price),
+                    quantity
+                });
+            }
+        });
+
+        await fetch("/Combo/SaveComboSelection", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ foods })
+        });
+
+        window.location.href = "/Checkout/Index";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        updateSummary();
+    });
+</script>
+
+
+

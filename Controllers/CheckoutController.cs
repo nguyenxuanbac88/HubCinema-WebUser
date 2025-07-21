@@ -14,23 +14,41 @@ namespace MovieTicketWebsite.Controllers
                 return RedirectToAction("Index", "Home");
 
             var booking = JsonConvert.DeserializeObject<BookingRequestModel>(bookingJson);
+
             var seatInfoJson = HttpContext.Session.GetString("SeatInfo");
             var seatInfo = JsonConvert.DeserializeObject<SeatSelectionViewModel>(seatInfoJson ?? "{}");
+
+            // 🔥 Đọc combo đã chọn
+            var comboJson = HttpContext.Session.GetString("ComboData");
+            var combo = string.IsNullOrEmpty(comboJson)
+                ? new ComboSelectionModel()
+                : JsonConvert.DeserializeObject<ComboSelectionModel>(comboJson);
 
             var vm = new CheckoutViewModel
             {
                 MovieTitle = seatInfo.MovieTitle,
-                PosterUrl = seatInfo.PosterUrl,
+                PosterUrl = seatInfo.PosterUrl ?? "/images/default-poster.jpg",
                 CinemaName = seatInfo.CinemaName,
                 RoomName = seatInfo.RoomName,
                 ShowTime = seatInfo.ShowTime,
                 Seats = booking.Seats,
                 SeatTotal = booking.SeatTotal,
-                Foods = booking.Foods
+                Foods = combo.Foods?.Select(f => new FoodDto
+                {
+                    IdFood = f.IdFood,
+                    Price = (decimal)f.Price,
+                    Quantity = f.Quantity
+                }).ToList() ?? new List<FoodDto>(),
+
+                MovieId = seatInfo.MovieId,
+                ShowId = seatInfo.ShowId,
+                AgeRestriction = seatInfo.AgeRestriction
             };
 
             return View(vm);
         }
+
+
 
 
         [HttpPost]

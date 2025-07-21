@@ -148,8 +148,8 @@ namespace MovieTicketWebsite.Controllers
                     CinemaName = firstShowtime.TenRap,
                     RoomName = firstShowtime.TenPhong,
                     ShowTime = ngay.Date.Add(gio),
-                    ShowId = firstShowtime.SuatChieuId
-                    // Không cần gán Seats
+                    ShowId = firstShowtime.SuatChieuId,
+                    AgeRestriction = movie.AgeRestriction
                 };
 
                 TempData["SeatInfo"] = JsonConvert.SerializeObject(seatModel);

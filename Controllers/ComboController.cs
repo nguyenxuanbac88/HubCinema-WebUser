@@ -25,6 +25,7 @@ namespace MovieTicketWebsite.Controllers
 
             // Lấy tổng tiền ghế
             var seatTotal = HttpContext.Session.GetString("SeatTotal");
+
             ViewBag.SeatTotal = string.IsNullOrEmpty(seatTotal) ? 0 : decimal.Parse(seatTotal);
 
             // Lấy thông tin phim, rạp, phòng, suất chiếu từ Session
@@ -39,6 +40,7 @@ namespace MovieTicketWebsite.Controllers
                 ViewBag.PosterUrl = seatInfo.PosterUrl ?? "/images/default-poster.jpg";
                 ViewBag.MovieId = seatInfo.MovieId;
                 ViewBag.ShowId = seatInfo.ShowId;
+                ViewBag.AgeRestriction = seatInfo?.AgeRestriction;
             }
             else
             {
@@ -69,10 +71,28 @@ namespace MovieTicketWebsite.Controllers
             {
                 var combo = JsonConvert.DeserializeObject<ComboSelectionModel>(comboJson);
                 ViewBag.SelectedFoods = combo?.Foods ?? new List<FoodItem>();
+
+                // ✅ Tổng tiền combo
+                if (combo?.Foods != null)
+                {
+                    var comboTotal = combo.Foods.Sum(f => f.Quantity * f.Price);
+                    ViewBag.ComboTotal = comboTotal;
+                }
+                else
+                {
+                    ViewBag.ComboTotal = 0;
+                }
             }
             else
             {
                 ViewBag.SelectedFoods = new List<FoodItem>();
+                ViewBag.ComboTotal = 0;
+            }
+
+            // ✅ Nếu quay lại từ thanh toán
+            if (TempData["BackFromCheckout"]?.ToString() == "true")
+            {
+                ViewBag.BackFromCheckout = true;
             }
 
 

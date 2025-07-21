@@ -26,13 +26,17 @@
                     <input type="number" name="UsedPoint" class="form-control" min="0" max="100" value="0">
                 </div>
 
-                <!-- Ẩn radio chọn phương thức, luôn dùng VNPay -->
-                <input type="hidden" name="PaymentMethod" value="vnpay" />
-
-                <div class="mt-4 d-flex justify-content-between">
-                    <a href="/Combo/Index" class="btn btn-outline-secondary">Quay lại</a>
-                    <button type="submit" class="btn btn-warning fw-bold">Thanh toán</button>
+                <!-- Phương thức thanh toán -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Phương thức thanh toán</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" value="vnpay" id="vnpayRadio" checked>
+                        <label class="form-check-label" for="vnpayRadio">
+                            VNPay - ATM/VISA/MASTER
+                        </label>
+                    </div>
                 </div>
+
             </form>
         </div>
 
@@ -56,25 +60,45 @@
                 </div>
 
                 <hr />
-                <div class="d-flex justify-content-between">
-                    <div>Ghế:</div>
-                    <div>@Model.SeatTotal.ToString("N0") đ</div>
-                </div>
+                <!-- Tổng tiền ghế -->
+                @if (Model.Seats != null && Model.Seats.Any())
+                {
+                    <div class="d-flex justify-content-between small">
+                        <div>Ghế: @string.Join(", ", Model.Seats.Select(s => s.MaGhe))</div>
+                        <div>@Model.SeatTotal.ToString("N0") đ</div>
+                    </div>
+                }
+
+                <!-- Danh sách combo -->
                 @if (Model.Foods.Any())
                 {
-                    foreach (var food in Model.Foods)
+                    @foreach (var food in Model.Foods)
                     {
                         <div class="d-flex justify-content-between small">
-                            <div>@food.Quantity x @food.IdFood</div>
+                            <div>@food.Quantity x Combo @food.IdFood</div>
                             <div>@(food.Quantity * food.Price).ToString("N0") đ</div>
                         </div>
                     }
+                    <div class="d-flex justify-content-between small mt-2">
+                        <strong>Tổng combo:</strong>
+                        <span>@Model.Foods.Sum(f => f.Price * f.Quantity).ToString("N0") đ</span>
+                    </div>
                 }
+
                 <hr />
-                <div class="fw-bold d-flex justify-content-between">
-                    <span>Tổng cộng:</span>
-                    <span>@Model.TotalAmount.ToString("N0") đ</span>
+
+                <!-- Tổng cộng -->
+                @{
+                    var comboTotal = Model.Foods.Sum(f => f.Quantity * f.Price);
+                    var totalAmount = Model.SeatTotal + comboTotal;
+                }
+                <div class="d-flex justify-content-between fw-bold fs-6">
+                    <div>Tổng cộng:</div>
+                    <div>@totalAmount.ToString("N0") đ</div>
                 </div>
+
+
+
             </div>
         </div>
     </div>

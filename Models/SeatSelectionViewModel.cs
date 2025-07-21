@@ -12,6 +12,7 @@
         public int ShowId { get; set; }
 
         public List<SeatViewModel> Seats { get; set; } = new();
+        public string AgeRestriction { get; set; }
     }
 }
 /*
