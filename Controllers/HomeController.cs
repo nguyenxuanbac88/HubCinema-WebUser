@@ -22,7 +22,8 @@ public class HomeController : Controller
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
-            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+            var allNews = JsonConvert.DeserializeObject<List<News>>(json);
+            newsList = allNews.Where(n => n.Category == 2).ToList();
         }
 
         return PartialView("_IndexNews", newsList);
@@ -61,7 +62,10 @@ public class HomeController : Controller
         if (newsResponse.IsSuccessStatusCode)
         {
             var json = await newsResponse.Content.ReadAsStringAsync();
-            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+            var allNews = JsonConvert.DeserializeObject<List<News>>(json);
+
+           
+            newsList = allNews.Where(n => n.Category == 2).ToList();
         }
 
         // Banner
@@ -93,11 +97,12 @@ public class HomeController : Controller
         if (response.IsSuccessStatusCode)
         {
             var json = await response.Content.ReadAsStringAsync();
-            newsList = JsonConvert.DeserializeObject<List<News>>(json);
+            var allNews = JsonConvert.DeserializeObject<List<News>>(json);
+
+            
+            newsList = allNews.Where(n => n.Category == 2).ToList();
         }
 
-        return View(newsList); 
+        return View(newsList);
     }
-
-
 }
