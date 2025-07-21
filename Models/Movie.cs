@@ -16,6 +16,7 @@
         public string AgeRestriction { get; set; }
         public string Producer { get; set; }
         public string Actors { get; set; }
+        public int Status { get; set; } // 1: đang chiếu, 0: sắp chiếu, 2: hết chiếu
     }
 
 }

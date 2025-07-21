@@ -1,7 +1,7 @@
 ﻿@model MovieTicketWebsite.Models.HomeIndexViewModel
 
 <main>
-    @await Html.PartialAsync("_IndexBanner") <!-- banner vẫn gán cứng -->
+    @await Html.PartialAsync("_IndexBanner", Model.Banners)
     @await Html.PartialAsync("_IndexMovie", Model.Movies)
     @await Html.PartialAsync("_IndexCombo", Model.Combos)
     @await Html.PartialAsync("_IndexNews", Model.News)

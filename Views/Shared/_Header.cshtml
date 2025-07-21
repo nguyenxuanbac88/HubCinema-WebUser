@@ -1,4 +1,5 @@
-﻿@* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
+﻿
+@* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
 @{
     var token = Context.Session.GetString("AccessToken");
     bool isLoggedIn = !string.IsNullOrEmpty(token);
@@ -49,11 +50,10 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Phim</a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Phim đang chiếu</a></li>
-                        <li><a class="dropdown-item" href="#">Phim sắp chiếu</a></li>
+                        <li><a class="dropdown-item" href="/#showing">Phim đang chiếu</a></li>
+                        <li><a class="dropdown-item" href="/#upcoming">Phim sắp chiếu</a></li>
                     </ul>
                 </li>
-
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Rạp</a>
                     <ul class="dropdown-menu">
@@ -75,9 +75,10 @@
                 </li>
 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Sự kiện và ưu đãi</a>
+                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Tin tức</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="@Url.Action("promotion", "Home")">Khuyến mãi</a></li>
+                        <li><a class="dropdown-item" href="@Url.Action("promotion", "Home")">Bình luận phim</a></li>
                     </ul>
                 </li>
             </ul>

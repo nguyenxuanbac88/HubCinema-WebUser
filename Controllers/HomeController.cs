@@ -33,12 +33,14 @@ public class HomeController : Controller
         var movieUrl = $"{_baseApiUrl}/Public/GetMovies";
         var foodUrl = $"{_baseApiUrl}/Public/GetFoods";
         var newsUrl = $"{_baseApiUrl}/News";
+        var bannerUrl = $"{_baseApiUrl}/Banner/active"; // <-- API lấy banner
 
         List<Movie> movies = new();
         List<ComboUuDai> combos = new();
         List<News> newsList = new();
+        List<Banner> banners = new();
 
-        // Gọi API phim
+        // Phim
         var movieResponse = await _httpClient.GetAsync(movieUrl);
         if (movieResponse.IsSuccessStatusCode)
         {
@@ -46,7 +48,7 @@ public class HomeController : Controller
             movies = JsonConvert.DeserializeObject<List<Movie>>(json);
         }
 
-        // Gọi API combo
+        // Combo
         var foodResponse = await _httpClient.GetAsync(foodUrl);
         if (foodResponse.IsSuccessStatusCode)
         {
@@ -54,7 +56,7 @@ public class HomeController : Controller
             combos = JsonConvert.DeserializeObject<List<ComboUuDai>>(json);
         }
 
-        // Gọi API news
+        // Tin tức
         var newsResponse = await _httpClient.GetAsync(newsUrl);
         if (newsResponse.IsSuccessStatusCode)
         {
@@ -62,15 +64,25 @@ public class HomeController : Controller
             newsList = JsonConvert.DeserializeObject<List<News>>(json);
         }
 
+        // Banner
+        var bannerResponse = await _httpClient.GetAsync(bannerUrl);
+        if (bannerResponse.IsSuccessStatusCode)
+        {
+            var json = await bannerResponse.Content.ReadAsStringAsync();
+            banners = JsonConvert.DeserializeObject<List<Banner>>(json);
+        }
+
         var model = new HomeIndexViewModel
         {
             Movies = movies,
             Combos = combos,
-            News = newsList
+            News = newsList,
+            Banners = banners
         };
 
         return View(model);
     }
+
 
     public async Task<IActionResult> Promotion()
     {

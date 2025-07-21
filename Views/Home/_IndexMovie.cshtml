@@ -23,7 +23,8 @@
             <div class="tab-panel show" id="showing">
                 <div class="row g-4 movie-limit">
                     @{
-                        var showingMovies = Model.Where(m => m.ReleaseDate <= DateTime.Now).ToList();
+                        var showingMovies = Model.Where(m => m.Status == 1).ToList();
+                        var upcomingMovies = Model.Where(m => m.Status == 0).ToList();
                         int count = 0;
                     }
                     @foreach (var movie in showingMovies)
@@ -67,34 +68,21 @@
             <!-- PHIM SẮP CHIẾU -->
             <div class="tab-panel" id="upcoming">
                 <div class="row g-4">
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="movie-item">
-                            <img src="/images/demon-slayer--kimetsu-no-yaiba-sap-chieu-3.jpg" alt="Thanh Gươm Diệt Quỷ" />
-                            <div class="movie-title">Thanh Gươm Diệt Quỷ</div>
-                            <div class="movie-info">Khởi chiếu: 15/08/2025</div>
+                    @foreach (var movie in upcomingMovies)
+                    {
+
+                        <div class="col-lg-3 col-md-4 col-6">
+                            <a href="@Url.Action("Details", "Movie", new { id = movie.IdMovie })" class="movie-item-link">
+                            <div class="movie-item">
+                                <img src="@(string.IsNullOrEmpty(movie.CoverURL) ? "/images/default.jpg" : movie.CoverURL)"
+                                     alt="@movie.MovieName"
+                                     onerror="this.onerror=null; this.src='/images/default.jpg';" />
+                                <div class="movie-title">@movie.MovieName</div>
+                                <div class="movie-info">Khởi chiếu: @movie.ReleaseDate.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            </a>
                         </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="movie-item">
-                            <img src="/images/megan-sap-chieu-1.jpg" alt="Megan 2.0" />
-                            <div class="movie-title">Megan 2.0</div>
-                            <div class="movie-info">Khởi chiếu: 27/06/2025</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="movie-item">
-                            <img src="/images/quan-tai-vo-quy-sap-chieu-2.jpg" alt="Quan Tài Vợ Quỷ" />
-                            <div class="movie-title">Quan Tài Vợ Quỷ</div>
-                            <div class="movie-info">Khởi chiếu: 04/07/2025</div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-md-4 col-6">
-                        <div class="movie-item">
-                            <img src="/images/zootopia-2-sap-chieu-4.jpg" alt="Zootopia 2" />
-                            <div class="movie-title">Zootopia 2</div>
-                            <div class="movie-info">Khởi chiếu: 28/11/2025</div>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
 
