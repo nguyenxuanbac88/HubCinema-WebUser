@@ -60,6 +60,8 @@ namespace MovieTicketWebsite.Controllers
                 else
                 {
                     TempData["LoginMessage"] = $"Đăng nhập thất bại: {response.StatusCode}";
+                    TempData["ShowLoginModal"] = true;
+
                 }
             }
             catch (Exception ex)

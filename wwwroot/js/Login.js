@@ -20,3 +20,10 @@ function toggleLoginPassword(iconSpan) {
         icon.classList.add("bi-eye-slash");
     }
 }
+document.addEventListener("DOMContentLoaded", function () {
+    const showLogin = '@TempData["ShowLoginModal"]';
+    if (showLogin === 'True') {
+        const modal = document.getElementById("loginModal");
+        if (modal) modal.style.display = "block";
+    }
+});
