@@ -95,6 +95,7 @@ namespace MovieTicketWebsite.Controllers
                 ViewBag.BackFromCheckout = true;
             }
 
+            ViewBag.TotalAmount = (decimal)ViewBag.SeatTotal + (decimal)ViewBag.ComboTotal;
 
             return View(foods);
         }

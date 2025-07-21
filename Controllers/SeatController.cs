@@ -24,6 +24,7 @@ namespace MovieTicketWebsite.Controllers
         [HttpPost]
         public IActionResult SaveBookingData([FromBody] BookingRequestModel model)
         {
+            model.SeatTotal = model.Seats.Sum(s => s.Price); // ✅ Gán lại đảm bảo
             var json = JsonConvert.SerializeObject(model);
             HttpContext.Session.SetString("BookingData", json);
 
