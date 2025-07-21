@@ -3,7 +3,13 @@
     const idSuatChieu = seatMatrix.getAttribute('data-id-suat-chieu');
 
     const tokenRes = await fetch("/Login/GetJwt");
-    if (!tokenRes.ok) return alert("Không lấy được token");
+    if (!tokenRes.ok) {
+        if (typeof openLoginModal === "function") {
+            openLoginModal();
+        }
+        return;
+    }
+
 
     const { token: jwtToken } = await tokenRes.json();
     const apiUrl = `http://api.dvxuanbac.com:2030/api/Seat/get-layout-price/${idSuatChieu}`;
@@ -125,7 +131,7 @@
         const isCurrentlySelected = seatEl.classList.contains("selected");
 
         // ✅ Luật 4: Không vượt quá 8 ghế
-        if (selectedCount >= 8 && !isCurrentlySelected) {
+        if (selectedCount > 8 && !isCurrentlySelected) {
             showToast("Bạn chỉ được chọn tối đa 8 ghế mỗi lần.");
             return false;
         }
@@ -201,18 +207,6 @@
                     }
                 }
             }
-
-            // ✅ Luật 5: Không trộn ghế đôi và thường
-            if (valid) {
-                const selectedSeatEls = Array.from(document.querySelectorAll(".seat.selected"));
-                const hasDouble = selectedSeatEls.some(s => s.classList.contains("double-seat"));
-                const hasSingle = selectedSeatEls.some(s => !s.classList.contains("double-seat"));
-
-                if (hasDouble && hasSingle) {
-                    valid = false;
-                    reason = "Không được chọn đồng thời ghế đơn và ghế đôi.";
-                }
-            }
             // ✅ Luật 7: Ghế đang held (đã được xử lý từ trước bằng class 'held') — bỏ qua
 
             seatEl.classList.remove("selected");
@@ -226,9 +220,31 @@
         return true;
     }
     function showToast(message) {
-        // Bạn có thể thay bằng SweetAlert2, Toastify, hoặc tự viết modal
-        alert("Thông báo:\n" + message);
+        const toastModal = document.getElementById("toastModal");
+        const toastMsg = document.getElementById("toastMessage");
+        if (!toastModal || !toastMsg) return alert(message); // fallback
+        toastMsg.innerHTML = message.replace(/\n/g, "<br>");
+        toastModal.style.display = "flex";
+
+        const btn = toastModal.querySelector("button.btn");
+        if (btn) setTimeout(() => btn.focus(), 10);
     }
+
+    function closeToastModal() {
+        const toastModal = document.getElementById("toastModal");
+        if (toastModal) toastModal.style.display = "none";
+    }
+
+    // Đóng modal nếu click ngoài vùng hoặc nhấn Esc
+    document.addEventListener("click", function (e) {
+        const toastModal = document.getElementById("toastModal");
+        if (toastModal && toastModal.style.display === "flex" && e.target === toastModal) {
+            closeToastModal();
+        }
+    });
+    document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeToastModal();
+    });
     function updateTotal() {
         const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
             .map(seat => seat.dataset.id);
@@ -245,6 +261,42 @@
 
         const totalInputVnpay = document.getElementById("totalAmountInputVnpay");
         if (totalInputVnpay) totalInputVnpay.value = total;
+        // Cập nhật box hiển thị ghế đã chọn
+        const selectedSeatsBox = document.getElementById("selectedSeatsBox");
+        const seatTypeLabel = document.getElementById("seatTypeLabel");
+        const seatPriceLabel = document.getElementById("seatPriceLabel");
+        const seatNames = document.getElementById("seatNames");
+
+        if (selectedSeats.length > 0 && total > 0) {
+            selectedSeatsBox.style.display = "block";
+
+            // 🧠 Phân loại ghế
+            const selectedEls = selectedSeats.map(id => document.querySelector(`.seat[data-id="${id}"]`));
+
+            let singleCount = 0;
+            let doubleCount = 0;
+            const seatNamesArr = [];
+
+            for (const el of selectedEls) {
+                if (el?.classList.contains("double-seat")) {
+                    doubleCount++;
+                } else {
+                    singleCount++;
+                }
+                if (el?.dataset?.id) seatNamesArr.push(el.dataset.id);
+            }
+
+            const types = [];
+            if (singleCount > 1) types.push(`${singleCount-1}x Ghế đơn`);
+            if (doubleCount > 0) types.push(`${doubleCount}x Ghế đôi`);
+
+            seatTypeLabel.textContent = types.join(", ");
+            seatPriceLabel.textContent = `${total.toLocaleString()} đ`;
+            seatNames.textContent = seatNamesArr.join(", ");
+        } else {
+            selectedSeatsBox.style.display = "none";
+        }
+
     }
 
 

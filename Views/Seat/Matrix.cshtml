@@ -16,6 +16,14 @@
                 <p class="mb-1"><strong>Rạp:</strong> @Model.CinemaName</p>
                 <p class="mb-1"><strong>Phòng:</strong> @Model.RoomName</p>
                 <p class="mb-1"><strong>Suất chiếu:</strong> @Model.ShowTime.ToString("HH:mm - dd/MM/yyyy")</p>
+                <!-- 🔸 Ghế đã chọn -->
+                <div id="selectedSeatsBox" class="mt-3" style="display: none;">
+                    <div class="d-flex justify-content-between">
+                        <div><span id="seatTypeLabel"></span></div>
+                        <div><span id="seatPriceLabel"></span></div>
+                    </div>
+                    <div>Ghế: <span id="seatNames"></span></div>
+                </div>
 
              
 
