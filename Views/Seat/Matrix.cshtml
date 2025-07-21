@@ -1,4 +1,19 @@
-﻿@model MovieTicketWebsite.Models.SeatSelectionViewModel
+﻿@using Newtonsoft.Json
+@model MovieTicketWebsite.Models.SeatSelectionViewModel
+
+@{
+    var bookingJson = Context.Session.GetString("BookingData");
+    List<string> selectedSeats = new();
+    if (!string.IsNullOrEmpty(bookingJson))
+    {
+        var booking = JsonConvert.DeserializeObject<MovieTicketWebsite.Models.Booking.BookingRequestModel>(bookingJson);
+        selectedSeats = booking.Seats?.Select(s => s.MaGhe)?.ToList() ?? new();
+    }
+}
+<script>
+    const previouslySelectedSeats = @Html.Raw(JsonConvert.SerializeObject(selectedSeats));
+</script>
+
 
 <div class="bg-light">
     <div class="container py-4">
@@ -30,16 +45,16 @@
                 <!-- 🔽 Hiển thị tổng tiền -->
                 <div class="mt-2 fw-bold">Tổng cộng: <span id="totalAmount">0</span> VNĐ</div>
 
-                <!-- 🔽 Nút thanh toán -->
-                <form asp-action="CreatePaymentUrlVnpay" asp-controller="Payment" method="post">
-                    <input type="hidden" name="OrderType" value="ticket" />
-                    <input type="hidden" name="OrderDescription" value="@Model.MovieTitle - @Model.ShowTime.ToString("dd/MM/yyyy HH:mm")" />
-                    <input type="hidden" name="Name" value="Khách hàng" />
-                    <input type="hidden" name="Amount" id="totalAmountInputVnpay" />
-                    <button type="submit" class="btn btn-warning fw-bold w-100 mt-3" id="btnDatVeVnpay">
+                <!-- ✅ Sửa form này để chuyển đến trang combo -->
+                <form asp-controller="Combo" asp-action="Index" method="get" id="formDatVe">
+                    <input type="hidden" name="selectedSeats" id="selectedSeatsInput" />
+                    <input type="hidden" name="totalAmount" id="totalAmountInput" />
+
+                    <button type="button" class="btn btn-warning fw-bold w-100 mt-3" id="btnDatVe">
                         Tiếp tục
                     </button>
                 </form>
+
             </div>
 
             <!-- 🔹 Sơ đồ ghế -->

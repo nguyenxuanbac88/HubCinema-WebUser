@@ -45,8 +45,6 @@
                 if (suatChieu) {
                     window.location.href = `/Movie/ChonGhe/${suatChieu}`;
 
-
-
                 }
             });
         });

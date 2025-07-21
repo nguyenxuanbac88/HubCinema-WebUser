@@ -71,6 +71,10 @@
                     seatEl.classList.add("held");
                 } else {
                     seatEl.classList.add("available");
+                    if (previouslySelectedSeats && previouslySelectedSeats.includes(seat)) {
+                        seatEl.classList.add("selected");
+                    }
+
                     seatEl.addEventListener("click", () => {
                         if (!canSelectSeat(seatEl)) return;
                         seatEl.classList.toggle("selected");
@@ -102,6 +106,10 @@
                     seatEl.classList.add("held");
                 } else {
                     seatEl.classList.add("available");
+                    if (previouslySelectedSeats && previouslySelectedSeats.includes(seat)) {
+                        seatEl.classList.add("selected");
+                    }
+
                     seatEl.addEventListener("click", () => {
                         if (!canSelectSeat(seatEl)) return;
                         seatEl.classList.toggle("selected");
@@ -122,6 +130,8 @@
 
         seatMatrix.appendChild(rowDiv);
     });
+    updateTotal();
+
     function canSelectSeat(seatEl) {
         const rowEl = seatEl.closest(".seat-row");
         const seatsInRow = Array.from(rowEl.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
@@ -248,6 +258,7 @@
     function updateTotal() {
         const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
             .map(seat => seat.dataset.id);
+        //Lấy danh sách ID của các ghế đang được chọn (.seat.selected), lưu vào mảng selectedSeats.
 
         let total = 0;
         for (const seat of selectedSeats) {
@@ -255,12 +266,21 @@
         }
 
         document.getElementById("totalAmount").textContent = total.toLocaleString();
+        //Hiển thị tổng tiền lên DOM (<span id="totalAmount">) theo định dạng có dấu phân cách hàng nghìn
 
         const totalInput = document.getElementById("totalAmountInput");
         if (totalInput) totalInput.value = total;
 
         const totalInputVnpay = document.getElementById("totalAmountInputVnpay");
         if (totalInputVnpay) totalInputVnpay.value = total;
+        /*
+        Đồng bộ tổng tiền vào các input ẩn:
+
+        totalAmountInput: dùng để truyền giá trị sang controller khi submit form.
+
+        totalAmountInputVnpay: dùng cho trang thanh toán VNPay.
+        */
+
         // Cập nhật box hiển thị ghế đã chọn
         const selectedSeatsBox = document.getElementById("selectedSeatsBox");
         const seatTypeLabel = document.getElementById("seatTypeLabel");
@@ -303,7 +323,7 @@
 
     const btnDatVe = document.getElementById("btnDatVe");
     if (btnDatVe) {
-        btnDatVe.addEventListener("click", () => {
+        btnDatVe.addEventListener("click", async () => {
             const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
                 .map(seat => seat.dataset.id);
 
@@ -311,9 +331,40 @@
                 return alert("Vui lòng chọn ít nhất một ghế để tiếp tục.");
             }
 
+            const idSuatChieu = document.getElementById("seat-matrix").getAttribute('data-id-suat-chieu');
+
+            const selectedSeatObjects = selectedSeats.map(seatId => ({
+                maGhe: seatId,
+                price: seatPrices[seatId] || 0
+            }));
+
             const selectedSeatsInput = document.getElementById("selectedSeatsInput");
             selectedSeatsInput.value = selectedSeats.join(",");
-            selectedSeatsInput.closest("form").submit();
+
+            // ✅ Tính tổng tiền ghế
+            const total = selectedSeatObjects.reduce((sum, s) => sum + s.price, 0);
+            const bookingModel = {
+                idShowtime: parseInt(idSuatChieu),
+                seats: selectedSeatObjects,
+                foods: [],
+                idVoucher: 0,
+                usedPoint: 0,
+                total: total // 👈 Thêm dòng này để lưu vào session trong SaveBookingData
+            };
+
+            const response = await fetch("/Seat/SaveBookingData", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bookingModel)
+            });
+
+            if (response.ok) {
+                window.location.href = "/Combo/Index?inBookingFlow=true";
+            } else {
+                alert("Lưu thông tin đặt vé thất bại!");
+            }
         });
     }
 });

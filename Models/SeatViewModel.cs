@@ -10,3 +10,16 @@
         public bool IsTriple { get; set; }
     }
 }
+
+/*
+ Vai trò:
+Là phần tử trong Seats của SeatSelectionViewModel. Mỗi SeatViewModel thể hiện một ghế cụ thể.
+
+Thông tin chứa:
+
+Dòng (Row) và số ghế (Number)
+
+Trạng thái: đã bán, ghế VIP, ghế đôi, ghế ba...
+
+📌 Chỉ dùng để hiển thị, không dùng để đặt vé trực tiếp.
+ */

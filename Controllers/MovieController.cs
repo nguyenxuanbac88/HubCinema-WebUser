@@ -142,6 +142,7 @@ namespace MovieTicketWebsite.Controllers
 
                 var seatModel = new SeatSelectionViewModel
                 {
+                    MovieId = id,
                     MovieTitle = movie.MovieName,
                     PosterUrl = movie.CoverURL,
                     CinemaName = firstShowtime.TenRap,

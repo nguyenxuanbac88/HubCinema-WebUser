@@ -1,0 +1,81 @@
+﻿@model MovieTicketWebsite.Models.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4">Thanh toán</h2>
+
+    <div class="row">
+        <!-- 🔸 Cột trái: Chọn khuyến mãi + phương thức -->
+        <div class="col-lg-8">
+            <form asp-controller="Checkout" asp-action="ConfirmPayment" method="post">
+                <!-- Mã khuyến mãi -->
+                <div class="mb-3">
+                    <label for="voucherCode" class="form-label">Mã khuyến mãi</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="VoucherCode" id="voucherCode" placeholder="Nhập mã giảm giá nếu có">
+                        <button type="button" class="btn btn-outline-primary">Áp dụng</button>
+                    </div>
+                </div>
+
+                <!-- Dùng điểm (nếu có hệ thống điểm tích lũy) -->
+                <div class="mb-3">
+                    <label class="form-label">Sử dụng điểm Stars</label>
+                    <input type="number" name="UsedPoint" class="form-control" min="0" max="100" value="0">
+                </div>
+
+                <!-- Ẩn radio chọn phương thức, luôn dùng VNPay -->
+                <input type="hidden" name="PaymentMethod" value="vnpay" />
+
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="/Combo/Index" class="btn btn-outline-secondary">Quay lại</a>
+                    <button type="submit" class="btn btn-warning fw-bold">Thanh toán</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 🔹 Cột phải: Thông tin đơn hàng -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
+                <div class="d-flex gap-2 align-items-center mb-2">
+                    <img src="@Model.PosterUrl" class="rounded" width="60" height="90" />
+                    <div>
+                        <div class="fw-bold">@Model.MovieTitle</div>
+                        <div class="text-muted small">2D Lồng Tiếng</div>
+                    </div>
+                </div>
+
+                <div class="small mb-2">
+                    <div><strong>Rạp:</strong> @Model.CinemaName</div>
+                    <div><strong>Phòng:</strong> @Model.RoomName</div>
+                    <div><strong>Suất:</strong> @Model.ShowTime.ToString("HH:mm - dddd, dd/MM/yyyy")</div>
+                    <div><strong>Ghế:</strong> @string.Join(", ", Model.Seats.Select(s => s.MaGhe))</div>
+                </div>
+
+                <hr />
+                <div class="d-flex justify-content-between">
+                    <div>Ghế:</div>
+                    <div>@Model.SeatTotal.ToString("N0") đ</div>
+                </div>
+                @if (Model.Foods.Any())
+                {
+                    foreach (var food in Model.Foods)
+                    {
+                        <div class="d-flex justify-content-between small">
+                            <div>@food.Quantity x @food.IdFood</div>
+                            <div>@(food.Quantity * food.Price).ToString("N0") đ</div>
+                        </div>
+                    }
+                }
+                <hr />
+                <div class="fw-bold d-flex justify-content-between">
+                    <span>Tổng cộng:</span>
+                    <span>@Model.TotalAmount.ToString("N0") đ</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
