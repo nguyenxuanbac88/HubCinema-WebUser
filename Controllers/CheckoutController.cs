@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
 using MovieTicketWebsite.Models.Booking;
+using MovieTicketWebsite.Models.Vnpay;
 using Newtonsoft.Json;
 
 namespace MovieTicketWebsite.Controllers
@@ -54,11 +55,41 @@ namespace MovieTicketWebsite.Controllers
         [HttpPost]
         public IActionResult ConfirmPayment(string VoucherCode, int UsedPoint, string PaymentMethod)
         {
-            // Ghi vào session để dùng cho VNPay
             HttpContext.Session.SetString("UsedPoint", UsedPoint.ToString());
             HttpContext.Session.SetString("VoucherCode", VoucherCode ?? "");
 
-            return RedirectToAction("CreatePaymentUrlVnpay", "Payment");
+            var bookingJson = HttpContext.Session.GetString("BookingData");
+            var seatInfoJson = HttpContext.Session.GetString("SeatInfo");
+
+            if (string.IsNullOrEmpty(bookingJson) || string.IsNullOrEmpty(seatInfoJson))
+                return RedirectToAction("Index", "Home");
+
+            var booking = JsonConvert.DeserializeObject<BookingRequestModel>(bookingJson);
+            var seatInfo = JsonConvert.DeserializeObject<SeatSelectionViewModel>(seatInfoJson);
+
+            // Tổng tiền = ghế + combo
+            var comboJson = HttpContext.Session.GetString("ComboData");
+            var combo = string.IsNullOrEmpty(comboJson)
+                ? new ComboSelectionModel()
+                : JsonConvert.DeserializeObject<ComboSelectionModel>(comboJson);
+
+            var comboTotal = combo?.Foods?.Sum(f => f.Price * f.Quantity) ?? 0;
+            var totalAmount = booking.SeatTotal + (decimal)comboTotal;
+
+            // Tạo model gửi sang VNPay
+            var model = new PaymentInformationModel
+            {
+                OrderType = "billpayment",
+                Amount = (double)totalAmount,
+                OrderDescription = $"Thanh toán vé xem phim {seatInfo.MovieTitle}",
+                Name = "MovieTicket"
+            };
+
+            HttpContext.Session.SetString("VnPayData", JsonConvert.SerializeObject(model));
+            return RedirectToAction("RedirectToVNPay", "Payment");
+
+
         }
+
     }
 }

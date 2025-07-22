@@ -18,7 +18,6 @@ namespace MovieTicketWebsite.Controllers
         public IActionResult CreatePaymentUrlVnpay(PaymentInformationModel model)
         {
             var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
-
             return Redirect(url);
         }
 
@@ -29,9 +28,9 @@ namespace MovieTicketWebsite.Controllers
 
             if (response.Success)
             {
-                // Lưu vào DB, tạo vé hoặc chuyển hướng sang trang hiển thị vé
+                // Lưu response vào TempData dưới dạng JSON (System.Text.Json)
                 TempData["VnpayResult"] = JsonSerializer.Serialize(response);
-                return RedirectToAction("XemVe", "Ticket"); // ví dụ tên action là XemVe
+                return RedirectToAction("XemVe", "Ticket");
             }
             else
             {
@@ -39,7 +38,17 @@ namespace MovieTicketWebsite.Controllers
             }
         }
 
+        [HttpGet]
+        public IActionResult RedirectToVNPay()
+        {
+            var json = HttpContext.Session.GetString("VnPayData");
+            if (string.IsNullOrEmpty(json))
+                return RedirectToAction("Index", "Home");
 
+            var model = JsonSerializer.Deserialize<PaymentInformationModel>(json);
+            var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
 
+            return Redirect(url);
+        }
     }
 }
