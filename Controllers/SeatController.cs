@@ -9,17 +9,23 @@ namespace MovieTicketWebsite.Controllers
     {
         public IActionResult Matrix(int id)
         {
-            if (TempData["SeatSelectionData"] is string json)
+            var json = HttpContext.Session.GetString("SeatInfo");
+            if (string.IsNullOrEmpty(json))
             {
-                var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
-
-                // ✅ Lưu vào session tại đây trước khi mất
-                HttpContext.Session.SetString("SeatInfo", json);
-
-                return View(model);
+                // Nếu không có dữ liệu thì về trang chọn phim
+                return RedirectToAction("Index", "Home");
             }
-            return NotFound();
+
+            var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
+            if (model == null || model.ShowId != id)
+            {
+                // Nếu sai Suất chiếu thì cũng về lại Index
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(model);
         }
+
 
         [HttpPost]
         public IActionResult SaveBookingData([FromBody] BookingRequestModel model)

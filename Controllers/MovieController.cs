@@ -166,31 +166,27 @@ namespace MovieTicketWebsite.Controllers
 
         public IActionResult ChonGhe(int id)
         {
-            // Lấy dữ liệu đã lưu từ TempData
             if (TempData["SeatInfo"] is string json)
             {
                 var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
                 if (model != null)
                 {
-                    model.ShowId = id; // Cập nhật lại ShowId nếu cần
+                    model.ShowId = id;
 
-                    TempData["SeatSelectionData"] = JsonConvert.SerializeObject(model);
-                    TempData.Keep("SeatSelectionData");
+                    var serialized = JsonConvert.SerializeObject(model);
+                    HttpContext.Session.SetString("SeatInfo", serialized); // ✅ Lưu thẳng Session
+
                     return RedirectToAction("Matrix", "Seat", new { id });
                 }
             }
 
-            // Nếu không có dữ liệu thì chỉ tạo model đơn giản
+            // Nếu không có TempData thì tạo fallback
             var fallbackModel = new SeatSelectionViewModel { ShowId = id };
-            TempData["SeatSelectionData"] = JsonConvert.SerializeObject(fallbackModel);
-            TempData.Keep("SeatSelectionData");
+            var fallbackJson = JsonConvert.SerializeObject(fallbackModel);
+            HttpContext.Session.SetString("SeatInfo", fallbackJson);
 
             return RedirectToAction("Matrix", "Seat", new { id });
         }
-
-
-
-
 
 
         private string ConvertYoutubeUrlToEmbed(string url)
