@@ -1,0 +1,69 @@
+﻿<div id="countdown-timer" class="position-fixed top-0 end-0 bg-dark text-white px-3 py-1 rounded-bottom-start small shadow" style="z-index: 1050; display:none">
+    <i class="bi bi-clock me-1"></i>
+    <span>Còn lại: <span id="countdown-time">05:00</span></span>
+</div>
+<!-- Nút test ẩn để giả lập hết thời gian -->
+<button id="testExpire" onclick="simulateExpire()" class="btn btn-danger btn-sm position-fixed bottom-0 end-0 m-3 d-none" style="z-index: 9999;">
+    Giả lập hết thời gian
+</button>
+
+
+<script>
+    let countdownInterval;
+
+    function startCountdown(seconds) {
+        clearInterval(countdownInterval);
+
+        const countdownEl = document.getElementById("countdown-timer");
+        const timeEl = document.getElementById("countdown-time");
+
+        let remaining = seconds;
+
+        countdownEl.style.display = 'block';
+
+        function update() {
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            timeEl.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            if (remaining <= 0) {
+                clearInterval(countdownInterval);
+                countdownEl.innerHTML = `<i class="bi bi-exclamation-circle me-1"></i> Đã hết thời gian giữ ghế!`;
+                sessionStorage.removeItem("countdown_start");
+
+                // 🟡 Hiển thị thông báo 3 giây rồi ẩn
+                setTimeout(() => {
+                    countdownEl.style.display = 'none';
+                    fetch("/Login/LogoutLocalOnly");
+                    window.location.href = '/';
+                }, 3000);
+            }
+
+            remaining--;
+        }
+
+        update();
+        countdownInterval = setInterval(update, 1000);
+    }
+
+    // 🧠 Tự khởi động nếu có sessionStorage flag (dùng cho các bước sau khi đã giữ ghế)
+    if (sessionStorage.getItem("countdown_start")) {
+        const start = parseInt(sessionStorage.getItem("countdown_start"));
+        const now = Math.floor(Date.now() / 1000);
+        const elapsed = now - start;
+        const remaining = Math.max(0, 300 - elapsed);
+        startCountdown(remaining);
+    }
+
+    // 🔘 Hàm giả lập hết thời gian
+    function simulateExpire() {
+        sessionStorage.removeItem("countdown_start");
+        startCountdown(0);
+    }
+
+    // ✅ Hiện nút nếu đang ở localhost hoặc có query `test=1`
+    if (location.hostname === "localhost" || location.search.includes("test=1")) {
+        document.getElementById("testExpire").classList.remove("d-none");
+    }
+</script>
+

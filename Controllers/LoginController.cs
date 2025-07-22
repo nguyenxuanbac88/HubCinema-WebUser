@@ -261,6 +261,14 @@ namespace MovieTicketWebsite.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
+        public IActionResult LogoutLocalOnly()
+        {
+            HttpContext.Session.Clear(); // hoặc chỉ Clear AccessToken
+            return Ok();
+        }
+
+
 
     }
 }

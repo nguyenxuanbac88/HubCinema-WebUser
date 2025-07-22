@@ -335,6 +335,39 @@
 
             const idSuatChieu = document.getElementById("seat-matrix").getAttribute('data-id-suat-chieu');
 
+            // ✅ Gọi API giữ ghế trước khi lưu dữ liệu
+            const tokenRes = await fetch("/Login/GetJwt");
+            if (!tokenRes.ok) {
+                openLoginModal?.();
+                return;
+            }
+            const { token: jwtToken } = await tokenRes.json();
+
+            const holdRes = await fetch("http://api.dvxuanbac.com:2030/api/Seat/hold-multiple", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${jwtToken}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    showtimeId: parseInt(idSuatChieu),
+
+                    seatCodes: selectedSeats.filter(code => code)
+
+                })
+            });
+
+            const holdResult = await holdRes.json();
+            const failedSeat = Object.entries(holdResult).find(([_, success]) => !success);
+            if (failedSeat) {
+                alert("Một số ghế không thể giữ. Vui lòng thử lại!");
+                window.location.href = "/";
+                return;
+            }
+            // ✅ Bắt đầu đếm ngược
+            sessionStorage.setItem("countdown_start", Math.floor(Date.now() / 1000)); // lưu mốc thời gian
+            startCountdown(300); // Gọi hàm từ partial
+
             const selectedSeatObjects = selectedSeats.map(seatId => ({
                 maGhe: seatId,
                 price: seatPrices[seatId] || 0
