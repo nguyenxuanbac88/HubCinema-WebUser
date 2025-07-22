@@ -1,0 +1,51 @@
+﻿@model List<MovieTicketWebsite.Models.Invoice>
+
+<div class="container py-4">
+    <h2 class="mb-4">LỊCH SỬ VÉ ĐÃ ĐẶT</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">Bạn chưa có vé nào.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var invoice in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card shadow-sm border-0 rounded-4 h-100">
+                        <div class="card-body position-relative">
+                            <div class="position-absolute top-0 end-0 p-2">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?data=@invoice.IdInvoice&size=100x100"
+                                     alt="QR Code" class="img-fluid rounded" />
+                            </div>
+
+                            <h5 class="fw-bold text-primary">HÓA ĐƠN #@invoice.IdInvoice</h5>
+                            <p class="mb-1 text-muted">Ngày tạo: @invoice.CreateAt.ToString("dd/MM/yyyy HH:mm")</p>
+                            <p class="mb-1 text-muted">Tổng tiền: <span class="text-danger fw-bold">@invoice.TotalPrice.ToString("N0") đ</span></p>
+
+                            <hr />
+
+                            <p class="mb-1"><strong>Ghế:</strong> @string.Join(", ", invoice.Seats)</p>
+
+                            <p class="mb-1">
+                                <strong>Combo:</strong>
+                                @if (invoice.Foods != null && invoice.Foods.Any(f => f.Quantity > 0))
+                                {
+                                    @foreach (var food in invoice.Foods)
+                                    {
+                                        <div>- Combo ID: @food.IdFood (SL: @food.Quantity)</div>
+                                    }
+                                }
+                                else
+                                {
+                                    <span>Không có</span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

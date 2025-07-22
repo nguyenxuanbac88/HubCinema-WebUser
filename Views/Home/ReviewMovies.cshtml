@@ -1,0 +1,55 @@
+﻿@model List<MovieTicketWebsite.Models.News>
+
+<style>
+    .offer-card .card-body {
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .offer-card .card-title {
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2; /* hiển thị tối đa 2 dòng */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 2.8em; /* tương ứng với 2 dòng */
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<div class="container py-4">
+    <h2 class="mb-4">TẤT CẢ TIN TỨC & ƯU ĐÃI</h2>
+    <div class="row g-4">
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <div class="col-6 col-md-4 col-lg-3 p-2"
+                     onclick="location.href='@Url.Action("Detail", "News", new { id = item.Id })'">
+                    <div class="card h-100 shadow-sm border-0 offer-card">
+                        <img src="@(string.IsNullOrEmpty(item.Thumbnail) ? "/images/default-news.jpg" : item.Thumbnail)"
+                             class="card-img-top" alt="@item.Title" />
+                        <div class="card-body text-center">
+                            <p class="card-title">@item.Title</p>
+                            <a href="@Url.Action("Detail", "News", new { id = item.Id })"
+                               class="btn btn-link text-primary fw-semibold text-decoration-none">
+                                Xem chi tiết
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-warning text-center">Không có bài viết nào.</div>
+            </div>
+        }
+    </div>
+</div>
