@@ -44,7 +44,7 @@ namespace MovieTicketWebsite.Controllers
                 {
                     IdFood = f.IdFood,
                     FoodName = f.FoodName,
-                    Price = (decimal)f.Price,
+                    Price = (int)f.Price,
                     Quantity = f.Quantity
                 }).ToList() ?? new List<FoodDto>(),
 

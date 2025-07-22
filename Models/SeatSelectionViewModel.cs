@@ -1,4 +1,6 @@
-﻿namespace MovieTicketWebsite.Models
+﻿using MovieTicketWebsite.Models.Booking;
+
+namespace MovieTicketWebsite.Models
 {
     public class SeatSelectionViewModel
     {
@@ -14,6 +16,9 @@
         public List<SeatViewModel> Seats { get; set; } = new();
         public string AgeRestriction { get; set; }
         public string? Poster { get; set; } // Thêm thuộc tính Poster để chứa ảnh poster của phim
+
+        // ✅ BỔ SUNG: Danh sách ghế đã chọn
+        public List<SeatDto> SelectedSeats { get; set; } = new();
     }
 }
 /*

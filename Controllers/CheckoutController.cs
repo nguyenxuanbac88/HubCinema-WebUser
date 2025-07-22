@@ -3,6 +3,8 @@ using MovieTicketWebsite.Models;
 using MovieTicketWebsite.Models.Booking;
 using MovieTicketWebsite.Models.Vnpay;
 using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace MovieTicketWebsite.Controllers
 {
@@ -39,7 +41,7 @@ namespace MovieTicketWebsite.Controllers
                 {
                     IdFood = f.IdFood,
                     FoodName = f.FoodName,
-                    Price = (decimal)f.Price,
+                    Price = (int)f.Price,
                     Quantity = f.Quantity
                 }).ToList() ?? new List<FoodDto>(),
 
@@ -55,8 +57,13 @@ namespace MovieTicketWebsite.Controllers
 
 
         [HttpPost]
-        public IActionResult ConfirmPayment(string VoucherCode, int UsedPoint, string PaymentMethod)
+        public async Task<IActionResult> ConfirmPayment(string VoucherCode, int UsedPoint, string PaymentMethod)
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("🔔 [ConfirmPaymentAsync] ĐÃ ĐƯỢC GỌI");
+            Console.ResetColor();
+
+            // Lưu lại mã giảm giá và điểm sử dụng
             HttpContext.Session.SetString("UsedPoint", UsedPoint.ToString());
             HttpContext.Session.SetString("VoucherCode", VoucherCode ?? "");
 
@@ -64,7 +71,12 @@ namespace MovieTicketWebsite.Controllers
             var seatInfoJson = HttpContext.Session.GetString("SeatInfo");
 
             if (string.IsNullOrEmpty(bookingJson) || string.IsNullOrEmpty(seatInfoJson))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("⛔ Thiếu BookingData hoặc SeatInfo trong session.");
+                Console.ResetColor();
                 return RedirectToAction("Index", "Home");
+            }
 
             var booking = JsonConvert.DeserializeObject<BookingRequestModel>(bookingJson);
             var seatInfo = JsonConvert.DeserializeObject<SeatSelectionViewModel>(seatInfoJson);
@@ -78,7 +90,66 @@ namespace MovieTicketWebsite.Controllers
             var comboTotal = combo?.Foods?.Sum(f => f.Price * f.Quantity) ?? 0;
             var totalAmount = booking.SeatTotal + (decimal)comboTotal;
 
-            // Tạo model gửi sang VNPay
+            // Chuẩn bị dữ liệu gửi API Booking
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("http://api.dvxuanbac.com:2030");
+                var token = HttpContext.Session.GetString("AccessToken");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                booking.IdVoucher = 0; // Nếu có xử lý VoucherCode, cập nhật ở đây
+                booking.UsedPoint = UsedPoint;
+
+                // Ghép dữ liệu combo
+                booking.Foods = combo.Foods?.Select(f => new FoodDto
+                {
+                    IdFood = f.IdFood,
+                    Quantity = f.Quantity,
+                    Price = (int)f.Price
+                }).ToList() ?? new List<FoodDto>();
+
+                // Ghép danh sách ghế từ seatInfo
+                booking.Seats = seatInfo.SelectedSeats?.Select(s => new SeatDto
+                {
+                    MaGhe = s.MaGhe,
+                    Price = (int)s.Price
+                }).ToList() ?? new List<SeatDto>();
+
+                // ✅ Bỏ bọc request (API KHÔNG yêu cầu wrapper)
+                var json = JsonConvert.SerializeObject(booking);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync("/api/Booking/book", content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"[❌ API Booking Error]: {response.StatusCode} - {error}");
+                    Console.ResetColor();
+
+                    TempData["SeatSelectionData"] = seatInfoJson;
+                    return RedirectToAction("Matrix", "Seat", new { id = booking.IdShowtime });
+                }
+
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var result = JsonConvert.DeserializeObject<dynamic>(responseJson);
+                int invoiceId = result.invoiceId;
+                HttpContext.Session.SetInt32("InvoiceId", invoiceId);
+                Console.WriteLine($"[✔] Booking thành công - InvoiceId: {invoiceId}");
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"[❌ Exception]: {ex.Message}");
+                Console.ResetColor();
+
+                TempData["SeatSelectionData"] = seatInfoJson;
+                return RedirectToAction("Matrix", "Seat", new { id = booking.IdShowtime });
+            }
+
+            // Chuẩn bị thông tin VNPay
             var model = new PaymentInformationModel
             {
                 OrderType = "billpayment",
@@ -88,9 +159,8 @@ namespace MovieTicketWebsite.Controllers
             };
 
             HttpContext.Session.SetString("VnPayData", JsonConvert.SerializeObject(model));
+
             return RedirectToAction("RedirectToVNPay", "Payment");
-
-
         }
 
     }
