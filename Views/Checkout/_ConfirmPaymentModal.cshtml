@@ -1,0 +1,36 @@
+﻿@model MovieTicketWebsite.Models.CheckoutViewModel
+
+<div class="modal fade" id="confirmPaymentModal" tabindex="-1" aria-labelledby="confirmPaymentLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title fw-bold" id="confirmPaymentLabel">Xác nhận thanh toán</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body text-start">
+                <p>Bạn chuẩn bị thanh toán đơn hàng với tổng số tiền:</p>
+                <h4 class="text-danger fw-bold">@Model.TotalAmount.ToString("N0") đ</h4>
+
+                <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" value="" id="agreeCheckbox">
+                    <label class="form-check-label" for="agreeCheckbox">
+                        Tôi đồng ý với <a href="#">điều khoản sử dụng</a> của dịch vụ.
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form asp-controller="Checkout" asp-action="ConfirmPayment" method="post" class="w-100">
+                    <input type="hidden" name="VoucherCode" id="modalVoucherCode" />
+                    <input type="hidden" name="UsedPoint" id="modalUsedPoint" />
+                    <input type="hidden" name="PaymentMethod" value="vnpay" />
+
+                    <button type="submit" id="confirmBtn" class="btn btn-danger w-100 fw-bold" disabled>
+                        Thanh toán
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
