@@ -13,6 +13,7 @@
 
         public List<SeatViewModel> Seats { get; set; } = new();
         public string AgeRestriction { get; set; }
+        public string? Poster { get; set; } // Thêm thuộc tính Poster để chứa ảnh poster của phim
     }
 }
 /*

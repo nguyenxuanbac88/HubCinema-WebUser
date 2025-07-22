@@ -25,6 +25,7 @@ namespace MovieTicketWebsite.Controllers
                 ? new ComboSelectionModel()
                 : JsonConvert.DeserializeObject<ComboSelectionModel>(comboJson);
 
+
             var vm = new CheckoutViewModel
             {
                 MovieTitle = seatInfo.MovieTitle,
@@ -37,6 +38,7 @@ namespace MovieTicketWebsite.Controllers
                 Foods = combo.Foods?.Select(f => new FoodDto
                 {
                     IdFood = f.IdFood,
+                    FoodName = f.FoodName,
                     Price = (decimal)f.Price,
                     Quantity = f.Quantity
                 }).ToList() ?? new List<FoodDto>(),

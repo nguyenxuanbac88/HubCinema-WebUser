@@ -42,7 +42,6 @@
                     <img src="@(ViewBag.PosterUrl ?? "/images/default-poster.jpg")" class="rounded" width="60" height="90" alt="Poster" />
                     <div>
                         <div class="fw-bold">@ViewBag.MovieTitle</div>
-                        <div class="text-muted small">2D Lồng Tiếng</div>
                     </div>
                 </div>
                 <div class="small">
@@ -97,7 +96,9 @@
                 const price = parseFloat(qty.dataset.price);
                 if (quantity > 0) {
                     total += quantity * price;
-                    orderList.innerHTML += `<li>${quantity}x Combo ${id} - ${(quantity * price).toLocaleString()} đ</li>`;
+                            const foodName = qty.closest('.card').querySelector('.card-title').textContent.trim();
+        orderList.innerHTML += `<li>${quantity}x ${foodName} - ${(quantity * price).toLocaleString()} đ</li>`;
+
                 }
             });
 
@@ -195,10 +196,12 @@
         quantities.forEach(qty => {
             const quantity = parseInt(qty.value);
             if (quantity > 0) {
+                const foodName = qty.closest('.card').querySelector('.card-title').textContent.trim();
                 foods.push({
                     idFood: parseInt(qty.dataset.id),
                     price: parseFloat(qty.dataset.price),
-                    quantity
+                    quantity,
+                    foodName: foodName   // thêm tên
                 });
             }
         });

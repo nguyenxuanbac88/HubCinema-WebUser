@@ -149,7 +149,8 @@ namespace MovieTicketWebsite.Controllers
                     RoomName = firstShowtime.TenPhong,
                     ShowTime = ngay.Date.Add(gio),
                     ShowId = firstShowtime.SuatChieuId,
-                    AgeRestriction = movie.AgeRestriction
+                    AgeRestriction = movie.AgeRestriction,
+                    Poster = movie.CoverURL // Thêm ảnh poster vào model
                 };
 
                 TempData["SeatInfo"] = JsonConvert.SerializeObject(seatModel);
