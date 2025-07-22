@@ -6,17 +6,15 @@
         <div class="col-md-4">
             <div class="card shadow-sm p-4 rounded-4">
                 <div class="d-flex align-items-center mb-3 gap-3">
-                    <div class="avatar rounded-circle bg-light border" style="width: 64px; height: 64px;"></div>
+                    
                     <div>
-                        <h6 class="mb-0 fw-semibold text-dark">@Model.FullName</h6>
-                        <small class="text-warning d-block">🎁 @Model.Diem Stars</small>
-                        <small class="text-muted">Mã thành viên: <strong>@Model.MaBarcode</strong></small>
+                        <small class="text-muted d-block">Họ Tên: <strong>@Model.FullName</strong></small>
+                        <svg id="barcode"></svg>
+                        <small class="text-muted d-block">Mã thành viên: <strong>@Model.MaBarcode</strong></small>
                     </div>
                 </div>
 
                 <div class="user-meta text-start ps-1 mb-3">
-                    <p class="mb-1 text-muted">Khu vực: <strong>@Model.KhuVuc</strong></p>
-                    <p class="mb-1 text-muted">Hạng: <strong>@(Model.ThuHang ?? "Chưa xác định")</strong></p>
                     <p class="mb-1 text-muted">Ngày sinh: <strong>@(DateTime.Parse(Model.Dob).ToString("dd/MM/yyyy"))</strong></p>
                     <p class="mb-0 text-muted">Điểm tích lũy: <strong>@Model.Diem ⭐</strong></p>
                 </div>
@@ -175,6 +173,19 @@
 @Html.Partial("_ChangePasswordModal")
 @Html.Partial("_ChangeEmail")
 @Html.Partial("_ConfirmChangeEmail")
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        JsBarcode("#barcode", "@Model.MaBarcode", {
+            format: "CODE128",
+            lineColor: "#000",
+            width: 2,
+            height: 40,
+            displayValue: false
+        });
+    });
+</script>
+
 <script src="~/js/ChangePassHandler.js"></script>
 @if (TempData["OpenConfirmChangeEmailModal"] != null)
 {

@@ -105,4 +105,21 @@ public class HomeController : Controller
 
         return View(newsList);
     }
+    public async Task<IActionResult> ReviewMovies()
+    {
+        var newsUrl = $"{_baseApiUrl}/News";
+        List<News> newsList = new();
+
+        var response = await _httpClient.GetAsync(newsUrl);
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            var allNews = JsonConvert.DeserializeObject<List<News>>(json);
+
+
+            newsList = allNews.Where(n => n.Category == 1).ToList();
+        }
+
+        return View(newsList);
+    }
 }
