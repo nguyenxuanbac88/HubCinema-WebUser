@@ -230,30 +230,32 @@
         return true;
     }
     function showToast(message) {
-        const toastModal = document.getElementById("toastModal");
-        const toastMsg = document.getElementById("toastMessage");
-        if (!toastModal || !toastMsg) return alert(message); // fallback
-        toastMsg.innerHTML = message.replace(/\n/g, "<br>");
-        toastModal.style.display = "flex";
-
-        const btn = toastModal.querySelector("button.btn");
-        if (btn) setTimeout(() => btn.focus(), 10);
+        const modal = document.getElementById("errorModal");
+        const msgEl = document.getElementById("errorModalMessage");
+        if (modal && msgEl) {
+            msgEl.innerHTML = message.replace(/\n/g, "<br>");
+            modal.style.display = "flex";
+        } else {
+            alert(message); // fallback nếu modal chưa có
+        }
     }
-
-    function closeToastModal() {
-        const toastModal = document.getElementById("toastModal");
-        if (toastModal) toastModal.style.display = "none";
+    function closeErrorModal() {
+        const modal = document.getElementById("errorModal");
+        if (modal) modal.style.display = "none";
     }
-
+    window.closeErrorModal = closeErrorModal;
     // Đóng modal nếu click ngoài vùng hoặc nhấn Esc
     document.addEventListener("click", function (e) {
-        const toastModal = document.getElementById("toastModal");
-        if (toastModal && toastModal.style.display === "flex" && e.target === toastModal) {
-            closeToastModal();
+        const modal = document.getElementById("errorModal");
+        if (!modal || modal.style.display !== "flex") return;
+
+        const box = modal.querySelector(".custom-modal-box");
+        if (e.target === modal && !box.contains(e.target)) {
+            closeErrorModal();
         }
     });
     document.addEventListener("keydown", function (e) {
-        if (e.key === "Escape") closeToastModal();
+        if (e.key === "Escape") closeErrorModal();
     });
     function updateTotal() {
         const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))

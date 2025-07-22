@@ -17,13 +17,16 @@
 
 <div class="bg-light">
     <div class="container py-4">
-        <h2 class="text-center fw-bold mb-4">Chọn ghế</h2>
+        
+
 
         <!-- 🔄 Đổi sang flex-row-reverse để ghế nằm bên trái, thông tin bên phải -->
-        <div class="d-flex flex-row-reverse gap-4">
+        <div class="d-flex flex-row-reverse gap-4 align-items-start mt-4">
+
+
 
             <!-- 🔸 Box thông tin phim & thanh toán -->
-            <div class="movie-info-box bg-white border rounded p-3 shadow-sm" style="min-width: 300px; max-width: 360px; width: 100%;">
+            <div class="movie-info-box bg-white border rounded p-3 shadow-sm" style="min-width: 300px; max-width: 360px; width: 100%;margin-top: 61px;">
 
                 <img src="@Model.PosterUrl" class="img-fluid mb-3 rounded" alt="@Model.MovieTitle" />
                 <h5 class="fw-bold">@Model.MovieTitle</h5>
@@ -59,6 +62,7 @@
 
             <!-- 🔹 Sơ đồ ghế -->
             <div class="flex-grow-1">
+                <h2 class="fw-bold text-center mb-4">Chọn ghế</h2> <!-- ✅ Căn giữa theo sơ đồ -->
                 <div class="d-flex justify-content-center">
                     <div id="seat-matrix"
                          class="seat-matrix"
@@ -79,6 +83,17 @@
             </div>
         </div>
     </div>
+    <div id="errorModal" class="custom-modal-overlay" style="display:none;">
+        <div class="custom-modal-box text-center">
+            <div class="text-center mb-3">
+                <i class="bi bi-exclamation-circle-fill text-danger fs-1"></i>
+                <h5 class="mt-3 fw-bold" id="errorModalTitle">Thông báo</h5>
+                <p id="errorModalMessage" class="mt-2"></p>
+            </div>
+            <button class="btn btn-warning w-100 fw-bold mt-3" onclick="closeErrorModal()">Đóng</button>
+        </div>
+    </div>
+
 
     <!-- Không sửa JS -->
     <script src="~/js/seat-matrix-bootstrap.js" asp-append-version="true"></script>
