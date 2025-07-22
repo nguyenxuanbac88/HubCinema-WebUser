@@ -36,9 +36,11 @@
                         </label>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-danger px-4">
+                <!-- Thay nút submit -->
+                <button type="button" class="btn btn-danger px-4" id="openModalBtn" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal">
                     Thanh toán
                 </button>
+
 
             </form>
         </div>
@@ -104,3 +106,22 @@
         </div>
     </div>
 </div>
+
+@await Html.PartialAsync("_ConfirmPaymentModal", Model)
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const agreeCheckbox = document.getElementById("agreeCheckbox");
+            const confirmBtn = document.getElementById("confirmBtn");
+
+            agreeCheckbox?.addEventListener("change", () => {
+                confirmBtn.disabled = !agreeCheckbox.checked;
+            });
+
+            document.getElementById("openModalBtn")?.addEventListener("click", () => {
+                document.getElementById("modalVoucherCode").value = document.getElementById("voucherCode").value;
+                document.getElementById("modalUsedPoint").value = document.querySelector("input[name='UsedPoint']").value;
+            });
+        });
+    </script>
+}
