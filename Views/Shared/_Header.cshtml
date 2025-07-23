@@ -1,206 +1,233 @@
 ﻿
 @* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
 @{
+    var inBookingFlow = Context.Request.Cookies["booking_flow"] == "1";
     var token = Context.Session.GetString("AccessToken");
     bool isLoggedIn = !string.IsNullOrEmpty(token);
 }
 
-<!-- Topbar -->
-<div class="bg-dark text-white py-2 px-4 d-flex justify-content-end align-items-center gap-3">
-    <!-- Language switch -->
-    <div class="language-switch border rounded-pill overflow-hidden d-flex">
-        <button type="button" class="btn btn-sm lang-btn active">VN</button>
-        <button type="button" class="btn btn-sm lang-btn">EN</button>
-    </div>
-
-    <!-- Register -->
-    @if (!isLoggedIn)
-    {
-        <a href="javascript:void(0);" onclick="openRegisterModal()" class="btn btn-sm btn-register">Đăng ký</a>
-    }
-</div>
-
-
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg bg-white">
-    <div class="container-fluid">
-        <!-- Logo bên trái -->
-        <a class="navbar-brand ms-lg-5 me-4" href="/">
-            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub">
+@if (inBookingFlow)
+{
+    <!-- Giao diện tối giản khi đang đặt vé -->
+    <div class="d-flex justify-content-between align-items-center px-4 py-2 bg-dark text-white">
+        <a href="/" class="navbar-brand">
+            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub" style="height: 40px;" />
         </a>
-
-        <!-- Toggler cho mobile -->
-        <button class="navbar-toggler d-lg-none" type="button" id="menuToggle">
-            <i class="bi bi-list fs-3"></i>
-        </button>
-
-
-        <!-- Trung tâm: TICKET + Nav Items -->
-        <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNav">
-
-            <ul class="navbar-nav align-items-center gap-lg-4">
-                <!-- TICKET button -->
-                <li class="nav-item">
-                    <a href="/dat-ve" class="btn-ticket d-none d-lg-block">
-                        <img src="~/images/ticket-button.png" alt="TICKET" style="height: 50px;">
-                    </a>
-                </li>
-
-                <!-- Menu dropdowns -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Phim</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="/#showing">Phim đang chiếu</a></li>
-                        <li><a class="dropdown-item" href="/#upcoming">Phim sắp chiếu</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Rạp</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetAllCinemas">Tất cả rạp</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1">Galaxy Trung Chánh</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="2">Galaxy Nguyễn Văn Quá</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3">Galaxy Nguyễn Du</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="4">Galaxy Kinh Dương Vương</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="5">Galaxy Kinh Đà Nẵng</a></li>
-                        <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="6">Galaxy Kinh Bến Tre</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Sản phẩm</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="@Url.Action("ListFood", "Food")">Bắp nước</a></li>
-                    </ul>
-                </li>
-
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Tin tức</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="@Url.Action("promotion", "Home")">Khuyến mãi</a></li>
-                        <li><a class="dropdown-item" href="@Url.Action("ReviewMovies", "Home")">Bình luận phim</a></li>
-                    </ul>
-                </li>
-            </ul>
+        <button class="btn btn-outline-light btn-sm" onclick="cancelBookingFlow()">Hủy giao dịch</button>
+    </div>
+}
+else
+{
+    <!-- Topbar -->
+    <div class="bg-dark text-white py-2 px-4 d-flex justify-content-end align-items-center gap-3">
+        <!-- Language switch -->
+        <div class="language-switch border rounded-pill overflow-hidden d-flex">
+            <button type="button" class="btn btn-sm lang-btn active">VN</button>
+            <button type="button" class="btn btn-sm lang-btn">EN</button>
         </div>
 
-        <!-- Góc phải: Đăng nhập / Thành viên -->
-        <div class="d-flex align-items-center gap-3 me-lg-5" style="margin-left: auto;">
+        <!-- Register -->
+        @if (!isLoggedIn)
+        {
+            <a href="javascript:void(0);" onclick="openRegisterModal()" class="btn btn-sm btn-register">Đăng ký</a>
+        }
+    </div>
+
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white">
+        <div class="container-fluid">
+            <!-- Logo bên trái -->
+            <a class="navbar-brand ms-lg-5 me-4" href="/">
+                <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub">
+            </a>
+
+            <!-- Toggler cho mobile -->
+            <button class="navbar-toggler d-lg-none" type="button" id="menuToggle">
+                <i class="bi bi-list fs-3"></i>
+            </button>
+
+
+            <!-- Trung tâm: TICKET + Nav Items -->
+            <div class="collapse navbar-collapse justify-content-center d-none d-lg-flex" id="navbarNav">
+
+                <ul class="navbar-nav align-items-center gap-lg-4">
+                    <!-- TICKET button -->
+                    <li class="nav-item">
+                        <a href="/dat-ve" class="btn-ticket d-none d-lg-block">
+                            <img src="~/images/ticket-button.png" alt="TICKET" style="height: 50px;">
+                        </a>
+                    </li>
+
+                    <!-- Menu dropdowns -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Phim</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/#showing">Phim đang chiếu</a></li>
+                            <li><a class="dropdown-item" href="/#upcoming">Phim sắp chiếu</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Rạp</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetAllCinemas">Tất cả rạp</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1">Galaxy Trung Chánh</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="2">Galaxy Nguyễn Văn Quá</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3">Galaxy Nguyễn Du</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="4">Galaxy Kinh Dương Vương</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="5">Galaxy Kinh Đà Nẵng</a></li>
+                            <li><a class="dropdown-item" asp-controller="Cinema" asp-action="GetCinema" asp-route-id="6">Galaxy Kinh Bến Tre</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Sản phẩm</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("ListFood", "Food")">Bắp nước</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold" href="#" role="button" data-bs-toggle="dropdown">Tin tức</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="@Url.Action("promotion", "Home")">Khuyến mãi</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("ReviewMovies", "Home")">Bình luận phim</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Góc phải: Đăng nhập / Thành viên -->
+            <div class="d-flex align-items-center gap-3 me-lg-5" style="margin-left: auto;">
+                @if (!isLoggedIn)
+                {
+                    <a href="javascript:void(0);" onclick="openLoginModal()" class="d-flex align-items-center text-decoration-none text-dark">
+                        <i class="bi bi-box-arrow-in-right"></i> <span class="ms-1">Đăng nhập</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Profile" class="d-flex align-items-center text-decoration-none text-dark">
+                        <img src="~/images/member.png" class="me-1" style="width: 20px; height: 20px; object-fit: contain;" alt="Thành viên" />
+                        <span>Thành viên</span>
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        <button class="btn btn-sm btn-outline-dark" type="submit">Đăng xuất</button>
+                    </form>
+                }
+            </div>
+    </nav>
+
+    <!-- Sidebar menu cho mobile -->
+    <div id="mobileMenu" class="position-fixed top-0 end-0 bg-white shadow h-100 p-4" style="width: 280px; z-index: 1050; transform: translateX(100%); transition: transform 0.3s;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <img src="~/images/hub_logo_new.png" alt="Logo" height="28" />
+            <button class="btn-close" id="menuClose"></button>
+        </div>
+
+        <a href="/dat-ve" class="btn btn-warning w-100 mb-3"><i class="bi bi-star-fill me-1"></i> Mua vé</a>
+
+        <div class="accordion" id="accordionMenu">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menu1">Phim</button>
+                </h2>
+                <div id="menu1" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <a href="#" class="d-block">Phim đang chiếu</a>
+                        <a href="#" class="d-block">Phim sắp chiếu</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bạn có thể lặp lại các mục giống như phần navbar -->
+            <!-- Rạp -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuRap">
+                        Rạp
+                    </button>
+                </h2>
+                <div id="menuRap" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <a href="#" class="d-block py-1">Tất cả rạp</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1" class="d-block py-1">Galaxy Trung Chánh</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="2" class="d-block py-1">Galaxy Nguyễn Văn Quá</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3" class="d-block py-1">Galaxy Nguyễn Du</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="4" class="d-block py-1">Galaxy Kinh Dương Vương</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="5" class="d-block py-1">Galaxy Đà Nẵng</a>
+                        <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="6" class="d-block py-1">Galaxy Kinh Bến Tre</a>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ... các mục khác -->
+            <!-- Sản phẩm -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuSanPham">
+                        Sản phẩm
+                    </button>
+                </h2>
+                <div id="menuSanPham" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <a href="@Url.Action("ListFood", "Food")">Bắp nước</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sự kiện và ưu đãi -->
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuSuKien">
+                        Sự kiện và ưu đãi
+                    </button>
+                </h2>
+                <div id="menuSuKien" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+                        <a href="@Url.Action("promotion", "Home")">Khuyến mãi</a>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <!-- Đăng nhập -->
+        <div class="mt-4">
             @if (!isLoggedIn)
             {
-                <a href="javascript:void(0);" onclick="openLoginModal()" class="d-flex align-items-center text-decoration-none text-dark">
-                    <i class="bi bi-box-arrow-in-right"></i> <span class="ms-1">Đăng nhập</span>
+                <a href="javascript:void(0);" onclick="openLoginModal()" class="d-block text-dark fw-medium mb-2">
+                    <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+                </a>
+                <a href="javascript:void(0);" onclick="openRegisterModal()" class="d-block text-dark fw-medium">
+                    <i class="bi bi-person-plus"></i> Đăng ký
                 </a>
             }
             else
             {
-                <a asp-controller="Account" asp-action="Profile" class="d-flex align-items-center text-decoration-none text-dark">
-                    <img src="~/images/member.png" class="me-1" style="width: 20px; height: 20px; object-fit: contain;" alt="Thành viên" />
-                    <span>Thành viên</span>
+                <a asp-controller="Account" asp-action="Profile" class="d-block text-dark fw-medium mb-2">
+                    <i class="bi bi-person-circle"></i> Thành viên
                 </a>
                 <form asp-controller="Account" asp-action="Logout" method="post">
-                    <button class="btn btn-sm btn-outline-dark" type="submit">Đăng xuất</button>
+                    <button type="submit" class="btn btn-sm btn-outline-dark w-100">Đăng xuất</button>
                 </form>
             }
         </div>
-</nav>
-
-<!-- Sidebar menu cho mobile -->
-<div id="mobileMenu" class="position-fixed top-0 end-0 bg-white shadow h-100 p-4" style="width: 280px; z-index: 1050; transform: translateX(100%); transition: transform 0.3s;">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <img src="~/images/hub_logo_new.png" alt="Logo" height="28" />
-        <button class="btn-close" id="menuClose"></button>
     </div>
+}
 
-    <a href="/dat-ve" class="btn btn-warning w-100 mb-3"><i class="bi bi-star-fill me-1"></i> Mua vé</a>
-
-    <div class="accordion" id="accordionMenu">
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menu1">Phim</button>
-            </h2>
-            <div id="menu1" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                    <a href="#" class="d-block">Phim đang chiếu</a>
-                    <a href="#" class="d-block">Phim sắp chiếu</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Bạn có thể lặp lại các mục giống như phần navbar -->
-        <!-- Rạp -->
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuRap">
-                    Rạp
-                </button>
-            </h2>
-            <div id="menuRap" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                    <a href="#" class="d-block py-1">Tất cả rạp</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="1" class="d-block py-1">Galaxy Trung Chánh</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="2" class="d-block py-1">Galaxy Nguyễn Văn Quá</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="3" class="d-block py-1">Galaxy Nguyễn Du</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="4" class="d-block py-1">Galaxy Kinh Dương Vương</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="5" class="d-block py-1">Galaxy Đà Nẵng</a>
-                    <a asp-controller="Cinema" asp-action="GetCinema" asp-route-id="6" class="d-block py-1">Galaxy Kinh Bến Tre</a>
-                </div>
-
-            </div>
-        </div>
-        <!-- ... các mục khác -->
-        <!-- Sản phẩm -->
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuSanPham">
-                    Sản phẩm
-                </button>
-            </h2>
-            <div id="menuSanPham" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                    <a href="@Url.Action("ListFood", "Food")">Bắp nước</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sự kiện và ưu đãi -->
-        <div class="accordion-item">
-            <h2 class="accordion-header">
-                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#menuSuKien">
-                    Sự kiện và ưu đãi
-                </button>
-            </h2>
-            <div id="menuSuKien" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                    <a href="@Url.Action("promotion", "Home")">Khuyến mãi</a>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-
-    <!-- Đăng nhập -->
-    <div class="mt-4">
-        @if (!isLoggedIn)
-        {
-            <a href="javascript:void(0);" onclick="openLoginModal()" class="d-block text-dark fw-medium mb-2">
-                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
-            </a>
-            <a href="javascript:void(0);" onclick="openRegisterModal()" class="d-block text-dark fw-medium">
-                <i class="bi bi-person-plus"></i> Đăng ký
-            </a>
+<script>
+    function cancelBookingFlow() {
+        if (confirm("Bạn có chắc chắn muốn hủy giao dịch này không?")) {
+            sessionStorage.clear();
+            document.cookie = "booking_flow=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            fetch("/Booking/CancelFlow") // cần có controller như đã nói
+                .then(() => window.location.href = "/");
         }
-        else
-        {
-            <a asp-controller="Account" asp-action="Profile" class="d-block text-dark fw-medium mb-2">
-                <i class="bi bi-person-circle"></i> Thành viên
-            </a>
-            <form asp-controller="Account" asp-action="Logout" method="post">
-                <button type="submit" class="btn btn-sm btn-outline-dark w-100">Đăng xuất</button>
-            </form>
-        }
-    </div>
-</div>
+    }
+</script>
+
+
 
 

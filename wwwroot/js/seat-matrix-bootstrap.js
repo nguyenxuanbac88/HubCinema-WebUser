@@ -356,6 +356,7 @@
                 },
                 body: JSON.stringify(bookingModel)
             });
+            document.cookie = "booking_flow=1; path=/";
 
             if (response.ok) {
                 window.location.href = "/Combo/Index?inBookingFlow=true";

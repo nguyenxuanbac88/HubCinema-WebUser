@@ -37,6 +37,9 @@ namespace MovieTicketWebsite.Controllers
             var total = model.Seats.Sum(s => s.Price);
             HttpContext.Session.SetString("SeatTotal", total.ToString());
 
+            // ✅ Đánh dấu người dùng đang trong quy trình đặt vé
+            HttpContext.Session.SetString("BookingFlow", "1");
+
             // ❌ Không nên dùng TempData ở đây vì đã bị mất sau khi render Matrix
             return Ok();
             // ✅ Ghi log ra console bằng response JSON (để log đỏ ở JS)
