@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
 using Newtonsoft.Json;
+using System.Diagnostics.Metrics;
 using System.Text;
 
 namespace MovieTicketWebsite.Controllers
@@ -69,7 +70,7 @@ namespace MovieTicketWebsite.Controllers
                 TempData["LoginMessage"] = "Lỗi kết nối API: " + ex.Message;
             }
 
-            return Redirect(Request.Headers["Referer"].ToString());
+            return RedirectToAction("Index", "Home"); 
         }
 
         [HttpGet]
