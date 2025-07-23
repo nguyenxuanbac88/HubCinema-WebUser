@@ -70,7 +70,7 @@ namespace MovieTicketWebsite.Controllers
                 TempData["LoginMessage"] = "Lỗi kết nối API: " + ex.Message;
             }
 
-            return RedirectToAction("Index", "Home"); 
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         [HttpGet]
