@@ -179,45 +179,7 @@
                     break;
                 }
             }
-
-            // ✅ Luật 2: Không để trống 2 ghế liền giữa
-            if (valid) {
-                for (let i = 1; i < seatsInRow.length - 2; i++) {
-                    const s1 = seatsInRow[i];
-                    const s2 = seatsInRow[i + 1];
-                    const left = seatsInRow[i - 1];
-                    const right = seatsInRow[i + 2];
-
-                    if (
-                        !selectedSeats.has(s1.dataset.id) &&
-                        !selectedSeats.has(s2.dataset.id) &&
-                        selectedSeats.has(left.dataset.id) &&
-                        selectedSeats.has(right.dataset.id) &&
-                        !s1.classList.contains("confirmed") &&
-                        !s2.classList.contains("confirmed")
-                    ) {
-                        valid = false;
-                        reason = "Không được để trống 2 ghế liền nhau giữa các ghế đã chọn.";
-                        break;
-                    }
-                }
-            }
-
-            // ✅ Luật 3: Không chọn cách xa nhau
-            if (valid) {
-                const selectedIndexes = seatsInRow
-                    .map((s, i) => selectedSeats.has(s.dataset.id) ? i : -1)
-                    .filter(i => i !== -1);
-
-                for (let i = 1; i < selectedIndexes.length; i++) {
-                    if (selectedIndexes[i] - selectedIndexes[i - 1] > 1) {
-                        valid = false;
-                        reason = "Các ghế được chọn phải nằm liền kề, không được cách xa.";
-                        break;
-                    }
-                }
-            }
-            // ✅ Luật 7: Ghế đang held (đã được xử lý từ trước bằng class 'held') — bỏ qua
+           
 
             seatEl.classList.remove("selected");
 
