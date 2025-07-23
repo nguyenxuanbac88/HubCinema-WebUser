@@ -8,13 +8,15 @@
 
 @if (inBookingFlow)
 {
-    <!-- Giao diện tối giản khi đang đặt vé -->
-    <div class="d-flex justify-content-between align-items-center px-4 py-2 bg-dark text-white">
+    <div class="booking-header d-flex justify-content-between align-items-center px-4 py-3 bg-white border-bottom shadow-sm">
         <a href="/" class="navbar-brand">
-            <img src="~/images/hub_logo_new.png" alt="Logo" class="logo-hub" style="height: 40px;" />
+            <img src="/images/hub_logo_new.png" alt="Logo" class="logo-hub" style="height: 42px;" />
         </a>
-        <button class="btn btn-outline-light btn-sm" onclick="cancelBookingFlow()">Hủy giao dịch</button>
+        <button class="btn btn-link text-danger fw-bold text-decoration-none" onclick="cancelBookingFlow()" style="font-size: 1rem;">
+            Hủy giao dịch <i class="bi bi-x-lg ms-1"></i>
+        </button>
     </div>
+
 }
 else
 {
