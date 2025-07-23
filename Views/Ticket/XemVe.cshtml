@@ -105,13 +105,14 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            const shouldClear = '@TempData["ClearSeatCountdown"]' === 'True';
+            const shouldClear = "@TempData["ClearSeatCountdown"]".toLowerCase() === "true";
 
             if (shouldClear) {
-                sessionStorage.removeItem("seatCountdownStart");
+                sessionStorage.removeItem("countdown_start"); // ❗ đúng key phải là countdown_start
                 const countdown = document.getElementById("countdown-timer");
-                if (countdown) countdown.remove();
+                if (countdown) countdown.style.display = "none";
             }
         });
     </script>
 }
+
