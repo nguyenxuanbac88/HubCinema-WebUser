@@ -96,12 +96,18 @@ namespace MovieTicketWebsite.Controllers
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("http://api.dvxuanbac.com:2030");
                 var token = HttpContext.Session.GetString("AccessToken");
+                if (!string.IsNullOrEmpty(token))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(token);
+                    Console.ResetColor();
+                }
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                booking.IdVoucher = 0; // Nếu có xử lý VoucherCode, cập nhật ở đây
+                booking.IdVoucher = 0;
                 booking.UsedPoint = UsedPoint;
 
-                // Ghép dữ liệu combo
+                // ⚠️ Ghép combo và ép kiểu Price
                 booking.Foods = combo.Foods?.Select(f => new FoodDto
                 {
                     IdFood = f.IdFood,
@@ -109,15 +115,23 @@ namespace MovieTicketWebsite.Controllers
                     Price = (int)f.Price
                 }).ToList() ?? new List<FoodDto>();
 
-                // Ghép danh sách ghế từ seatInfo
-                booking.Seats = seatInfo.SelectedSeats?.Select(s => new SeatDto
-                {
-                    MaGhe = s.MaGhe,
-                    Price = (int)s.Price
-                }).ToList() ?? new List<SeatDto>();
+                // ⚠️ Ghép ghế và ép Price về int
+                booking.Seats = booking.Seats
+    .Where(s => !string.IsNullOrEmpty(s.MaGhe))
+    .Select(s => new SeatDto
+    {
+        MaGhe = s.MaGhe,
+        Price = (int)Math.Round((decimal)s.Price) // ✅ CHỐT QUAN TRỌNG
+    }).ToList();
+
+
+
+
 
                 // ✅ Bỏ bọc request (API KHÔNG yêu cầu wrapper)
                 var json = JsonConvert.SerializeObject(booking);
+                Console.WriteLine("✅ Booking JSON: " + json);
+
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync("/api/Booking/book", content);
@@ -134,8 +148,9 @@ namespace MovieTicketWebsite.Controllers
                 }
 
                 var responseJson = await response.Content.ReadAsStringAsync();
-                var result = JsonConvert.DeserializeObject<dynamic>(responseJson);
-                int invoiceId = result.invoiceId;
+                var result = JsonConvert.DeserializeObject<BookingResponseModel>(responseJson); // ✅ deserialize bằng model
+                int invoiceId = result.InvoiceId; // ✅ lấy chuẩn theo property
+
                 HttpContext.Session.SetInt32("InvoiceId", invoiceId);
                 Console.WriteLine($"[✔] Booking thành công - InvoiceId: {invoiceId}");
             }
@@ -159,6 +174,8 @@ namespace MovieTicketWebsite.Controllers
             };
 
             HttpContext.Session.SetString("VnPayData", JsonConvert.SerializeObject(model));
+            Console.ForegroundColor = ConsoleColor.Green;
+
 
             return RedirectToAction("RedirectToVNPay", "Payment");
         }

@@ -102,3 +102,16 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const shouldClear = '@TempData["ClearSeatCountdown"]' === 'True';
+
+            if (shouldClear) {
+                sessionStorage.removeItem("seatCountdownStart");
+                const countdown = document.getElementById("countdown-timer");
+                if (countdown) countdown.remove();
+            }
+        });
+    </script>
+}
