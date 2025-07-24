@@ -278,19 +278,77 @@
         }
 
     }
-
-
-
     const btnDatVe = document.getElementById("btnDatVe");
     if (btnDatVe) {
         btnDatVe.addEventListener("click", async () => {
             const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
                 .map(seat => seat.dataset.id);
 
-            if (selectedSeats.length === 0) {
-                return alert("Vui lòng chọn ít nhất một ghế để tiếp tục.");
+            if (selectedSeats.length-1 === 0) {
+                showToast("Vui lòng chọn ít nhất một ghế để tiếp tục.")
+                return;
             }
+            // ✅ Kiểm tra ghế trống giữa các ghế đã chọn/đã giữ/đã bán
+            const seatRows = document.querySelectorAll(".seat-row");
+            for (const row of seatRows) {
+                const seatsInRow = Array.from(row.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
 
+                const occupiedSeats = seatsInRow.filter(s =>
+                    s.classList.contains("selected") ||
+                    s.classList.contains("held") ||
+                    s.classList.contains("confirmed")
+                );
+
+                for (let i = 0; i < occupiedSeats.length - 1; i++) {
+                    const leftIndex = seatsInRow.indexOf(occupiedSeats[i]);
+                    const rightIndex = seatsInRow.indexOf(occupiedSeats[i + 1]);
+
+                    if (rightIndex - leftIndex === 2) {
+                        const middleSeat = seatsInRow[leftIndex + 1];
+                        const isEmpty = !middleSeat.classList.contains("selected") &&
+                            !middleSeat.classList.contains("held") &&
+                            !middleSeat.classList.contains("confirmed");
+
+                        if (isEmpty) {
+                            showToast("Không được để trống một ghế ở giữa các ghế đã chọn hoặc đã bán.");
+                            middleSeat.scrollIntoView({ behavior: "smooth", block: "center" });
+                            return;
+                        }
+                    }
+                }
+            }
+            // ✅ ② Kiểm tra khoảng trống giữa các ghế đang chọn
+            for (const row of seatRows) {
+                const seatsInRow = Array.from(row.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
+
+                const selectedSeatsInRow = seatsInRow.filter(s => s.classList.contains("selected"));
+
+                if (selectedSeatsInRow.length >= 2) {
+                    for (let i = 0; i < selectedSeatsInRow.length - 1; i++) {
+                        const leftIndex = seatsInRow.indexOf(selectedSeatsInRow[i]);
+                        const rightIndex = seatsInRow.indexOf(selectedSeatsInRow[i + 1]);
+
+                        const distance = rightIndex - leftIndex;
+                        if (distance > 1) {
+                            let allMiddleEmpty = true;
+
+                            for (let j = leftIndex + 1; j < rightIndex; j++) {
+                                const seat = seatsInRow[j];
+                                if (seat.classList.contains("selected")) {
+                                    allMiddleEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (allMiddleEmpty) {
+                                showToast("Không được để trống ghế ở giữa các ghế bạn đang chọn.");
+                                seatsInRow[leftIndex + 1].scrollIntoView({ behavior: "smooth", block: "center" });
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
             const idSuatChieu = document.getElementById("seat-matrix").getAttribute('data-id-suat-chieu');
 
             // ✅ Gọi API giữ ghế trước khi lưu dữ liệu
