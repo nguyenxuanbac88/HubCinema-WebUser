@@ -140,48 +140,43 @@
         const selectedCount = document.querySelectorAll(".seat.selected").length;
         const isCurrentlySelected = seatEl.classList.contains("selected");
 
-        // ✅ Luật 4: Không vượt quá 8 ghế
+        // ✅ Không vượt quá 8 ghế
         if (selectedCount > 8 && !isCurrentlySelected) {
             showToast("Bạn chỉ được chọn tối đa 8 ghế mỗi lần.");
             return false;
         }
 
-        // ✅ Nếu đang chọn mới kiểm tra
+        // ✅ Nếu đang chọn mới thì kiểm tra
         if (!isCurrentlySelected) {
-            seatEl.classList.add("selected");
-
-            const selectedSeats = new Set(
-                seatsInRow
-                    .filter(s => s.classList.contains("selected") || s.classList.contains("confirmed") || s.classList.contains("held"))
-                    .map(s => s.dataset.id)
-            );
-
             let valid = true;
             let reason = "";
 
-            // ✅ Luật 1: Không để trống 1 ghế giữa
-            for (let i = 1; i < seatsInRow.length - 1; i++) {
-                const left = seatsInRow[i - 1];
-                const middle = seatsInRow[i];
-                const right = seatsInRow[i + 1];
+            // ✅ Chỉ tính các ghế đang chọn + giả lập ghế đang click
+            const selectedSeats = new Set(
+                seatsInRow
+                    .filter(s => s.classList.contains("selected") || s === seatEl)
+                    .map(s => s.dataset.id)
+            );
 
-                const isLeftSelected = selectedSeats.has(left.dataset.id);
-                const isMiddleEmpty = !selectedSeats.has(middle.dataset.id);
-                const isRightSelected = selectedSeats.has(right.dataset.id);
+            // ✅ Tạo danh sách các ghế đang chọn trên hàng
+            const takenSeats = seatsInRow.filter(s => selectedSeats.has(s.dataset.id));
 
-                if (
-                    isLeftSelected && isRightSelected && isMiddleEmpty &&
-                    !middle.classList.contains("confirmed") &&
-                    !middle.classList.contains("held")
-                ) {
-                    valid = false;
-                    reason = "Không được để trống 1 ghế giữa các ghế đã chọn hoặc đã bán.";
-                    break;
+            for (let i = 0; i < takenSeats.length - 1; i++) {
+                const leftIndex = seatsInRow.indexOf(takenSeats[i]);
+                const rightIndex = seatsInRow.indexOf(takenSeats[i + 1]);
+
+                if (rightIndex - leftIndex === 2) {
+                    const middleSeat = seatsInRow[leftIndex + 1];
+
+                    const isEmpty = !selectedSeats.has(middleSeat.dataset.id);
+
+                    if (isEmpty) {
+                        valid = false;
+                        reason = "Không được để trống 1 ghế giữa các ghế bạn đang chọn.";
+                        break;
+                    }
                 }
             }
-           
-
-            seatEl.classList.remove("selected");
 
             if (!valid) {
                 showToast(reason);
@@ -191,6 +186,7 @@
 
         return true;
     }
+
     function showToast(message) {
         const modal = document.getElementById("errorModal");
         const msgEl = document.getElementById("errorModalMessage");
