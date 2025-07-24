@@ -16,6 +16,7 @@ namespace MovieTicketWebsite.Controllers
             var json = TempData["VnpayResult"].ToString();
             var response = JsonSerializer.Deserialize<PaymentResponseModel>(json);
 
+
             // Lấy các dữ liệu bổ sung từ session
             var bookingJson = HttpContext.Session.GetString("BookingData");
             var seatInfoJson = HttpContext.Session.GetString("SeatInfo");
@@ -51,6 +52,9 @@ namespace MovieTicketWebsite.Controllers
                 ComboTotal = (decimal)comboTotal
             };
 
+            // ⛔ Đây là bước bạn đang thiếu: xoá cookie booking_flow
+            Response.Cookies.Delete("booking_flow"); // ✅ Xoá ngay khi hiện vé
+            ViewBag.inBookingFlow = false; // ✳️ Truyền cứng
             return View(ticket);
         }
 

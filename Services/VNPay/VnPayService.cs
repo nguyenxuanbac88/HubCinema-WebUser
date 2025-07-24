@@ -19,6 +19,13 @@ namespace MovieTicketWebsite.Services.VNPay
             var tick = DateTime.Now.Ticks.ToString();
             var pay = new VnPayLibrary();
             var urlCallBack = _configuration["Vnpay:PaymentBackReturnUrl"];
+            if (string.IsNullOrEmpty(urlCallBack))
+            {
+                // Fallback nếu chưa cấu hình (tự tạo từ request hiện tại)
+                var request = context.Request;
+                urlCallBack = $"{request.Scheme}://{request.Host}/Payment/PaymentCallbackVnpay";
+            }
+
 
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
             pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);

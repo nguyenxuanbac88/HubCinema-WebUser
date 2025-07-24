@@ -40,14 +40,24 @@
 
         // Gắn sự kiện click cho từng giờ chiếu
         showtimeContainer.querySelectorAll('.showtime-badge').forEach(el => {
-            el.addEventListener('click', function () {
+            el.addEventListener('click', async function () {
                 const suatChieu = this.getAttribute('data-suat-chieu');
-                if (suatChieu) {
-                    window.location.href = `/Movie/ChonGhe/${suatChieu}`;
 
+                // Kiểm tra JWT
+                const tokenRes = await fetch("/Login/GetJwt");
+                if (!tokenRes.ok) {
+                    if (typeof openLoginModal === "function") {
+                        sessionStorage.setItem("pendingSuatChieu", suatChieu); // lưu lại để xử lý sau khi đăng nhập
+                        openLoginModal();
+                    }
+                    return;
                 }
+
+                // Đã đăng nhập → chuyển trang
+                window.location.href = `/Movie/ChonGhe/${suatChieu}`;
             });
         });
+
     }
 
     function applyFilters() {
@@ -98,4 +108,12 @@
 
     // Lần đầu
     applyFilters();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const pending = sessionStorage.getItem("pendingSuatChieu");
+    if (pending) {
+        sessionStorage.removeItem("pendingSuatChieu");
+        window.location.href = `/Movie/ChonGhe/${pending}`;
+    }
 });

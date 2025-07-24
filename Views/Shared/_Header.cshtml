@@ -1,7 +1,8 @@
 ﻿
 @* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
 @{
-    var inBookingFlow = Context.Request.Cookies["booking_flow"] == "1";
+    // Ưu tiên ViewBag nếu có, fallback cookie nếu không
+    var inBookingFlow = ViewBag.inBookingFlow is bool vb ? vb : (Context.Request.Cookies["booking_flow"] == "1");
     var token = Context.Session.GetString("AccessToken");
     bool isLoggedIn = !string.IsNullOrEmpty(token);
 }
