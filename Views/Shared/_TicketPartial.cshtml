@@ -1,21 +1,33 @@
 ﻿@model TicketViewModel
 
-<div class="ticket-modal-content text-center p-3">
-    <img src="@Model.PosterUrl" width="100" class="mb-2" />
-    <h5 class="fw-bold">@Model.MovieTitle</h5>
-    <div class="text-muted small">@Model.CinemaName - @Model.RoomName</div>
-    <div class="text-muted small mb-2">@Model.ShowTime.ToString("HH:mm dd/MM/yyyy")</div>
-    <div class="fw-semibold mb-1">🎟 Ghế: @Model.Seats</div>
+<div class="ticket-modal-content card mx-auto shadow-lg rounded-4 p-4" style="max-width: 400px; background-color: #f8f9fa;">
+    <div class="text-center">
+        <img src="@Model.PosterUrl" class="img-fluid rounded mb-3" style="width: 120px; height: auto;" alt="Poster" />
+        <h5 class="fw-bold">@Model.MovieTitle</h5>
+        <p class="text-muted mb-1">
+            <i class="bi bi-geo-alt-fill me-1"></i>@Model.CinemaName - @Model.RoomName
+        </p>
+        <p class="text-muted mb-3">
+            <i class="bi bi-clock-fill me-1"></i>@Model.ShowTime.ToString("HH:mm dd/MM/yyyy")
+        </p>
 
-    @if (Model.Foods.Any())
-    {
-        <div class="text-muted small mb-2">
-            🍿 Combo: @string.Join(", ", Model.Foods.Select(f => $"{f.Quantity}x {f.FoodName}"))
+        <div class="fw-semibold mb-2">
+            <i class="bi bi-ticket-perforated-fill me-1"></i>Ghế: <span class="text-dark">@Model.Seats</span>
         </div>
-    }
 
-    <div class="text-success fw-bold mt-2">
-        💰 Tổng: @(Model.Price.ToString("N0")) VNĐ
+        @if (Model.Foods.Any())
+        {
+            <div class="text-muted small mb-2">
+                <i class="bi bi-cup-straw me-1"></i>Combo: @string.Join(", ", Model.Foods.Select(f => $"{f.Quantity}x {f.FoodName}"))
+            </div>
+        }
+
+        <div class="text-success fw-bold fs-5 mt-3">
+            <i class="bi bi-cash-stack me-1"></i>@Model.Price.ToString("N0") VNĐ
+        </div>
+
+        <div class="text-muted small mt-2">
+            <i class="bi bi-hash me-1"></i>Mã vé: <span class="fw-medium">@Model.OrderId</span>
+        </div>
     </div>
-    <div class="text-muted small">Mã vé: <span>@Model.OrderId</span></div>
 </div>
