@@ -164,6 +164,44 @@
                         <button type="submit" class="btn btn-warning text-white px-4 rounded">Cập nhật</button>
                     </div>
                 </form>
+               
+            </div>
+            @if (ViewBag.Transactions != null)
+            {
+                <div class="mt-4">
+                    <h5 class="mb-3 text-dark fw-semibold">🧾 Lịch sử giao dịch gần đây</h5>
+                    <div class="d-flex flex-column gap-3">
+                        @foreach (var item in (List<MovieTicketWebsite.Models.Transaction.TransactionHistoryItem>)ViewBag.Transactions)
+                        {
+                            <div class="d-flex align-items-center justify-content-between border rounded shadow-sm p-3 bg-white">
+                                <div class="d-flex align-items-center">
+                                    <img src="@item.PosterUrl" alt="poster" width="50" height="70" class="rounded me-3" />
+                                    <div>
+                                        <div class="fw-semibold">@item.MovieTitle</div>
+                                        <div class="text-muted small">@item.CinemaName - <strong>@item.RoomName</strong></div>
+                                        <div class="text-muted small">
+                                            🕒 <strong>@item.ShowTime.ToString("HH:mm")</strong> - @item.ShowTime.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="javascript:void(0)" class="text-warning fw-semibold small" onclick="showTicketModal('@item.OrderId')">Chi tiết</a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<!-- Modal xem vé -->
+<div class="modal fade" id="ticketModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content p-3">
+            <div id="ticketContent">
+                <div class="text-center text-muted">Đang tải...</div>
             </div>
         </div>
     </div>
@@ -197,4 +235,25 @@
         });
     </script>
 }
-}
+
+<script>
+    function showTicketModal(orderId) {
+        const contentEl = document.getElementById("ticketContent");
+        contentEl.innerHTML = '<div class="text-center text-muted">Đang tải...</div>';
+
+        fetch(`/Ticket/GetTicketPartial?orderId=${orderId}`)
+            .then(res => {
+                if (!res.ok) throw new Error("Không tìm thấy vé");
+                return res.text();
+            })
+            .then(html => {
+                contentEl.innerHTML = html;
+                const modal = new bootstrap.Modal(document.getElementById('ticketModal'));
+                modal.show();
+            })
+            .catch(err => {
+                contentEl.innerHTML = `<div class="text-danger text-center">❌ ${err.message}</div>`;
+            });
+    }
+</script>
+

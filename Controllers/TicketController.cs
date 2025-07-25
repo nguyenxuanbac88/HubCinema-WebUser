@@ -2,12 +2,18 @@
 using MovieTicketWebsite.Models;
 using MovieTicketWebsite.Models.Booking;
 using MovieTicketWebsite.Models.Vnpay;
+using MovieTicketWebsite.Services.Transaction;
 using System.Text.Json;
 
 namespace MovieTicketWebsite.Controllers
 {
     public class TicketController : Controller
     {
+        private readonly ITransactionService _transactionService;
+        public TicketController(ITransactionService transactionService)
+        {
+            _transactionService = transactionService;
+        }
         public IActionResult XemVe()
         {
             if (!TempData.ContainsKey("VnpayResult"))
@@ -51,6 +57,9 @@ namespace MovieTicketWebsite.Controllers
 
                 ComboTotal = (decimal)comboTotal
             };
+            // // Lưu vé vào Session để có thể lấy lại sau này
+            HttpContext.Session.SetString("LastTicketJson", JsonSerializer.Serialize(ticket));
+
 
             // ⛔ Đây là bước bạn đang thiếu: xoá cookie booking_flow
             Response.Cookies.Delete("booking_flow"); // ✅ Xoá ngay khi hiện vé
@@ -58,6 +67,14 @@ namespace MovieTicketWebsite.Controllers
             return View(ticket);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetTicketPartial(string orderId)
+        {
+            var ticket = await _transactionService.GetInvoiceByOrderIdAsync(orderId);
+            if (ticket == null)
+                return NotFound();
 
+            return PartialView("_TicketPartial", ticket);
+        }
     }
 }

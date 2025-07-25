@@ -1,4 +1,5 @@
 ﻿using MovieTicketWebsite.middlewares;
+using MovieTicketWebsite.Services.Transaction;
 using MovieTicketWebsite.Services.VNPay;
 
 namespace MovieTicketWebsite
@@ -13,6 +14,7 @@ namespace MovieTicketWebsite
             // Add services to the container.
 
             builder.Services.AddScoped<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 
             builder.Services.AddControllersWithViews();
