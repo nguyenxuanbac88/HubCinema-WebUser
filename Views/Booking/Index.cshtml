@@ -1,15 +1,17 @@
-﻿@model dynamic
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+@model dynamic
 @{
     ViewData["Title"] = "Booking";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container py-5">
-    <h2 class="mb-4 text-center">Đặt Vé Phim</h2>
+    <h2 class="mb-4 text-center">@Localizer["BookingTitle"]</h2>
 
     <!-- Step 1: Chọn Khu Vực -->
     <div class="mb-5">
-        <h5 class="mb-3">1. Chọn khu vực</h5>
+        <h5 class="mb-3">1. @Localizer["SelectRegion"]</h5>
         <select id="region-select" class="form-select w-auto d-inline-block">
             @* <option value="">-- Tất cả khu vực --</option> *@
             @foreach (var region in ViewBag.Regions as List<string>)
@@ -21,7 +23,7 @@
 
     <!-- Step 2: Chọn phim -->
     <div id="movie-section" class="mb-5 d-none">
-        <h5 class="mb-3">2. Chọn phim</h5>
+        <h5 class="mb-3">2.@Localizer["SelectMovie"]</h5>
         <div id="movie-list" class="row row-cols-2 row-cols-md-4 g-4">
             <!-- Render bằng JS -->
         </div>
@@ -29,7 +31,7 @@
 
     <!-- Step 3: Chọn suất chiếu -->
     <div id="showtime-section" class="mb-5 d-none">
-        <h5 class="mb-3">3. Chọn suất chiếu</h5>
+        <h5 class="mb-3">3. @Localizer["SelectShowtime"]</h5>
         <div id="showtime-list">
             <!-- Render bằng JS -->
         </div>
@@ -113,7 +115,7 @@
         );
 
         if (!filtered.length) {
-            showtimeList.innerHTML = '<div class="text-muted">Không có suất chiếu nào.</div>';
+            showtimeList.innerHTML = '<div class="text-muted">@Localizer["NoShowtimes"]</div>';
             showtimeSection.classList.remove("d-none");
             return;
         }

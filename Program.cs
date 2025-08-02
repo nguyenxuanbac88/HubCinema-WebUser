@@ -1,4 +1,6 @@
-﻿using MovieTicketWebsite.middlewares;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
+using MovieTicketWebsite.middlewares;
 using MovieTicketWebsite.Services.Transaction;
 using MovieTicketWebsite.Services.VNPay;
 
@@ -12,12 +14,24 @@ namespace MovieTicketWebsite
 
 
             // Add services to the container.
-
+            // 1. Add localization service
+            builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews().AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder)
+    .AddDataAnnotationsLocalization();
+            // 3. Add support for cookie-based culture provider
+            builder.Services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[] { "en", "vi" };
+                options.SetDefaultCulture("vi")
+                       .AddSupportedCultures(supportedCultures)
+                       .AddSupportedUICultures(supportedCultures);
+
+                options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+            });
             builder.Services.AddHttpClient();
             builder.Services.AddSession();
 
@@ -36,6 +50,8 @@ namespace MovieTicketWebsite
                 app.UseHsts();
             }
 
+            // 4. Enable localization middleware
+            app.UseRequestLocalization();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

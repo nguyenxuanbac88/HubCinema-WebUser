@@ -1,4 +1,9 @@
-﻿
+﻿@using System.Globalization
+@{
+    var currentCulture = CultureInfo.CurrentUICulture.TwoLetterISOLanguageName; // "vi" or "en"
+}
+
+
 @* HEADER - HubCinema (Bootstrap 5.3.2 Responsive) *@
 @{
     // Ưu tiên ViewBag nếu có, fallback cookie nếu không
@@ -25,9 +30,15 @@ else
     <div class="bg-dark text-white py-2 px-4 d-flex justify-content-end align-items-center gap-3">
         <!-- Language switch -->
         <div class="language-switch border rounded-pill overflow-hidden d-flex">
-            <button type="button" class="btn btn-sm lang-btn active">VN</button>
-            <button type="button" class="btn btn-sm lang-btn">EN</button>
+            <button type="button" class="btn btn-sm lang-btn @(currentCulture == "vi" ? "active" : "")" data-lang="vi">VN</button>
+            <button type="button" class="btn btn-sm lang-btn @(currentCulture == "en" ? "active" : "")" data-lang="en">EN</button>
         </div>
+
+        <!-- Hidden form for language switch -->
+        <form id="lang-form" asp-controller="Home" asp-action="SetLanguage" method="post" style="display: none;">
+            <input type="hidden" name="culture" id="culture-input" />
+            <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+        </form>
 
         <!-- Register -->
         @if (!isLoggedIn)
@@ -221,6 +232,13 @@ else
 }
 
 <script>
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const culture = btn.getAttribute('data-lang');
+            document.getElementById('culture-input').value = culture;
+            document.getElementById('lang-form').submit();
+        });
+    });
     function cancelBookingFlow() {
         if (confirm("Bạn có chắc chắn muốn hủy giao dịch này không?")) {
             sessionStorage.clear();

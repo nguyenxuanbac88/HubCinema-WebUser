@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
 using Newtonsoft.Json;
 
@@ -64,7 +65,7 @@ public class HomeController : Controller
             var json = await newsResponse.Content.ReadAsStringAsync();
             var allNews = JsonConvert.DeserializeObject<List<News>>(json);
 
-           
+
             newsList = allNews.Where(n => n.Category == 2).ToList();
         }
 
@@ -99,7 +100,7 @@ public class HomeController : Controller
             var json = await response.Content.ReadAsStringAsync();
             var allNews = JsonConvert.DeserializeObject<List<News>>(json);
 
-            
+
             newsList = allNews.Where(n => n.Category == 2).ToList();
         }
 
@@ -122,4 +123,18 @@ public class HomeController : Controller
 
         return View(newsList);
     }
+
+
+    [HttpPost]
+    public IActionResult SetLanguage(string culture, string returnUrl)
+    {
+        Response.Cookies.Append(
+            CookieRequestCultureProvider.DefaultCookieName,
+            CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+            new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+        );
+
+        return LocalRedirect(returnUrl ?? "/");
+    }
+
 }
