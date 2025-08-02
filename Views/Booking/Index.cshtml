@@ -1,0 +1,150 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "Booking";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4 text-center">Đặt Vé Phim</h2>
+
+    <!-- Step 1: Chọn Khu Vực -->
+    <div class="mb-5">
+        <h5 class="mb-3">1. Chọn khu vực</h5>
+        <select id="region-select" class="form-select w-auto d-inline-block">
+            @* <option value="">-- Tất cả khu vực --</option> *@
+            @foreach (var region in ViewBag.Regions as List<string>)
+            {
+                <option value="@region">@region</option>
+            }
+        </select>
+    </div>
+
+    <!-- Step 2: Chọn phim -->
+    <div id="movie-section" class="mb-5 d-none">
+        <h5 class="mb-3">2. Chọn phim</h5>
+        <div id="movie-list" class="row row-cols-2 row-cols-md-4 g-4">
+            <!-- Render bằng JS -->
+        </div>
+    </div>
+
+    <!-- Step 3: Chọn suất chiếu -->
+    <div id="showtime-section" class="mb-5 d-none">
+        <h5 class="mb-3">3. Chọn suất chiếu</h5>
+        <div id="showtime-list">
+            <!-- Render bằng JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Dữ liệu tất cả suất chiếu -->
+<script id="all-showtimes-data" type="application/json">
+    @Html.Raw(ViewBag.AllShowtimesJson)
+</script>
+
+<script>
+    const allShowtimes = JSON.parse(document.getElementById("all-showtimes-data").textContent);
+    const regionSelect = document.getElementById("region-select");
+    const movieSection = document.getElementById("movie-section");
+    const movieList = document.getElementById("movie-list");
+    const showtimeSection = document.getElementById("showtime-section");
+    const showtimeList = document.getElementById("showtime-list");
+
+    let selectedRegion = "";
+    let selectedMovie = null;
+
+    regionSelect.addEventListener("change", () => {
+        selectedRegion = regionSelect.value;
+        selectedMovie = null;
+        showtimeSection.classList.add("d-none");
+        renderMovieList();
+    });
+
+        // Khi trang load lần đầu, nếu đã chọn khu vực thì render phim luôn
+    document.addEventListener("DOMContentLoaded", () => {
+        if (regionSelect.value) {
+            selectedRegion = regionSelect.value;
+            renderMovieList();
+        }
+    });
+
+
+    function renderMovieList() {
+        const filtered = allShowtimes.filter(s => !selectedRegion || s.region === selectedRegion);
+        const movieMap = new Map();
+
+        filtered.forEach(item => {
+            if (!movieMap.has(item.maPhim)) {
+                movieMap.set(item.maPhim, {
+                    maPhim: item.maPhim,
+                    tenPhim: item.tenPhim,
+                    poster: item.poster
+                });
+            }
+        });
+
+        movieList.innerHTML = "";
+        for (let movie of movieMap.values()) {
+            const col = document.createElement("div");
+            col.className = "col";
+            col.innerHTML = `
+                <div class="card h-100 movie-card" data-id="${movie.maPhim}">
+                    <img src="${movie.poster}" class="card-img-top" alt="${movie.tenPhim}" style="height: 240px; object-fit: cover;">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">${movie.tenPhim}</h6>
+                    </div>
+                </div>
+            `;
+            col.querySelector(".movie-card").addEventListener("click", () => {
+                selectedMovie = movie.maPhim;
+                document.querySelectorAll(".movie-card").forEach(c => c.classList.remove("border-primary"));
+                col.querySelector(".movie-card").classList.add("border", "border-primary");
+                renderShowtimes();
+            });
+            movieList.appendChild(col);
+        }
+
+        movieSection.classList.remove("d-none");
+    }
+
+    function renderShowtimes() {
+        const filtered = allShowtimes.filter(s =>
+            (!selectedRegion || s.region === selectedRegion) &&
+            s.maPhim === selectedMovie
+        );
+
+        if (!filtered.length) {
+            showtimeList.innerHTML = '<div class="text-muted">Không có suất chiếu nào.</div>';
+            showtimeSection.classList.remove("d-none");
+            return;
+        }
+
+        const grouped = {};
+        filtered.forEach(item => {
+            const key = `${item.tenRap}__${item.date}`;
+            if (!grouped[key]) grouped[key] = [];
+            grouped[key].push(...item.gioChieu.map(g => ({
+                gioChieu: g.gioChieu,
+                suatChieu: g.suatChieu
+            })));
+        });
+
+        let html = "";
+        for (const [key, gioList] of Object.entries(grouped)) {
+            const [tenRap, date] = key.split("__");
+            html += `
+                <div class="mb-4">
+                    <h6 class="fw-bold">${tenRap} - ${date}</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        ${gioList.map(g =>
+                            `<a href="/Movie/ChonGhe/${g.suatChieu}" class="btn btn-outline-primary btn-sm">${g.gioChieu}</a>`
+                        ).join("")}
+                    </div>
+                </div>
+            `;
+        }
+
+        showtimeList.innerHTML = html;
+        showtimeSection.classList.remove("d-none");
+    }
+
+</script>
