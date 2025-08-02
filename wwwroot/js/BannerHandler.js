@@ -2,14 +2,14 @@
     $(".banner-slider").slick({
         slidesToShow: 1,
         centerMode: true,
-        centerPadding: "12%", // để 1 phần pre và post banner lộ ra
+        centerPadding: "12%",
         dots: true,
         arrows: true,
         autoplay: true,
         autoplaySpeed: 4000,
         pauseOnHover: true,
-        prevArrow: '<button class="slick-prev">&#10094;</button>',
-        nextArrow: '<button class="slick-next">&#10095;</button>',
+        prevArrow: '<button class="slick-prev"><i class="bi bi-chevron-left"></i></button>',
+        nextArrow: '<button class="slick-next"><i class="bi bi-chevron-right"></i></button>',
         responsive: [
             {
                 breakpoint: 768,
