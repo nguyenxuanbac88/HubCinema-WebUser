@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value></resheader>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="NowShowing" xml:space="preserve">
+    <value>Now Showing</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Coming Soon</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Contact</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+	<data name="Movies" xml:space="preserve">
+    <value>Movies</value>
+  </data>
+	<data name="Cinemas" xml:space="preserve">
+    <value>Cinemas</value>
+  </data>
+	<data name="Products" xml:space="preserve">
+    <value>Products</value>
+  </data>
+	<data name="News" xml:space="preserve">
+    <value>News</value>
+  </data>
+	<data name="Promotions" xml:space="preserve">
+    <value>Promotions</value>
+  </data>
+	<data name="Reviews" xml:space="preserve">
+    <value>Movie Reviews</value>
+  </data>
+	<data name="Snacks" xml:space="preserve">
+    <value>Snacks</value>
+  </data>
+	<data name="AllCinemas" xml:space="preserve">
+    <value>All Cinemas</value>
+  </data>
+	<data name="BuyTickets" xml:space="preserve">
+    <value>Buy Tickets</value>
+  </data>
+	<data name="Membership" xml:space="preserve">
+    <value>Membership</value>
+  </data>
+	<data name="Events" xml:space="preserve">
+  <value>Events &amp; Offers</value>
+</data>
+
+</root>
