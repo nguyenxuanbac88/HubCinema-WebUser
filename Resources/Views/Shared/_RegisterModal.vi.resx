@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>1.3</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<data name="RegisterTitle" xml:space="preserve">
+    <value>Đăng Ký Tài Khoản</value>
+  </data>
+	<data name="FullNameLabel" xml:space="preserve">
+    <value>Họ và tên</value>
+  </data>
+	<data name="FullNamePlaceholder" xml:space="preserve">
+    <value>Nhập Họ và tên</value>
+  </data>
+	<data name="EmailLabel" xml:space="preserve">
+    <value>Email</value>
+  </data>
+	<data name="EmailPlaceholder" xml:space="preserve">
+    <value>Nhập Email</value>
+  </data>
+	<data name="PhoneLabel" xml:space="preserve">
+    <value>Số điện thoại</value>
+  </data>
+	<data name="PhonePlaceholder" xml:space="preserve">
+    <value>Nhập Số điện thoại</value>
+  </data>
+	<data name="GenderLabel" xml:space="preserve">
+    <value>Giới tính</value>
+  </data>
+	<data name="GenderMale" xml:space="preserve">
+    <value>Nam</value>
+  </data>
+	<data name="GenderFemale" xml:space="preserve">
+    <value>Nữ</value>
+  </data>
+	<data name="BirthdateLabel" xml:space="preserve">
+    <value>Ngày sinh</value>
+  </data>
+	<data name="Day" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+	<data name="Month" xml:space="preserve">
+    <value>Tháng</value>
+  </data>
+	<data name="Year" xml:space="preserve">
+    <value>Năm</value>
+  </data>
+	<data name="PasswordLabel" xml:space="preserve">
+    <value>Mật khẩu</value>
+  </data>
+	<data name="PasswordPlaceholder" xml:space="preserve">
+    <value>Nhập Mật khẩu</value>
+  </data>
+	<data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Nhập lại mật khẩu</value>
+  </data>
+	<data name="ConfirmPasswordPlaceholder" xml:space="preserve">
+    <value>Nhập lại mật khẩu</value>
+  </data>
+	<data name="RegisterButton" xml:space="preserve">
+    <value>ĐĂNG KÝ</value>
+  </data>
+	<data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>Bạn đã có tài khoản?</value>
+  </data>
+	<data name="LoginNow" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+</root>

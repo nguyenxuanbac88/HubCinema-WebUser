@@ -29,7 +29,7 @@ namespace MovieTicketWebsite.Controllers
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*"));
 
-            var response = await client.GetAsync($"{_baseApiUrl}/api/Booking/invoices");
+            var response = await client.GetAsync($"{_baseApiUrl}/api/Invoice/by-user");
 
             if (!response.IsSuccessStatusCode)
             {

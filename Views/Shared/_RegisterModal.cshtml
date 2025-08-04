@@ -1,42 +1,43 @@
-﻿<!-- Modal đăng ký -->
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<!-- Modal đăng ký -->
 <div id="registerModal" class="custom-modal-overlay" style="display:none; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
     <div class="custom-modal-box" style="max-height: 90vh; overflow-y: auto; scrollbar-width: none; -ms-overflow-style: none;">
         <button class="custom-modal-close" onclick="closeRegisterModal()">×</button>
         <div class="text-center mb-4">
             <img src="~/images/hub_logo_new.png" width="150" alt="Register" />
-            <h4 class="fw-bold mt-2">Đăng Ký Tài Khoản</h4>
+            <h4 class="fw-bold mt-2">@Localizer["RegisterTitle"]</h4>
         </div>
         <form asp-controller="Register" asp-action="Submit" method="post">
             <div class="form-group mb-3">
-                <label>Họ và tên</label>
-                <input type="text" name="name" class="form-control" placeholder="Nhập Họ và tên" required />
+                <label>@Localizer["FullNameLabel"]</label>
+                <input type="text" name="name" class="form-control" placeholder="@Localizer["FullNamePlaceholder"]" required />
             </div>
             <div class="form-group mb-3">
-                <label>Email</label>
-                <input type="email" name="email" class="form-control" placeholder="Nhập Email" required />
+                <label>@Localizer["EmailLabel"]</label>
+                <input type="email" name="email" class="form-control" placeholder="@Localizer["EmailPlaceholder"]" required />
             </div>
             <div class="form-group mb-3">
-                <label>Số điện thoại</label>
-                <input type="tel" name="phone" class="form-control" placeholder="Nhập Số điện thoại" required />
+                <label>@Localizer["PhoneLabel"]</label>
+                <input type="tel" name="phone" class="form-control" placeholder="@Localizer["PhonePlaceholder"]" required />
             </div>
             <div class="form-group mb-3">
-                <label>Giới tính</label><br />
+                <label>@Localizer["GenderLabel"]</label><br />
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender" id="genderMale" value="true" checked />
-                    <label class="form-check-label" for="genderMale">Nam</label>
+                    <label class="form-check-label" for="genderMale">@Localizer["GenderMale"]</label>
                 </div>
                 <div class="form-check form-check-inline">
                     <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="false" />
-                    <label class="form-check-label" for="genderFemale">Nữ</label>
+                    <label class="form-check-label" for="genderFemale">@Localizer["GenderFemale"]</label>
                 </div>
             </div>
             <div class="form-group mb-3">
-                <label>Ngày sinh</label>
+                <label>@Localizer["BirthdateLabel"]</label>
                 <div class="date-group d-flex gap-2">
-                    <!-- thêm hidden để gom ngày sinh -->
                     <input type="hidden" name="dob" id="dobHiddenInput" />
                     <select name="dob_day" id="dob_day" class="form-select" required>
-                        <option value="">Ngày</option>
+                        <option value="">@Localizer["Day"]</option>
                         @for (int i = 1; i <= 31; i++)
                         {
                             <option value="@i">@i</option>
@@ -44,7 +45,7 @@
                     </select>
 
                     <select name="dob_month" id="dob_month" class="form-select" required>
-                        <option value="">Tháng</option>
+                        <option value="">@Localizer["Month"]</option>
                         @for (int i = 1; i <= 12; i++)
                         {
                             <option value="@i">@i</option>
@@ -52,7 +53,7 @@
                     </select>
 
                     <select name="dob_year" id="dob_year" class="form-select" required>
-                        <option value="">Năm</option>
+                        <option value="">@Localizer["Year"]</option>
                         @for (int i = DateTime.Now.Year; i >= 1900; i--)
                         {
                             <option value="@i">@i</option>
@@ -61,12 +62,10 @@
                 </div>
             </div>
 
-
-
             <div class="form-group mb-3">
-                <label>Mật khẩu</label>
+                <label>@Localizer["PasswordLabel"]</label>
                 <div class="input-group">
-                    <input type="password" name="password" class="form-control" placeholder="Nhập Mật khẩu" required id="registerPassword" />
+                    <input type="password" name="password" class="form-control" placeholder="@Localizer["PasswordPlaceholder"]" required id="registerPassword" />
                     <span class="input-group-text" onclick="togglePassword('registerPassword', this)">
                         <i class="bi bi-eye-slash"></i>
                     </span>
@@ -74,23 +73,22 @@
             </div>
 
             <div class="form-group mb-3">
-                <label>Nhập lại mật khẩu</label>
+                <label>@Localizer["ConfirmPasswordLabel"]</label>
                 <div class="input-group">
-                    <input type="password" name="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required id="registerConfirmPassword" />
+                    <input type="password" name="confirmPassword" class="form-control" placeholder="@Localizer["ConfirmPasswordPlaceholder"]" required id="registerConfirmPassword" />
                     <span class="input-group-text" onclick="togglePassword('registerConfirmPassword', this)">
                         <i class="bi bi-eye-slash"></i>
                     </span>
                 </div>
             </div>
 
-
-          
-
-            <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">ĐĂNG KÝ</button>
+            <button type="submit" style="background: #E48600;" class="btn w-100 text-white fw-bold">@Localizer["RegisterButton"]</button>
         </form>
+
         <hr />
         <div class="text-center">
-            Bạn đã có tài khoản? <a href="javascript:void(0);" onclick="openLoginModal()" class="text-orange link">Đăng nhập</a>
+            @Localizer["AlreadyHaveAccount"]
+            <a href="javascript:void(0);" onclick="openLoginModal()" class="text-orange link">@Localizer["LoginNow"]</a>
         </div>
     </div>
 </div>

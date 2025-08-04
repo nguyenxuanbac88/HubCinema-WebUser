@@ -1,4 +1,5 @@
-﻿@model MovieTicketWebsite.Models.Cinema
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@model MovieTicketWebsite.Models.Cinema
 @{
     var movieShowList = ViewBag.MovieShowList as List<MovieWithShowtimes>;
     var selectedDate = ViewBag.SelectedDate as string;
@@ -21,16 +22,13 @@
     </div>
 </div>
 <div class="container py-4">
-    <!-- Banner -->
-    
-
-    <!-- Thông tin rạp -->
+    <!-- Cinema Info -->
     <div class="mb-4">
         <h5 class="fw-bold">@Model.CinemaName</h5>
         <p>
-            <strong>Địa chỉ:</strong> @Model.Address<br>
-            <strong>Thành phố:</strong> @Model.City<br>
-            <strong>Hotline:</strong> <a href="tel:19002224">1900 2224</a>
+            <strong>@Localizer["Address"]:</strong> @Model.Address<br>
+            <strong>@Localizer["City"]:</strong> @Model.City<br>
+            <strong>@Localizer["Hotline"]:</strong> <a href="tel:19002224">1900 2224</a>
         </p>
         <div class="d-flex gap-2">
             <select class="form-select w-auto">
@@ -41,14 +39,14 @@
             </select>
         </div>
     </div>
-    <!-- Tiêu đề PHIM -->
-    <h5 class="fw-bold border-start border-4 border-primary ps-2 mb-3">PHIM</h5>
+    <!-- Movie Header -->
+    <h5 class="fw-bold border-start border-4 border-primary ps-2 mb-3">@Localizer["Movies"]</h5>
 
-    <!-- Tabs ngày chiếu -->
-    <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
+    <!-- Date Tabs -->
+   <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
         @{
             var availableDates = ViewBag.AvailableDates as List<string> ?? new();
-             selectedDate = ViewBag.SelectedDate as string;
+            selectedDate = ViewBag.SelectedDate as string;
 
             foreach (var dateStr in availableDates)
             {
@@ -57,19 +55,16 @@
                 var label = isToday ? "Hôm Nay" : date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"));
                 var shortDate = date.ToString("dd/MM");
 
-                <li class="nav-item">
-                    <button class="btn tab-date @(selectedDate == dateStr ? "active" : "")" data-date="@dateStr">
+                        <li class="nav-item">
+                            <button class="btn tab-date @(selectedDate == dateStr ? "active" : "")" data-date="@dateStr">
                         @label<br /><small>@shortDate</small>
-                    </button>
-                </li>
+                            </button>
+                        </li>
             }
         }
     </ul>
 
-
-    
-
-    <!-- Danh sách phim -->
+    <!-- Movie List -->
     <div id="movieList" class="row row-cols-2 row-cols-md-6 g-4 mb-5">
         @foreach (var movie in movieShowList)
         {
@@ -77,19 +72,12 @@
             {
                 var date = entry.Key;
                 var showListByTheater = entry.Value;
-
-                // Tổng hợp toàn bộ giờ chiếu từ các rạp/phòng
                 var allShowtimes = showListByTheater
-                .SelectMany(t => t.Showtimes)
-                .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
-                .Select(g => new GioChieuDto
-                    {
-                        MaSuat = g.MaSuat,
-                        StartTime = g.StartTime
-                    }).ToList();
+                    .SelectMany(t => t.Showtimes)
+                    .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
+                    .Select(g => new GioChieuDto { MaSuat = g.MaSuat, StartTime = g.StartTime }).ToList();
 
-
-                if (!allShowtimes.Any()) continue; // Bỏ qua nếu không có giờ chiếu
+                if (!allShowtimes.Any()) continue;
 
                 <div class="col movie-card" data-date="@date">
                     <div class="card h-100">
@@ -99,109 +87,67 @@
                             <div class="showtime-buttons d-flex flex-wrap gap-2 mt-2">
                                 @foreach (var time in allShowtimes)
                                 {
-                                    <a asp-controller="Movie"
-                                       asp-action="ChonGhe"
-                                       asp-route-id="@time.MaSuat"
-                                       class="badge-tag showtime-badge">
+                                    <a asp-controller="Movie" asp-action="ChonGhe" asp-route-id="@time.MaSuat" class="badge-tag showtime-badge">
                                         @time.StartTime
                                     </a>
                                 }
-
                             </div>
                         </div>
-
                     </div>
                 </div>
             }
         }
     </div>
 
-
-
-
+    <!-- Ticket Price -->
     <div class="row g-4 mb-5">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header fw-bold">GIÁ VÉ</div>
+                <div class="card-header fw-bold">@Localizer["TicketPrice"]</div>
                 <div class="card-body">
                     <table class="table table-bordered text-center align-middle">
                         <thead class="table-primary">
                             <tr>
-                                <th>SUẤT CHIẾU</th>
-                                <th>THÀNH VIÊN / NGƯỜI LỚN</th>
-                                <th>U22</th>
-                                <th>TRẺ EM / NGƯỜI CAO TUỔI</th>
+                                <th>@Localizer["Showtimes"]</th>
+                                <th>@Localizer["Member"]</th>
+                                <th>@Localizer["U22"]</th>
+                                <th>@Localizer["ChildSenior"]</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>THỨ 2, 4, 5 - TRƯỚC 17:00</td>
-                                <td>70.000</td>
-                                <td>55.000</td>
-                                <td>55.000</td>
-                            </tr>
-                            <tr>
-                                <td>THỨ 2, 4, 5 - SAU 17:00</td>
-                                <td>80.000</td>
-                                <td>55.000</td>
-                                <td>55.000</td>
-                            </tr>
-                            <tr>
-                                <td>THỨ 3 - HAPPY DAY</td>
-                                <td>55.000</td>
-                                <td>55.000</td>
-                                <td>55.000</td>
-                            </tr>
-                            <tr>
-                                <td>THỨ 6, 7, CN - TRƯỚC 17:00</td>
-                                <td>85.000</td>
-                                <td>65.000</td>
-                                <td>65.000</td>
-                            </tr>
-                            <tr>
-                                <td>THỨ 6, 7, CN - SAU 17:00</td>
-                                <td>95.000</td>
-                                <td>65.000</td>
-                                <td>65.000</td>
-                            </tr>
-                            <tr>
-                                <td>NGÀY LỄ</td>
-                                <td>95.000</td>
-                                <td>95.000</td>
-                                <td>65.000</td>
-                            </tr>
-                            <tr>
-                                <td>NGÀY TRI ÂN</td>
-                                <td colspan="3">50.000</td>
-                            </tr>
-                            <tr>
-                                <td>SAU 22H (THÀNH VIÊN)</td>
-                                <td colspan="3">60.000</td>
-                            </tr>
+                            <tr><td>THỨ 2, 4, 5 - TRƯỚC 17:00</td><td>70.000</td><td>55.000</td><td>55.000</td></tr>
+                            <tr><td>THỨ 2, 4, 5 - SAU 17:00</td><td>80.000</td><td>55.000</td><td>55.000</td></tr>
+                            <tr><td>THỨ 3 - HAPPY DAY</td><td>55.000</td><td>55.000</td><td>55.000</td></tr>
+                            <tr><td>THỨ 6, 7, CN - TRƯỚC 17:00</td><td>85.000</td><td>65.000</td><td>65.000</td></tr>
+                            <tr><td>THỨ 6, 7, CN - SAU 17:00</td><td>95.000</td><td>65.000</td><td>65.000</td></tr>
+                            <tr><td>@Localizer["Holiday"]</td><td>95.000</td><td>95.000</td><td>65.000</td></tr>
+                            <tr><td>@Localizer["PromotionDay"]</td><td colspan="3">50.000</td></tr>
+                            <tr><td>@Localizer["After10PM"]</td><td colspan="3">60.000</td></tr>
                         </tbody>
                     </table>
                     <p class="text-muted small">
-                        * Giá vé ngày lễ áp dụng cho các ngày lễ tết theo quy định, bao gồm cả sneakshow/suất chiếu sớm<br>
-                        * U22 áp dụng cho học sinh – sinh viên dưới 22 tuổi (phải xuất trình thẻ)
+                        * Giá vé ngày lễ áp dụng cho các ngày lễ tết theo quy định<br />
+                        * U22 áp dụng cho học sinh – sinh viên dưới 22 tuổi (xuất trình thẻ)
                     </p>
                 </div>
             </div>
         </div>
 
+        <!-- Detailed Info -->
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header fw-bold">THÔNG TIN CHI TIẾT</div>
+                <div class="card-header fw-bold">@Localizer["DetailInfo"]</div>
                 <div class="card-body">
                     <p>
-                        <strong>Địa chỉ:</strong> 119B Nguyễn Văn Quá, Phường Đông Hưng Thuận, Quận 12<br>
-                        <strong>Số điện thoại:</strong> <a href="tel:19002224">1900 2224</a>
+                        <strong>@Localizer["Address"]:</strong> 119B Nguyễn Văn Quá, P.Đông Hưng Thuận, Q.12<br>
+                        <strong>@Localizer["Phone"]:</strong> <a href="tel:19002224">1900 2224</a>
                     </p>
-                    <iframe src="https://www.google.com/maps?q=Galaxy+Nguyễn+Văn+Quá&output=embed" width="100%" height="200" frameborder="0" style="border:0;" allowfullscreen></iframe>
+                    <iframe src="https://www.google.com/maps?q=Galaxy+Nguy%E1%BB%85n+V%C4%83n+Qu%C3%A1&output=embed" width="100%" height="200" frameborder="0" style="border:0;" allowfullscreen></iframe>
                     <p class="mt-3">
-                        Tọa lạc ở 119B Nguyễn Văn Quá, Hub Nguyễn Văn Quá sở hữu vị trí “vàng” gần cầu Chợ Cầu, hết sức thuận tiện cho việc đi lại và thưởng thức phim hay. Cũng như các rạp Hub Cinema khác, Hub Nguyễn Văn Quá được đầu tư công nghệ hiện đại, thiết bị tân tiến và xây dựng đúng theo tiêu chuẩn quốc tế. Với 7 phòng chiếu, Hub Nguyễn Văn Quá trình chiếu đủ hai định dạng 2D & 3D phục vụ tối đa nhu cầu của khách hàng. Màn hình sắc nét và hệ thống âm thanh vòm Dolby 7.1 hiện đại sẽ mang đến những trải nghiệm sống động như thật. Từ nay, có thêm một địa chỉ để thưởng thức những bộ phim mới xuất sắc trong và ngoài nước rồi nhé. Nhanh chân đến ngay Hub Nguyễn Văn Quá - 119B Nguyễn Văn Quá để nhận ưu đãi nào các bạn!
+                        Tọa lạc ở 119B Nguyễn Văn Quá, Hub Nguyễn Văn Quá sở hữu vị trí "vàng" gần cầu Chợ Cầu, thuận tiện di chuyển. Với 7 phòng chiếu, chiếu cả 2D & 3D chuẩn quốc tế, âm thanh Dolby 7.1, là điểm đến lý tưởng cho mọi khán giả.
                     </p>
                 </div>
             </div>
         </div>
     </div>
-
+</div>

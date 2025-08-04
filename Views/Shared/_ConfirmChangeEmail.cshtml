@@ -1,4 +1,5 @@
-﻿@inject IHttpContextAccessor HttpContextAccessor
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@inject IHttpContextAccessor HttpContextAccessor
 @{
     var otpToken = HttpContextAccessor.HttpContext?.Session.GetString("OtpChangeEmailToken");
 }
@@ -8,8 +9,8 @@
         <button class="custom-modal-close" onclick="closeConfirmChangeEmailModal()">×</button>
 
         <div class="text-center mb-4">
-            <img src="/images/hub_logo_new.png" width="150" alt="Confirm OTP" />
-            <h4 class="fw-bold mt-2">Xác Nhận OTP</h4>
+            <img src="/images/hub_logo_new.png" width="150" alt="@Localizer["ConfirmOtpTitle"]" />
+            <h4 class="fw-bold mt-2">@Localizer["ConfirmOtpTitle"]</h4>
         </div>
 
         <form asp-controller="Account" asp-action="ConfirmChangeEmail" method="post">
@@ -28,7 +29,7 @@
             </div>
 
             <button type="submit" class="btn w-100 text-white fw-bold" style="background: #E48600;">
-                XÁC NHẬN
+                @Localizer["ConfirmButton"]
             </button>
         </form>
 
