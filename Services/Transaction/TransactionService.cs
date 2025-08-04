@@ -1,54 +1,47 @@
 ﻿using MovieTicketWebsite.Models;
-using MovieTicketWebsite.Models.Booking;
 using MovieTicketWebsite.Models.Transaction;
 using MovieTicketWebsite.Services.Transaction;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 public class TransactionService : ITransactionService
 {
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _configuration;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TransactionService(IHttpContextAccessor httpContextAccessor)
+    public TransactionService(IHttpClientFactory httpClientFactory, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
+        _httpClientFactory = httpClientFactory;
+        _configuration = configuration;
+
     }
 
     public async Task<List<TransactionHistoryItem>> GetTransactionHistoryAsync(string token)
     {
-        // TODO: Gọi API thật ở đây (dùng token nếu cần)
-        // Tạm mock dữ liệu
-        await Task.Delay(200); // giả lập delay
+        var client = _httpClientFactory.CreateClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        return new List<TransactionHistoryItem>
+        var apiUrl = _configuration["ApiSettings:BaseUrl"] + "/Invoice/by-user";
+
+        try
         {
-            new TransactionHistoryItem
-            {
-                MovieTitle = "Doraemon: Nobita và Thế Giới Truyện Tranh",
-                CinemaName = "Galaxy Trung Chánh",
-                RoomName = "Phòng 1",
-                ShowTime = DateTime.Now.AddDays(-2).AddHours(19),
-                Seats = "A1, A2",
-                Price = 160000,
-                OrderId = "INV123456",
-                PosterUrl = "https://cdn.galaxycine.vn/media/2024/5/5/doraemon-poster.jpg"
-            },
-            new TransactionHistoryItem
-            {
-                MovieTitle = "Ba Mặt Lật Kèo",
-                CinemaName = "Galaxy Parc Mall",
-                RoomName = "Phòng 7",
-                ShowTime = DateTime.Now.AddDays(-4).AddHours(21),
-                Seats = "B3, B4",
-                Price = 180000,
-                OrderId = "INV654321",
-                ComboTotal = 50000,
-                Foods = new List<FoodDto> {
-                    new FoodDto { FoodName = "Combo 2 Big Extra", Quantity = 1, Price = 50000 }
-                }
-            }
-        };
+            var response = await client.GetAsync(apiUrl);
+            if (!response.IsSuccessStatusCode) return new();
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var items = JsonConvert.DeserializeObject<List<TransactionHistoryItem>>(responseBody);
+
+            return items ?? new();
+        }
+        catch
+        {
+            return new(); // fallback khi lỗi kết nối
+        }
     }
 
-    public async Task<TicketViewModel?> GetInvoiceByOrderIdAsync(string orderId)
+    public async Task<TicketViewModel?> GetInvoiceByOrderIdAsync(int orderId)
     {
         // Giả lập lấy token từ HttpContext để gọi API
         var token = _httpContextAccessor.HttpContext?.Session.GetString("AccessToken");

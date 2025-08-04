@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
-using MovieTicketWebsite.Models.Booking;
-using MovieTicketWebsite.Models.Vnpay;
 using MovieTicketWebsite.Services.Transaction;
+using System.Net.Http.Headers;
 using System.Text.Json;
 
 namespace MovieTicketWebsite.Controllers
@@ -14,61 +13,36 @@ namespace MovieTicketWebsite.Controllers
         {
             _transactionService = transactionService;
         }
-        public IActionResult XemVe()
+        public async Task<IActionResult> XemVe()
         {
-            if (!TempData.ContainsKey("VnpayResult"))
+            var invoiceId = HttpContext.Session.GetInt32("InvoiceId");
+            if (invoiceId == null)
                 return RedirectToAction("Index", "Home");
 
-            var json = TempData["VnpayResult"].ToString();
-            var response = JsonSerializer.Deserialize<PaymentResponseModel>(json);
+            var token = HttpContext.Session.GetString("AccessToken");
+            if (string.IsNullOrEmpty(token))
+                return RedirectToAction("Index", "Home");
 
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri("http://api.dvxuanbac.com:2030");
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            // Lấy các dữ liệu bổ sung từ session
-            var bookingJson = HttpContext.Session.GetString("BookingData");
-            var seatInfoJson = HttpContext.Session.GetString("SeatInfo");
-            var comboJson = HttpContext.Session.GetString("ComboData");
+            var response = await client.GetAsync($"/api/Invoice/{invoiceId}");
+            if (!response.IsSuccessStatusCode)
+                return RedirectToAction("Index", "Home");
 
-            var booking = JsonSerializer.Deserialize<BookingRequestModel>(bookingJson ?? "{}");
-            var seatInfo = JsonSerializer.Deserialize<SeatSelectionViewModel>(seatInfoJson ?? "{}");
-            var combo = JsonSerializer.Deserialize<ComboSelectionModel>(comboJson ?? "{}");
-
-            var comboTotal = combo?.Foods?.Sum(f => f.Price * f.Quantity) ?? 0;
-            var totalAmount = booking.SeatTotal + (decimal)comboTotal;
-
-            var ticket = new TicketViewModel
+            var json = await response.Content.ReadAsStringAsync();
+            var model = JsonSerializer.Deserialize<TicketViewModel>(json, new JsonSerializerOptions
             {
-                MovieTitle = seatInfo.MovieTitle,
-                CinemaName = seatInfo.CinemaName,
-                RoomName = seatInfo.RoomName,
-                ShowTime = seatInfo.ShowTime,
-                Seats = string.Join(", ", booking.Seats.Select(s => s.MaGhe)),
-                Price = totalAmount,
-                OrderId = response.OrderId,
-                PosterUrl = seatInfo.Poster, // ➕ thêm dòng này
+                PropertyNameCaseInsensitive = true
+            });
 
-                // ✅ Thêm 2 dòng này
-                Foods = combo?.Foods.Select(f => new FoodDto
-                {
-                    IdFood = f.IdFood,
-                    FoodName = f.FoodName,
-                    Price = (int)f.Price,
-                    Quantity = f.Quantity
-                }).ToList() ?? new List<FoodDto>(),
-
-                ComboTotal = (decimal)comboTotal
-            };
-            // // Lưu vé vào Session để có thể lấy lại sau này
-            HttpContext.Session.SetString("LastTicketJson", JsonSerializer.Serialize(ticket));
-
-
-            // ⛔ Đây là bước bạn đang thiếu: xoá cookie booking_flow
-            Response.Cookies.Delete("booking_flow"); // ✅ Xoá ngay khi hiện vé
-            ViewBag.inBookingFlow = false; // ✳️ Truyền cứng
-            return View(ticket);
+            return View(model);
         }
 
+
         [HttpGet]
-        public async Task<IActionResult> GetTicketPartial(string orderId)
+        public async Task<IActionResult> GetTicketPartial(int orderId)
         {
             var ticket = await _transactionService.GetInvoiceByOrderIdAsync(orderId);
             if (ticket == null)
