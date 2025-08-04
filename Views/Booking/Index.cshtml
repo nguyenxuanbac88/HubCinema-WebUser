@@ -108,6 +108,17 @@
         movieSection.classList.remove("d-none");
     }
 
+        function getMovieName(movieId) {
+        const match = allShowtimes.find(s => s.maPhim === movieId);
+        return match ? match.tenPhim : "";
+    }
+
+    function getMoviePoster(movieId) {
+        const match = allShowtimes.find(s => s.maPhim === movieId);
+        return match ? match.poster : "";
+    }
+
+
     function renderShowtimes() {
         const filtered = allShowtimes.filter(s =>
             (!selectedRegion || s.region === selectedRegion) &&
@@ -138,7 +149,13 @@
                     <h6 class="fw-bold">${tenRap} - ${date}</h6>
                     <div class="d-flex flex-wrap gap-2">
                         ${gioList.map(g =>
-                            `<a href="/Movie/ChonGhe/${g.suatChieu}" class="btn btn-outline-primary btn-sm">${g.gioChieu}</a>`
+                                `<a href="/Booking/ChonGhe?id=${g.suatChieu}
+        &tenRap=${encodeURIComponent(tenRap)}
+        &tenPhim=${encodeURIComponent(getMovieName(selectedMovie))}
+        &poster=${encodeURIComponent(getMoviePoster(selectedMovie))}
+        &gioChieu=${encodeURIComponent(g.gioChieu)}
+        &ngayChieu=${encodeURIComponent(date)}"
+       class="btn btn-outline-primary btn-sm">${g.gioChieu}</a>`
                         ).join("")}
                     </div>
                 </div>

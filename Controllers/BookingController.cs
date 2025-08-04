@@ -148,6 +148,32 @@ namespace MovieTicketWebsite.Controllers
             return View();
         }
 
+        public IActionResult ChonGhe(int id, string tenRap, string tenPhim, string poster, string gioChieu, string ngayChieu)
+        {
+            if (string.IsNullOrEmpty(gioChieu) || string.IsNullOrEmpty(ngayChieu))
+            {
+                return RedirectToAction("Index", "Booking");
+            }
+
+            DateTime.TryParse(ngayChieu, out var ngay);
+            TimeSpan.TryParse(gioChieu, out var gio);
+
+            var seatModel = new SeatSelectionViewModel
+            {
+                ShowId = id,
+                CinemaName = tenRap,
+                MovieTitle = tenPhim,
+                PosterUrl = poster,
+                ShowTime = ngay.Date.Add(gio)
+            };
+
+            var json = JsonConvert.SerializeObject(seatModel);
+            HttpContext.Session.SetString("SeatInfo", json);
+
+            return RedirectToAction("Matrix", "Seat", new { id });
+        }
+
+
 
         [HttpGet]
         public IActionResult CancelFlow()

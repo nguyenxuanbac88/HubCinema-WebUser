@@ -120,7 +120,7 @@ namespace MovieTicketWebsite.Controllers
     .Where(s => !string.IsNullOrEmpty(s.MaGhe))
     .Select(s => new SeatDto
     {
-        MaGhe = s.MaGhe,
+        MaGhe = s.MaGhe.Trim().Trim(','), // 🧼 Trim space + dấu phẩy
         Price = (int)Math.Round((decimal)s.Price) // ✅ CHỐT QUAN TRỌNG
     }).ToList();
 
