@@ -37,6 +37,10 @@ namespace MovieTicketWebsite.Controllers
                 PropertyNameCaseInsensitive = true
             });
 
+            // ✅ Thêm phần xử lý này (không ảnh hưởng logic cũ)
+            Response.Cookies.Delete("booking_flow"); // Xoá cookie flow
+            ViewBag.inBookingFlow = false;           // Để ẩn nút "Hủy giao dịch"
+
             return View(model);
         }
 
