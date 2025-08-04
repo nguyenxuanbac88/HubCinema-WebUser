@@ -1,4 +1,5 @@
-﻿@model List<MovieTicketWebsite.Models.Movie>
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@model List<MovieTicketWebsite.Models.Movie>
 
 <section class="movie-section">
     <div class="container">
@@ -8,14 +9,14 @@
             <!-- PHIM tiêu đề -->
             <div class="col-auto d-flex align-items-center">
                 <div style="width: 5px; height: 22px; background-color: #d18800; border-radius: 2px;" class="me-2"></div>
-                <h2 class="section-title m-0 fs-5 fw-bold">PHIM</h2>
+                <h2 class="section-title m-0 fs-5 fw-bold">@Localizer["MovieSectionTitle"]</h2>
             </div>
         </div>
 
         <!-- Tabs -->
         <ul class="tabs">
-            <li class="tab active" data-target="#showing">Đang chiếu</li>
-            <li class="tab" data-target="#upcoming">Sắp chiếu</li>
+            <li class="tab active" data-target="#showing">@Localizer["NowShowingTab"]</li>
+            <li class="tab" data-target="#upcoming">@Localizer["ComingSoonTab"]</li>
         </ul>
 
         <!-- Tab nội dung -->
@@ -38,8 +39,8 @@
                                          onerror="this.onerror=null; this.src='/images/dan-da-dan.jpg';" />
                                     <div class="movie-title">@movie.MovieName</div>
                                     <div class="movie-info">
-                                        Thể loại: @movie.Genre<br />
-                                        Thời lượng: @movie.Duration phút
+                                        @Localizer["Genre"]: @movie.Genre<br />
+                                        @Localizer["Duration"]: @movie.Duration @Localizer["Minutes"]
                                     </div>
                                 </div>
                             </a>
@@ -51,8 +52,12 @@
                 @if (showingMovies.Count > 8)
                 {
                     <div class="film__footer text-center mt-4">
-                        <button id="showMoreBtn" class="btn btn-outline-warning px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
-                            Xem thêm
+                        <button id="showMoreBtn"
+                                data-expand="@Localizer["Expand"]"
+                                data-collapse="@Localizer["Collapse"]"
+                                class="btn btn-outline-warning px-4 py-2 fw-medium d-inline-flex align-items-center gap-2">
+                            @Localizer["Expand"]
+
                             <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
                                  class="svg-inline--fa fa-angle-right" role="img"
                                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14">
@@ -78,7 +83,7 @@
                                      alt="@movie.MovieName"
                                      onerror="this.onerror=null; this.src='/images/default.jpg';" />
                                 <div class="movie-title">@movie.MovieName</div>
-                                <div class="movie-info">Khởi chiếu: @movie.ReleaseDate.ToString("dd/MM/yyyy")</div>
+                                    <div class="movie-info">@Localizer["ReleaseDate"]: @movie.ReleaseDate.ToString("dd/MM/yyyy")</div>
                             </div>
                             </a>
                         </div>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="ComboSectionTitle" xml:space="preserve">
+    <value>COMBO OFFERS</value>
+  </data>
+	<data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+	<data name="Expand" xml:space="preserve">
+    <value>Show more</value>
+  </data>
+	<data name="Collapse" xml:space="preserve">
+    <value>Collapse</value>
+  </data>
+</root>
