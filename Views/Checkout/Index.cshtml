@@ -55,7 +55,7 @@
 
                 <div class="small mb-2">
                     <div><strong>Rạp:</strong> @Model.CinemaName</div>
-                    <div><strong>Phòng:</strong> @Model.RoomName</div>
+                    @* <div><strong>Phòng:</strong> @Model.RoomName</div> *@
                     <div><strong>Suất:</strong> @Model.ShowTime.ToString("HH:mm - dddd, dd/MM/yyyy")</div>
                     <div><strong>Ghế:</strong> @string.Join(", ", Model.Seats.Select(s => s.MaGhe))</div>
                 </div>

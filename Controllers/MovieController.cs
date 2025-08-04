@@ -131,7 +131,7 @@ namespace MovieTicketWebsite.Controllers
                         GioChieu = g.gioChieu.ToString(),
                         NgayChieu = ((dynamic)s).date,
                         TenRap = (string)((dynamic)s).tenRap,
-                        TenPhong = "Phòng 1" // Bạn cần thay bằng thông tin thật nếu có
+                        TenPhong = "" // Bạn cần thay bằng thông tin thật nếu có
                     }))
                 .FirstOrDefault();
 
