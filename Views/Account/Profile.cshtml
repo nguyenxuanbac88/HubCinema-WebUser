@@ -182,8 +182,12 @@
                             var style = isHidden ? "display: none;" : "";
 
                             <div class="d-flex align-items-center justify-content-between border rounded shadow-sm p-3 bg-white @(isHidden ? "transaction-item d-none" : "transaction-item")">
-                                <div class="d-flex align-items-center">
-                                    <img src="@item.PosterUrl" alt="poster" width="50" height="70" class="rounded me-3" />
+                                <div class="d-flex align-items-start">
+                                    <div class="me-3 d-flex flex-column align-items-center">
+                                        <img src="@item.PosterUrl" alt="poster" width="50" height="70" class="rounded mb-2" />
+
+                                        
+                                    </div>
                                     <div>
                                         <div class="fw-semibold">@item.MovieTitle</div>
                                         <div class="text-muted small">@item.CinemaName - <strong>@item.RoomName</strong></div>
@@ -194,6 +198,7 @@
                                 </div>
                                 <a href="javascript:void(0)" class="text-warning fw-semibold small" onclick="showTicketModal('@item.OrderId')">@Localizer["Details"]</a>
                             </div>
+
                         }
                     </div>
 

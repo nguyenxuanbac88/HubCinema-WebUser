@@ -1,34 +1,54 @@
 ﻿@model MovieTicketWebsite.Models.Transaction.TransactionHistoryItem
 
-
-<div class="ticket-modal-content card mx-auto shadow-lg rounded-4 p-4" style="max-width: 400px; background-color: #f8f9fa;">
+<div class="ticket-modal-content card mx-auto shadow-lg rounded-4 p-4" style="max-width: 420px; background-color: #ffffff;">
     <div class="text-center">
-        <img src="@Model.PosterUrl" class="img-fluid rounded mb-3" style="width: 120px; height: auto;" alt="Poster" />
-        <h5 class="fw-bold">@Model.MovieTitle</h5>
+        <!-- Poster -->
+        <img src="@Model.PosterUrl" class="img-fluid rounded-3 mb-3 shadow-sm" style="width: 130px;" alt="Poster" />
+
+        <!-- Movie title -->
+        <h5 class="fw-bold text-dark mb-1">@Model.MovieTitle</h5>
+
+        <!-- Cinema & Room -->
         <p class="text-muted mb-1">
-            <i class="bi bi-geo-alt-fill me-1"></i>@Model.CinemaName - @Model.RoomName
-        </p>
-        <p class="text-muted mb-3">
-            <i class="bi bi-clock-fill me-1"></i>@Model.ShowTime.ToString("HH:mm dd/MM/yyyy")
+            <i class="bi bi-geo-alt-fill me-1"></i> @Model.CinemaName - <strong>@Model.RoomName</strong>
         </p>
 
+        <!-- Showtime -->
+        <p class="text-muted">
+            <i class="bi bi-clock-fill me-1"></i> @Model.ShowTime.ToString("HH:mm dd/MM/yyyy")
+        </p>
+
+        <hr class="my-3" />
+
+        <!-- Seat -->
         <div class="fw-semibold mb-2">
-            <i class="bi bi-ticket-perforated-fill me-1"></i>Ghế: <span class="text-dark">@Model.Seats</span>
+            <i class="bi bi-ticket-perforated-fill me-1 text-primary"></i>
+            Ghế: <span class="text-dark">@Model.Seats</span>
         </div>
 
+        <!-- Combo -->
         @if (Model.Foods.Any())
         {
             <div class="text-muted small mb-2">
-                <i class="bi bi-cup-straw me-1"></i>Combo: @string.Join(", ", Model.Foods.Select(f => $"{f.Quantity}x {f.FoodName}"))
+                <i class="bi bi-cup-straw me-1 text-danger"></i>
+                Combo: @string.Join(", ", Model.Foods.Select(f => $"{f.Quantity}x {f.FoodName}"))
             </div>
         }
 
+        <!-- Price -->
         <div class="text-success fw-bold fs-5 mt-3">
-            <i class="bi bi-cash-stack me-1"></i>@Model.Price.ToString("N0") VNĐ
+            <i class="bi bi-cash-stack me-1"></i> @Model.Price.ToString("N0") VNĐ
         </div>
 
+        <hr class="my-3" />
+
+        <!-- QR Code -->
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=@Model.OrderId"
+             alt="QR Code" class="border rounded-3 shadow-sm" />
+
+        <!-- Order ID -->
         <div class="text-muted small mt-2">
-            <i class="bi bi-hash me-1"></i>Mã vé: <span class="fw-medium">@Model.OrderId</span>
+            <i class="bi bi-hash me-1"></i> Mã vé: <span class="fw-medium">@Model.OrderId</span>
         </div>
     </div>
 </div>
