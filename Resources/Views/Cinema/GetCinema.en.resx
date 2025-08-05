@@ -21,4 +21,12 @@
 	<data name="Hotline" xml:space="preserve"><value>Hotline</value></data>
 	<data name="Showtime" xml:space="preserve"><value>Showtime</value></data>
 	<data name="Today" xml:space="preserve"><value>Today</value></data>
+	<data name="Showtimes" xml:space="preserve"><value>Showtimes</value></data>
+	<data name="Member" xml:space="preserve"><value>Member</value></data>
+	<data name="U22" xml:space="preserve"><value>U22</value></data>
+	<data name="ChildSenior" xml:space="preserve"><value>Child/Senior</value></data>
+	<data name="Holiday" xml:space="preserve"><value>Holiday</value></data>
+	<data name="PromotionDay" xml:space="preserve"><value>Promotion Day</value></data>
+	<data name="After10PM" xml:space="preserve"><value>After 10PM</value></data>
+	<data name="DetailInfo" xml:space="preserve"><value>Detailed Information</value></data>
 </root>

@@ -21,5 +21,13 @@
 	<data name="Hotline" xml:space="preserve"><value>Hotline</value></data>
 	<data name="Showtime" xml:space="preserve"><value>SUẤT CHIẾU</value></data>
 	<data name="Today" xml:space="preserve"><value>Hôm nay</value></data>
+	<data name="Showtimes" xml:space="preserve"><value>Suất chiếu</value></data>
+	<data name="Member" xml:space="preserve"><value>Thành viên</value></data>
+	<data name="U22" xml:space="preserve"><value>U22</value></data>
+	<data name="ChildSenior" xml:space="preserve"><value>Trẻ em / Người già</value></data>
+	<data name="Holiday" xml:space="preserve"><value>Ngày lễ</value></data>
+	<data name="PromotionDay" xml:space="preserve"><value>Ngày khuyến mãi</value></data>
+	<data name="After10PM" xml:space="preserve"><value>Sau 22:00</value></data>
+	<data name="DetailInfo" xml:space="preserve"><value>Thông tin chi tiết</value></data>
 
 </root>
