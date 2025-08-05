@@ -70,4 +70,11 @@
 	<data name="NotFound" xml:space="preserve">
     <value>Ticket not found</value>
   </data>
+	<data name="SeeMore" xml:space="preserve">
+  <value>See more</value>
+</data>
+	<data name="Collapse" xml:space="preserve">
+  <value>Collapse</value>
+</data>
+
 </root>

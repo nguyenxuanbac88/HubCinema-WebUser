@@ -70,4 +70,11 @@
 	<data name="NotFound" xml:space="preserve">
     <value>Không tìm thấy vé</value>
   </data>
+	<data name="SeeMore" xml:space="preserve">
+  <value>Xem thêm</value>
+</data>
+	<data name="Collapse" xml:space="preserve">
+  <value>Thu gọn</value>
+</data>
+
 </root>
