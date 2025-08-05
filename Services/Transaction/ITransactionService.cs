@@ -1,5 +1,4 @@
-﻿using MovieTicketWebsite.Models;
-using MovieTicketWebsite.Models.Transaction;
+﻿using MovieTicketWebsite.Models.Transaction;
 
 namespace MovieTicketWebsite.Services.Transaction
 {
@@ -8,6 +7,6 @@ namespace MovieTicketWebsite.Services.Transaction
         Task<List<TransactionHistoryItem>> GetTransactionHistoryAsync(string token);
 
         // ➕ Thêm phương thức này để gọi từ controller
-        Task<TicketViewModel?> GetInvoiceByOrderIdAsync(int orderId);
+        Task<TransactionHistoryItem?> GetInvoiceByOrderIdAsync(int orderId);
     }
 }
