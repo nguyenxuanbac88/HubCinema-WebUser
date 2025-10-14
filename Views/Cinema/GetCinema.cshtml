@@ -43,26 +43,32 @@
     <h5 class="fw-bold border-start border-4 border-primary ps-2 mb-3">@Localizer["Movies"]</h5>
 
     <!-- Date Tabs -->
-   <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
-        @{
-            var availableDates = ViewBag.AvailableDates as List<string> ?? new();
-            selectedDate = ViewBag.SelectedDate as string;
+    @{
+        var allDates = ViewBag.AvailableDates as List<string> ?? new();
+        var availableDates = allDates
+        .Select(d => DateTime.Parse(d))
+        .Where(d => d.Date >= DateTime.Today)
+        .OrderBy(d => d)
+        .ToList();
 
-            foreach (var dateStr in availableDates)
-            {
-                var date = DateTime.Parse(dateStr);
-                var isToday = date.Date == DateTime.Today;
-                var label = isToday ? "Hôm Nay" : date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"));
-                var shortDate = date.ToString("dd/MM");
+         selectedDate = ViewBag.SelectedDate as string;
+    }
 
-                        <li class="nav-item">
-                            <button class="btn tab-date @(selectedDate == dateStr ? "active" : "")" data-date="@dateStr">
-                        @label<br /><small>@shortDate</small>
-                            </button>
-                        </li>
-            }
+    <ul class="nav d-flex gap-3 justify-content-center align-items-center border-bottom border-primary pb-2 mb-4" id="movieTabs">
+        @foreach (var date in availableDates)
+        {
+            var dateStr = date.ToString("yyyy-MM-dd");
+            var isToday = date.Date == DateTime.Today;
+            var label = isToday ? "Hôm Nay" : date.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"));
+            var shortDate = date.ToString("dd/MM");
+            <li class="nav-item">
+                <button class="btn tab-date @(selectedDate == dateStr ? "active" : "")" data-date="@dateStr">
+                    @label<br /><small>@shortDate</small>
+                </button>
+            </li>
         }
     </ul>
+
 
     <!-- Movie List -->
     <div id="movieList" class="row row-cols-2 row-cols-md-6 g-4 mb-5">
