@@ -93,9 +93,10 @@
                             <div class="showtime-buttons d-flex flex-wrap gap-2 mt-2">
                                 @foreach (var time in allShowtimes)
                                 {
-                                    <a asp-controller="Movie" asp-action="ChonGhe" asp-route-id="@time.MaSuat" class="badge-tag showtime-badge">
+                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.MovieId" class="badge-tag showtime-badge">
                                         @time.StartTime
                                     </a>
+
                                 }
                             </div>
                         </div>
