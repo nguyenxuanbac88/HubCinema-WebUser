@@ -15,16 +15,19 @@ namespace MovieTicketWebsite.Controllers
             _baseApiUrl = configuration["ApiSettings:BaseUrl"];
         }
 
+        // ======================
+        // 🎬 DETAILS - Chi tiết phim
+        // ======================
         public async Task<IActionResult> Details(int id)
         {
             var client = _httpClientFactory.CreateClient();
 
-            // Lấy thông tin phim
+            // 🔹 Lấy thông tin phim
             var movieResponse = await client.GetStringAsync($"{_baseApiUrl}/Public/GetMovieById/{id}");
             var movie = JsonConvert.DeserializeObject<MovieDetailViewModel>(movieResponse);
             movie.TrailerURL = ConvertYoutubeUrlToEmbed(movie.TrailerURL);
 
-            // Lấy regions + cinemas
+            // 🔹 Lấy dữ liệu filter
             var filterDataResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/filter-data");
             dynamic filterData = JsonConvert.DeserializeObject(filterDataResp);
 
@@ -39,44 +42,32 @@ namespace MovieTicketWebsite.Controllers
                     Region = (string)c.region
                 }).ToList() ?? new();
 
-            // Lấy danh sách ngày chiếu
+            // 🔹 Lấy danh sách ngày chiếu
             var dateList = new List<DateTime>();
             try
             {
                 var datesResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/dates?maPhim={id}");
                 dynamic datesData = JsonConvert.DeserializeObject(datesResp);
                 var rawDates = datesData?.data as IEnumerable<dynamic>;
-                // Pseudocode:
-                // 1. Check if rawDates is not null.
-                // 2. Convert rawDates to a list of string or dynamic.
-                // 3. For each item, parse to DateTime safely (handle nulls and invalid formats).
-                // 4. If parsing fails, skip that item.
-
-                dateList = new List<DateTime>();
                 if (rawDates != null)
                 {
                     foreach (var d in rawDates)
                     {
                         if (d == null) continue;
-                        // Fix for CS8197: Explicitly specify the type of the out variable 'dt' in DateTime.TryParse.
                         if (DateTime.TryParse(d.ToString(), out DateTime dt))
-                        {
                             dateList.Add(dt);
-                        }
                     }
-
                 }
             }
             catch { }
 
-            // Chuẩn bị allShowtimes
+            // 🔹 Lấy danh sách suất chiếu
             var allShowtimes = new List<object>();
             foreach (var date in dateList)
             {
                 var formattedDate = date.ToString("yyyy-MM-dd");
                 var showtimeResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule?maPhim={id}&date={formattedDate}");
                 dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
-
                 var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
                 if (rawShowtimes != null)
                 {
@@ -87,13 +78,7 @@ namespace MovieTicketWebsite.Controllers
                             {
                                 gioChieu = (string)g.gioChieu,
                                 suatChieu = (int)g.suatChieu
-                            })
-                            .ToList();
-
-                        // Log giá trị của gioChieuList
-                        Console.WriteLine("gioChieuList: " + JsonConvert.SerializeObject(gioChieuList));
-
-
+                            }).ToList();
 
                         var showtimeObj = new
                         {
@@ -109,95 +94,107 @@ namespace MovieTicketWebsite.Controllers
                         };
 
                         allShowtimes.Add(showtimeObj);
-                        // Log giá trị của showtimeObj
-                        Console.WriteLine("showtimeObj: " + JsonConvert.SerializeObject(showtimeObj));
                     }
                 }
             }
 
-            // Gán vào ViewModel
+            // 🔹 Gán lại ViewModel
             movie.Regions = regions;
             movie.Cinemas = cinemas;
             movie.AvailableDates = dateList;
             movie.SelectedDate = dateList.FirstOrDefault();
-            movie.AllShowtimesRawJson = JsonConvert.SerializeObject(allShowtimes); // thêm property này
+            movie.AllShowtimesRawJson = JsonConvert.SerializeObject(allShowtimes);
 
-            // Lấy thông tin của một suất chiếu đầu tiên nếu có
-            var firstShowtime = allShowtimes
-                .SelectMany(s => ((IEnumerable<dynamic>)((dynamic)s).gioChieu)
-                    .Select(g => new
-                    {
-                        SuatChieuId = (int)g.suatChieu,
-                        GioChieu = g.gioChieu.ToString(),
-                        NgayChieu = ((dynamic)s).date,
-                        TenRap = (string)((dynamic)s).tenRap,
-                        TenPhong = "" // Bạn cần thay bằng thông tin thật nếu có
-                    }))
-                .FirstOrDefault();
-
-            if (firstShowtime != null)
+            // 🔹 Lưu toàn bộ suất chiếu và model cơ bản vào session
+            HttpContext.Session.SetString("AllShowtimes", movie.AllShowtimesRawJson);
+            var seatModel = new SeatSelectionViewModel
             {
-                var ngay = DateTime.Parse(firstShowtime.NgayChieu);
-                var gio = TimeSpan.Parse(firstShowtime.GioChieu);
-
-                var seatModel = new SeatSelectionViewModel
-                {
-                    MovieId = id,
-                    MovieTitle = movie.MovieName,
-                    PosterUrl = movie.CoverURL,
-                    CinemaName = firstShowtime.TenRap,
-                    RoomName = firstShowtime.TenPhong,
-                    ShowTime = ngay.Date.Add(gio),
-                    ShowId = firstShowtime.SuatChieuId,
-                    AgeRestriction = movie.AgeRestriction,
-                    Poster = movie.CoverURL // Thêm ảnh poster vào model
-                };
-
-                TempData["SeatInfo"] = JsonConvert.SerializeObject(seatModel);
-                TempData.Keep("SeatInfo");
-            }
-
+                MovieId = id,
+                MovieTitle = movie.MovieName,
+                PosterUrl = movie.CoverURL,
+                Poster = movie.CoverURL,
+                AgeRestriction = movie.AgeRestriction
+            };
+            HttpContext.Session.SetString("SeatInfo", JsonConvert.SerializeObject(seatModel));
 
             return View(movie);
         }
 
-
-
-
+        // ======================
+        // 🎟️ CHON GHE - Khi click suất chiếu
+        // ======================
         public IActionResult ChonGhe(int id)
         {
-            if (TempData["SeatInfo"] is string json)
+            try
             {
-                var model = JsonConvert.DeserializeObject<SeatSelectionViewModel>(json);
-                if (model != null)
+                // 🔹 Lấy SeatInfo cũ (để giữ poster, tên phim, v.v.)
+                var oldSeatJson = HttpContext.Session.GetString("SeatInfo");
+                if (string.IsNullOrEmpty(oldSeatJson))
+                    return RedirectToAction("Index", "Home");
+                var seatModel = JsonConvert.DeserializeObject<SeatSelectionViewModel>(oldSeatJson);
+
+                // 🔹 Lấy danh sách suất chiếu
+                var allShowtimesJson = HttpContext.Session.GetString("AllShowtimes");
+                if (string.IsNullOrEmpty(allShowtimesJson))
+                    return RedirectToAction("Index", "Home");
+                var allShowtimes = JsonConvert.DeserializeObject<List<dynamic>>(allShowtimesJson);
+
+                // 🔹 Tìm suất người dùng chọn
+                dynamic found = null;
+                foreach (var s in allShowtimes)
                 {
-                    model.ShowId = id;
-
-                    var serialized = JsonConvert.SerializeObject(model);
-                    HttpContext.Session.SetString("SeatInfo", serialized); // ✅ Lưu thẳng Session
-
-                    return RedirectToAction("Matrix", "Seat", new { id });
+                    foreach (var g in (IEnumerable<dynamic>)s.gioChieu)
+                    {
+                        if ((int)g.suatChieu == id)
+                        {
+                            found = new
+                            {
+                                tenRap = (string)s.tenRap,
+                                gio = (string)g.gioChieu,
+                                ngay = (string)s.date
+                            };
+                            break;
+                        }
+                    }
+                    if (found != null) break;
                 }
+
+                if (found == null)
+                    return RedirectToAction("Index", "Home");
+
+                // 🔹 Cập nhật thông tin suất mới
+                DateTime.TryParse((string)found.ngay, out DateTime ngay);
+                TimeSpan.TryParse((string)found.gio, out TimeSpan gio);
+
+                seatModel.ShowId = id;
+                seatModel.CinemaName = found.tenRap;
+                seatModel.ShowTime = ngay.Add(gio);
+
+                // 🔹 Ghi đè lại session
+                HttpContext.Session.SetString("SeatInfo", JsonConvert.SerializeObject(seatModel));
+
+                Console.WriteLine("✅ SeatInfo updated: " + JsonConvert.SerializeObject(seatModel));
+
+                return RedirectToAction("Matrix", "Seat", new { id });
             }
-
-            // Nếu không có TempData thì tạo fallback
-            var fallbackModel = new SeatSelectionViewModel { ShowId = id };
-            var fallbackJson = JsonConvert.SerializeObject(fallbackModel);
-            HttpContext.Session.SetString("SeatInfo", fallbackJson);
-
-            return RedirectToAction("Matrix", "Seat", new { id });
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Lỗi ChonGhe: " + ex.Message);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-
+        // ======================
+        // 🎥 Xử lý URL trailer
+        // ======================
         private string ConvertYoutubeUrlToEmbed(string url)
         {
             if (string.IsNullOrWhiteSpace(url))
-                return "https://www.youtube.com/embed/EQ9CGrgIq9M"; // Trailer mặc định
+                return "https://www.youtube.com/embed/EQ9CGrgIq9M";
 
             try
             {
                 var uri = new Uri(url);
-
                 if (url.Contains("watch?v="))
                 {
                     var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
@@ -213,15 +210,9 @@ namespace MovieTicketWebsite.Controllers
                         return $"https://www.youtube.com/embed/{id}";
                 }
             }
-            catch
-            {
-                // Nếu url không parse được hoặc không hợp lệ
-            }
+            catch { }
 
-            return "https://www.youtube.com/embed/EQ9CGrgIq9M"; // fallback
+            return "https://www.youtube.com/embed/EQ9CGrgIq9M";
         }
-
-
     }
-
 }
