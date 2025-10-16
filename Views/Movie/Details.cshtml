@@ -119,7 +119,7 @@
             <div class="col-md-7">
                 <div class="d-flex gap-2 flex-wrap" id="date-buttons">
                     @{
-                        var today = DateTime.Today;
+                        var today = DateTime.Now.AddMinutes(-20);
                         var availableDates = Model.AvailableDates ?? new List<DateTime>();
                         var selectedDate = Model.SelectedDate.Date;
                     }

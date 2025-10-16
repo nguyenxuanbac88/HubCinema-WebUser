@@ -70,20 +70,53 @@
     </ul>
 
 
-    <!-- Movie List -->
+    @{
+        var now = DateTime.Now.AddMinutes(-20);
+    }
+
     <div id="movieList" class="row row-cols-2 row-cols-md-6 g-4 mb-5">
         @foreach (var movie in movieShowList)
         {
-            foreach (var entry in movie.ShowtimesByDate)
+            // Lọc toàn bộ ngày chiếu và giờ chiếu hợp lệ
+            var validShowtimesByDate = movie.ShowtimesByDate
+            .Where(entry =>
             {
-                var date = entry.Key;
-                var showListByTheater = entry.Value;
-                var allShowtimes = showListByTheater
-                    .SelectMany(t => t.Showtimes)
-                    .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
-                    .Select(g => new GioChieuDto { MaSuat = g.MaSuat, StartTime = g.StartTime }).ToList();
+                // entry.Key có thể là string hoặc DateTime, nên parse an toàn
+                DateTime dateValue;
+                DateTime.TryParse(entry.Key?.ToString(), out dateValue);
+                // Chỉ giữ ngày hôm nay trở đi
+                return dateValue.Date >= now.Date;
+            })
+            .Select(entry => new
+            {
+                Date = entry.Key,
+                Showtimes = entry.Value
+            .SelectMany(t => t.Showtimes)
+            .Where(g => !string.IsNullOrWhiteSpace(g.StartTime))
+            .Select(g =>
+            {
+                DateTime parsedTime;
+                DateTime.TryParse(g.StartTime, out parsedTime);
+                return new { g.MaSuat, ParsedTime = parsedTime };
+            })
+            // Chỉ giữ suất chiếu chưa qua 20 phút
+            .Where(x => x.ParsedTime >= now)
+            .OrderBy(x => x.ParsedTime)
+            .ToList()
+            })
+            // Chỉ giữ ngày có ít nhất 1 suất hợp lệ
+            .Where(x => x.Showtimes.Any())
+            .ToList();
 
-                if (!allShowtimes.Any()) continue;
+            // Nếu phim không còn ngày hoặc suất hợp lệ => bỏ qua hoàn toàn
+            if (!validShowtimesByDate.Any())
+                continue;
+
+            // Render từng ngày hợp lệ
+            foreach (var entry in validShowtimesByDate)
+            {
+                var date = entry.Date;
+                var allShowtimes = entry.Showtimes;
 
                 <div class="col movie-card" data-date="@date">
                     <div class="card h-100">
@@ -93,10 +126,12 @@
                             <div class="showtime-buttons d-flex flex-wrap gap-2 mt-2">
                                 @foreach (var time in allShowtimes)
                                 {
-                                    <a asp-controller="Movie" asp-action="Details" asp-route-id="@movie.MovieId" class="badge-tag showtime-badge">
-                                        @time.StartTime
+                                    <a asp-controller="Movie"
+                                       asp-action="Details"
+                                       asp-route-id="@movie.MovieId"
+                                       class="badge-tag showtime-badge">
+                                        @time.ParsedTime.ToString("HH:mm")
                                     </a>
-
                                 }
                             </div>
                         </div>
@@ -105,6 +140,10 @@
             }
         }
     </div>
+
+
+
+
 
     <!-- Ticket Price -->
     <div class="row g-4 mb-5">
