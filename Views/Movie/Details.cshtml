@@ -119,14 +119,14 @@
             <div class="col-md-7">
                 <div class="d-flex gap-2 flex-wrap" id="date-buttons">
                     @{
-                        var today = DateTime.Now.AddMinutes(-20);
+                        var today = DateTime.Now.Date;
                         var availableDates = Model.AvailableDates ?? new List<DateTime>();
                         var selectedDate = Model.SelectedDate.Date;
                     }
 
                     @foreach (var date in availableDates)
                     {
-                        if (date < today)
+                        if (date.Date < today)
                             continue;
                         var isActive = date.Date == selectedDate;
                         <button type="button" class="btn @(isActive ? "btn-primary text-white" : "btn-outline-secondary")"

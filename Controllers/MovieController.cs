@@ -22,12 +22,12 @@ namespace MovieTicketWebsite.Controllers
         {
             var client = _httpClientFactory.CreateClient();
 
-            // 🔹 Lấy thông tin phim
+            // 🔹 1. Lấy thông tin phim
             var movieResponse = await client.GetStringAsync($"{_baseApiUrl}/Public/GetMovieById/{id}");
             var movie = JsonConvert.DeserializeObject<MovieDetailViewModel>(movieResponse);
             movie.TrailerURL = ConvertYoutubeUrlToEmbed(movie.TrailerURL);
 
-            // 🔹 Lấy dữ liệu filter
+            // 🔹 2. Lấy dữ liệu filter (Regions + Cinemas)
             var filterDataResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule/filter-data");
             dynamic filterData = JsonConvert.DeserializeObject(filterDataResp);
 
@@ -42,7 +42,7 @@ namespace MovieTicketWebsite.Controllers
                     Region = (string)c.region
                 }).ToList() ?? new();
 
-            // 🔹 Lấy danh sách ngày chiếu
+            // 🔹 3. Lấy danh sách ngày chiếu
             var dateList = new List<DateTime>();
             try
             {
@@ -60,52 +60,89 @@ namespace MovieTicketWebsite.Controllers
                 }
             }
             catch { }
-
-            // 🔹 Lấy danh sách suất chiếu
+            // ✅ Fix: chỉ giữ phần ngày, loại trùng, sắp xếp
+            dateList = dateList
+                .Select(d => d.Date)
+                .Distinct()
+                .OrderBy(d => d)
+                .ToList();
+            // 🔹 4. Lấy danh sách suất chiếu (lọc giờ, gộp theo rạp)
             var allShowtimes = new List<object>();
+            var now = DateTime.Now.AddMinutes(-20); // ✅ trừ hao 20 phút
+            var today = now.Date;
+
             foreach (var date in dateList)
             {
                 var formattedDate = date.ToString("yyyy-MM-dd");
                 var showtimeResp = await client.GetStringAsync($"{_baseApiUrl}/Schedule?maPhim={id}&date={formattedDate}");
                 dynamic showtimeData = JsonConvert.DeserializeObject(showtimeResp);
                 var rawShowtimes = showtimeData?.data as IEnumerable<dynamic>;
-                if (rawShowtimes != null)
+                if (rawShowtimes == null) continue;
+
+                // ✅ Gom suất chiếu theo rạp
+                foreach (var group in rawShowtimes.GroupBy(x => (int)x.maRap))
                 {
-                    foreach (var item in rawShowtimes)
+                    var first = group.First();
+                    var maRap = (int)first.maRap;
+                    var tenRap = (string)first.tenRap;
+                    var region = (string)first.region ?? cinemas.FirstOrDefault(c => c.MaRap == maRap)?.Region;
+
+                    // ✅ Gộp và lọc giờ chiếu
+                    var gioChieuList = group
+    // Gom tất cả giờ chiếu của các phòng trong rạp
+    .SelectMany(x => ((IEnumerable<dynamic>)x.gioChieu)
+        .Select(g => new
+        {
+            gioChieu = (string)g.gioChieu,
+            suatChieu = (int)g.suatChieu
+        }))
+    // ✅ Loại trùng ngay tại đây (trước khi lọc)
+    .GroupBy(g => g.gioChieu)
+    .Select(g => g.First())
+    // ✅ Parse và lọc giờ hợp lệ
+    .Where(g =>
+    {
+        if (DateTime.TryParse(g.gioChieu, out DateTime timePart))
+        {
+            var fullDateTime = date.Date
+                .AddHours(timePart.Hour)
+                .AddMinutes(timePart.Minute)
+                .AddSeconds(timePart.Second);
+
+            if (fullDateTime.Date == today)
+                return fullDateTime >= now;
+
+            return fullDateTime.Date > today;
+        }
+        return false;
+    })
+    .OrderBy(g => g.gioChieu)
+    .ToList();
+
+
+                    if (!gioChieuList.Any()) continue;
+
+                    var showtimeObj = new
                     {
-                        var gioChieuList = ((IEnumerable<dynamic>)item.gioChieu)
-                            .Select(g => new
-                            {
-                                gioChieu = (string)g.gioChieu,
-                                suatChieu = (int)g.suatChieu
-                            }).ToList();
+                        maRap = maRap,
+                        tenRap = tenRap,
+                        regions = new List<string> { region, "Toàn quốc" },
+                        date = formattedDate,
+                        gioChieu = gioChieuList
+                    };
 
-                        var showtimeObj = new
-                        {
-                            maRap = (int)item.maRap,
-                            tenRap = (string)item.tenRap,
-                            regions = new List<string>
-                            {
-                                (string)item.region ?? cinemas.FirstOrDefault(c => c.MaRap == (int)item.maRap)?.Region,
-                                "Toàn quốc"
-                            },
-                            date = formattedDate,
-                            gioChieu = gioChieuList
-                        };
-
-                        allShowtimes.Add(showtimeObj);
-                    }
+                    allShowtimes.Add(showtimeObj);
                 }
             }
 
-            // 🔹 Gán lại ViewModel
+            // 🔹 5. Gán lại ViewModel
             movie.Regions = regions;
             movie.Cinemas = cinemas;
             movie.AvailableDates = dateList;
             movie.SelectedDate = dateList.FirstOrDefault();
             movie.AllShowtimesRawJson = JsonConvert.SerializeObject(allShowtimes);
 
-            // 🔹 Lưu toàn bộ suất chiếu và model cơ bản vào session
+            // 🔹 6. Lưu session (đặt ghế)
             HttpContext.Session.SetString("AllShowtimes", movie.AllShowtimesRawJson);
             var seatModel = new SeatSelectionViewModel
             {
@@ -117,8 +154,10 @@ namespace MovieTicketWebsite.Controllers
             };
             HttpContext.Session.SetString("SeatInfo", JsonConvert.SerializeObject(seatModel));
 
+            // 🔹 7. Trả về view
             return View(movie);
         }
+
 
         // ======================
         // 🎟️ CHON GHE - Khi click suất chiếu
