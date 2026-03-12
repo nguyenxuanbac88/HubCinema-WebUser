@@ -51,41 +51,50 @@ namespace MovieTicketWebsite.Controllers
                     PosterUrl = movie.CoverURL ?? "/images/doraemon.jpg"
                 };
 
-                // Lấy ngày chiếu
-                var resDates = await _httpClient.GetAsync($"{_baseApiUrl}/Schedule/dates?maPhim={movieId}");
-                if (!resDates.IsSuccessStatusCode) continue;
+                // ✅ Lấy danh sách toàn bộ suất chiếu (có cả ngày + giờ)
+                var resShowtimes = await _httpClient.GetAsync($"{_baseApiUrl}/Schedule/dates?maPhim={movieId}");
+                if (!resShowtimes.IsSuccessStatusCode) continue;
 
-                var jsonDates = await resDates.Content.ReadAsStringAsync();
-                var dateResult = JsonSerializer.Deserialize<ApiResult<List<DateTime>>>(jsonDates, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                var dates = dateResult?.Data ?? new();
+                var jsonShowtimes = await resShowtimes.Content.ReadAsStringAsync();
+                var showtimeResult = JsonSerializer.Deserialize<ApiResult<List<string>>>(jsonShowtimes, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var showData = showtimeResult?.Data ?? new();
 
-                foreach (var date in dates)
+                // ✅ Gom suất chiếu theo ngày
+                foreach (var timeStr in showData)
                 {
-                    string formattedDate = date.ToString("yyyy-MM-ddTHH:mm:ss");
-                    string key = date.ToString("yyyy-MM-dd");
-
-                    var url = $"{_baseApiUrl}/Schedule?maPhim={movieId}&date={formattedDate}&region={cinema.City}&maRap={id}";
-                    var resShowtimes = await _httpClient.GetAsync(url);
-                    if (!resShowtimes.IsSuccessStatusCode) continue;
-
-                    var jsonShowtimes = await resShowtimes.Content.ReadAsStringAsync();
-                    var showtimeResult = JsonSerializer.Deserialize<ApiResult<List<TheaterShowtimes>>>(jsonShowtimes, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                    var showData = showtimeResult?.Data ?? new();
-                    foreach (var t in showData)
+                    if (DateTime.TryParse(timeStr, out DateTime parsed))
                     {
-                        t.Showtimes ??= new();
+                        string key = parsed.ToString("yyyy-MM-dd");
+
+                        if (!movieEntry.ShowtimesByDate.ContainsKey(key))
+                            movieEntry.ShowtimesByDate[key] = new();
+
+                        // Mỗi ngày có thể nhiều giờ chiếu -> thêm vào TheaterShowtimes
+                        var theater = movieEntry.ShowtimesByDate[key]
+                            .FirstOrDefault(t => t.TheaterName == cinema.CinemaName);
+
+                        if (theater == null)
+                        {
+                            theater = new TheaterShowtimes
+                            {
+                                TheaterName = cinema.CinemaName,
+                                Showtimes = new List<GioChieuDto>()
+                            };
+                            movieEntry.ShowtimesByDate[key].Add(theater);
+                        }
+
+                        theater.Showtimes.Add(new GioChieuDto
+                        {
+                            StartTime = parsed.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            MaSuat = 0 // nếu API không trả mã suất, ta để 0
+                        });
                     }
-
-                    if (!movieEntry.ShowtimesByDate.ContainsKey(key))
-                        movieEntry.ShowtimesByDate[key] = new();
-
-                    movieEntry.ShowtimesByDate[key].AddRange(showData);
                 }
 
                 movieShowList.Add(movieEntry);
             }
 
+            // ✅ ViewBag để View hiện tab ngày và suất chiếu
             ViewBag.MovieShowList = movieShowList;
             ViewBag.AvailableDates = movieShowList
                 .SelectMany(m => m.ShowtimesByDate.Keys)
@@ -94,8 +103,10 @@ namespace MovieTicketWebsite.Controllers
                 .ToList();
 
             ViewBag.SelectedDate = ViewBag.AvailableDates.Count > 0 ? ViewBag.AvailableDates[0] : null;
+
             return View(cinema);
         }
+
 
 
         public async Task<IActionResult> GetAllCinemas()

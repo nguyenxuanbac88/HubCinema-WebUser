@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="About" xml:space="preserve"><value>Về Chúng Tôi</value></data>
+	<data name="TermsOfUse" xml:space="preserve"><value>Thoả Thuận Sử Dụng</value></data>
+	<data name="OperatingRegulations" xml:space="preserve"><value>Quy Chế Hoạt Động</value></data>
+	<data name="PrivacyPolicy" xml:space="preserve"><value>Chính Sách Bảo Mật</value></data>
+
+	<data name="CinemaCorner" xml:space="preserve"><value>Góc Điện Ảnh</value></data>
+	<data name="Genres" xml:space="preserve"><value>Thể Loại Phim</value></data>
+	<data name="Reviews" xml:space="preserve"><value>Bình Luận Phim</value></data>
+	<data name="MovieBlog" xml:space="preserve"><value>Blog Điện Ảnh</value></data>
+	<data name="MonthlyHighlights" xml:space="preserve"><value>Phim Hay Tháng</value></data>
+	<data name="IMAX" xml:space="preserve"><value>Phim IMAX</value></data>
+
+	<data name="Support" xml:space="preserve"><value>Hỗ Trợ</value></data>
+	<data name="Feedback" xml:space="preserve"><value>Góp Ý</value></data>
+	<data name="SaleServices" xml:space="preserve"><value>Sale &amp; Services</value></data>
+	<data name="CinemasPrices" xml:space="preserve"><value>Rạp / Giá Vé</value></data>
+	<data name="Careers" xml:space="preserve"><value>Tuyển Dụng</value></data>
+	<data name="FAQ" xml:space="preserve"><value>FAQ</value></data>
+
+	<data name="CompanyName" xml:space="preserve"><value>CÔNG TY CỔ PHẦN HUFLIT</value></data>
+	<data name="CompanyAddress" xml:space="preserve"><value>806 QL22, ấp Mỹ Hoà 3, Hóc Môn, Hồ Chí Minh</value></data>
+	<data name="CompanyContact" xml:space="preserve"><value>☎ 028.39.333.303 - 📞 19002224 ✉</value></data>
+</root>

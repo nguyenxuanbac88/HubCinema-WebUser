@@ -23,6 +23,18 @@
 
 document.addEventListener("DOMContentLoaded", function () {
     const showMoreBtn = document.getElementById("showMoreBtn");
+    console.log("Nút showMoreBtn:", showMoreBtn); // null nếu không được render
+
+    if (!showMoreBtn) {
+        console.warn("showMoreBtn not found!");
+        return;
+    }
+
+    const expandText = showMoreBtn.dataset.expand;
+    const collapseText = showMoreBtn.dataset.collapse;
+    console.log("Expand text:", expandText);
+    console.log("Collapse text:", collapseText);
+
     if (!showMoreBtn) return;
 
     const movieItems = document.querySelectorAll(".movie-hidden");
@@ -37,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Thay đổi nội dung nút và icon
         showMoreBtn.innerHTML = isExpanded
-            ? `Thu gọn
+            ? `${collapseText}
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
                     class="svg-inline--fa fa-angle-right"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"
@@ -47,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8
                         0-45.3s32.8-12.5 45.3 0l160 160z"></path>
                 </svg>`
-            : `Xem thêm
+            : `${expandText}
                 <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
                     class="svg-inline--fa fa-angle-right"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" width="14" height="14"

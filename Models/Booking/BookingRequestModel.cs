@@ -4,7 +4,7 @@
     {
         public int IdShowtime { get; set; }
 
-        public List<SeatDto> Seats { get; set; }
+        public List<SeatDto>? Seats { get; set; }
 
         public List<FoodDto> Foods { get; set; } = new(); // Optional
 

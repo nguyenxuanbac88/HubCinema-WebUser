@@ -1,0 +1,31 @@
+﻿#countdown-timer {
+    top: 80px;
+    right: 20px;
+    z-index: 1050;
+    background-color: rgba(33, 37, 41, 0.95);
+    color: #fff;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    display: none;
+    position: fixed;
+}
+
+    #countdown-timer i {
+        margin-right: 5px;
+    }
+
+@media (max-width: 576px) {
+    #countdown-timer {
+        top: 60px;
+        right: 10px;
+        font-size: 12px;
+        padding: 4px 8px;
+    }
+}
+
+/* Nút test */
+#testExpire {
+    z-index: 9999;
+}

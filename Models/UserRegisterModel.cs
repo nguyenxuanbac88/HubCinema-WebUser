@@ -21,5 +21,5 @@ public class UserRegisterModel
     public bool Gender { get; set; }
 
     [JsonProperty("zoneAddress")]
-    public string ZoneAddress { get; set; }
+    public string ZoneAddress { get; set; } = "";
 }

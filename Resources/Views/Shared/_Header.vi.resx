@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value></resheader>
+  <data name="Home" xml:space="preserve">
+    <value>Trang chủ</value>
+  </data>
+  <data name="NowShowing" xml:space="preserve">
+    <value>Phim đang chiếu</value>
+  </data>
+  <data name="ComingSoon" xml:space="preserve">
+    <value>Phim sắp chiếu</value>
+  </data>
+  <data name="Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Đăng nhập</value>
+  </data>
+  <data name="Register" xml:space="preserve">
+    <value>Đăng ký</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Đăng xuất</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+	<data name="Movies" xml:space="preserve">
+    <value>Phim</value>
+  </data>
+	<data name="Cinemas" xml:space="preserve">
+    <value>Rạp</value>
+  </data>
+	<data name="Products" xml:space="preserve">
+    <value>Sản phẩm</value>
+  </data>
+	<data name="News" xml:space="preserve">
+    <value>Tin tức</value>
+  </data>
+	<data name="Promotions" xml:space="preserve">
+    <value>Khuyến mãi</value>
+  </data>
+	<data name="Reviews" xml:space="preserve">
+    <value>Bình luận phim</value>
+  </data>
+	<data name="Snacks" xml:space="preserve">
+    <value>Bắp nước</value>
+  </data>
+	<data name="AllCinemas" xml:space="preserve">
+    <value>Tất cả rạp</value>
+  </data>
+	<data name="BuyTickets" xml:space="preserve">
+    <value>Mua vé</value>
+  </data>
+	<data name="Membership" xml:space="preserve">
+    <value>Thành viên</value>
+  </data>
+	<data name="Events" xml:space="preserve">
+    <value>Sự kiện và ưu đãi</value>
+  </data>
+
+</root>

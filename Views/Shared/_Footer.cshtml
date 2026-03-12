@@ -1,39 +1,43 @@
-﻿<footer class="footer bg-dark text-white pt-4">
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+
+<footer class="footer bg-dark text-white pt-4">
     <div class="container">
 
         <!-- Layout 4 cột – desktop & tablet -->
         <div class="row footer-top d-none d-sm-flex">
             <div class="footer-section col-6 col-md-3">
-                <h3>GIỚI THIỆU</h3>
+                <h3>@Localizer["About"]</h3>
                 <ul>
-                    <li><a href="/ve-chung-toi/">Về Chúng Tôi</a></li>
-                    <li><a href="/thoa-thuan-su-dung/">Thoả Thuận Sử Dụng</a></li>
-                    <li><a href="/quy-che-hoat-dong/">Quy Chế Hoạt Động</a></li>
-                    <li><a href="/chinh-sach-bao-mat/">Chính Sách Bảo Mật</a></li>
+                    <li><a href="/ve-chung-toi/">@Localizer["About"]</a></li>
+                    <li><a href="/thoa-thuan-su-dung/">@Localizer["TermsOfUse"]</a></li>
+                    <li><a href="/quy-che-hoat-dong/">@Localizer["OperatingRegulations"]</a></li>
+                    <li><a href="/chinh-sach-bao-mat/">@Localizer["PrivacyPolicy"]</a></li>
                 </ul>
             </div>
             <div class="footer-section col-6 col-md-3">
-                <h3>GÓC ĐIỆN ẢNH</h3>
+                <h3>@Localizer["CinemaCorner"]</h3>
                 <ul>
-                    <li><a href="/dien-anh/">Thể Loại Phim</a></li>
-                    <li><a href="/binh-luan-phim/">Bình Luận Phim</a></li>
-                    <li><a href="/movie-blog/">Blog Điện Ảnh</a></li>
-                    <li><a href="/phim-hay/">Phim Hay Tháng</a></li>
-                    <li><a href="/phim-imax/">Phim IMAX</a></li>
+                    <li><a href="/dien-anh/">@Localizer["Genres"]</a></li>
+                    <li><a href="/binh-luan-phim/">@Localizer["Reviews"]</a></li>
+                    <li><a href="/movie-blog/">@Localizer["MovieBlog"]</a></li>
+                    <li><a href="/phim-hay/">@Localizer["MonthlyHighlights"]</a></li>
+                    <li><a href="/phim-imax/">@Localizer["IMAX"]</a></li>
                 </ul>
+
             </div>
             <div class="footer-section col-6 col-md-3">
-                <h3>HỖ TRỢ</h3>
+                <h3>@Localizer["Support"]</h3>
                 <ul>
-                    <li><a href="/gop-y/">Góp Ý</a></li>
-                    <li><a href="/sale-and-service/">Sale & Services</a></li>
-                    <li><a href="/rap-gia-ve/">Rạp / Giá Vé</a></li>
-                    <li><a href="https://tuyendung-daotao.galaxystudio.vn/" target="_blank">Tuyển Dụng</a></li>
-                    <li><a href="/hoi-dap/">FAQ</a></li>
+                    <li><a href="/gop-y/">@Localizer["Feedback"]</a></li>
+                    <li><a href="/sale-and-service/">@Localizer["SaleServices"]</a></li>
+                    <li><a href="/rap-gia-ve/">@Localizer["CinemasPrices"]</a></li>
+                    <li><a href="https://tuyendung-daotao.galaxystudio.vn/" target="_blank">@Localizer["Careers"]</a></li>
+                    <li><a href="/hoi-dap/">@Localizer["FAQ"]</a></li>
                 </ul>
+
             </div>
             <div class="footer-section col-6 col-md-3 text-center text-md-start">
-                <img src="https://www.galaxycine.vn/media/2024/11/11/glx-footer.svg" alt="Galaxy Cinema" class="img-fluid mb-3" style="max-width: 140px;">
+                <img src="~/images/hub_logo_new.png" alt="Logo" alt="Galaxy Cinema" class="img-fluid mb-3" style="max-width: 140px;">
                 <div class="social-icons justify-content-center justify-content-md-start">
                     <a href="#" class="social-icon"><img src="~/images/facebook.png" alt="Facebook"></a>
                     <a href="#" class="social-icon"><img src="~/images/youtube.png" alt="YouTube"></a>
@@ -47,32 +51,32 @@
         <div class="d-block d-sm-none">
             <div class="row gx-2 gy-3">
                 <div class="col-6">
-                    <h6 class="fw-bold text-uppercase">GIỚI THIỆU</h6>
+                    <h6 class="fw-bold text-uppercase">@Localizer["About"]</h6>
                     <ul class="list-unstyled small mb-0">
-                        <li><a href="#" class="text-white text-decoration-none">Về Chúng Tôi</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Thoả Thuận Sử Dụng</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Quy Chế Hoạt Động</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Chính Sách Bảo Mật</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["About"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["TermsOfUse"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["OperatingRegulations"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["PrivacyPolicy"]</a></li>
                     </ul>
                 </div>
                 <div class="col-6">
-                    <h6 class="fw-bold text-uppercase">GÓC ĐIỆN ẢNH</h6>
+                    <h6 class="fw-bold text-uppercase">@Localizer["CinemaCorner"]</h6>
                     <ul class="list-unstyled small mb-0">
-                        <li><a href="#" class="text-white text-decoration-none">Thể Loại Phim</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Bình Luận Phim</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Blog Điện Ảnh</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Phim Hay Tháng</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Phim IMAX</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["Genres"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["Reviews"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["MovieBlog"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["MonthlyHighlights"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["IMAX"]</a></li>
                     </ul>
                 </div>
                 <div class="col-6">
-                    <h6 class="fw-bold text-uppercase">HỖ TRỢ</h6>
+                    <h6 class="fw-bold text-uppercase">@Localizer["Support"]</h6>
                     <ul class="list-unstyled small mb-0">
-                        <li><a href="#" class="text-white text-decoration-none">Góp Ý</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Sale & Services</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Rạp / Giá Vé</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">Tuyển Dụng</a></li>
-                        <li><a href="#" class="text-white text-decoration-none">FAQ</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["Feedback"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["SaleServices"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["CinemasPrices"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["Careers"]</a></li>
+                        <li><a href="#" class="text-white text-decoration-none">@Localizer["FAQ"]</a></li>
                     </ul>
                 </div>
                 <div class="col-6">
@@ -92,9 +96,12 @@
             <div class="d-flex align-items-center gap-3 mb-3 mb-md-0">
                 <img src="~/images/hub_logo_new.png" alt="Logo">
                 <div>
-                    <h6 class="mb-1">CÔNG TY CỔ PHẦN HUFLIT</h6>
-                    <p class="mb-0">806 QL22, ấp Mỹ Hoà 3, Hóc Môn, Hồ Chí Minh</p>
-                    <p class="mb-1">☎ 028.39.333.303 - 📞 19002224 ✉ <a href="mailto:hotro@galaxystudio.vn">hotro@hubstudio.vn</a></p>
+                    <h6 class="mb-1">@Localizer["CompanyName"]</h6>
+                    <p class="mb-0">@Localizer["CompanyAddress"]</p>
+                    <p class="mb-1">
+                        @Localizer["CompanyContact"]
+                        <a href="mailto:hotro@galaxystudio.vn">hotro@hubstudio.vn</a>
+                    </p>
                 </div>
             </div>
         </div>

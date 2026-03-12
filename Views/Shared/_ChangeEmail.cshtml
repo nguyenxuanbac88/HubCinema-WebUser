@@ -1,20 +1,21 @@
-﻿<div id="changeEmailModal" class="custom-modal-overlay" style="display:none;">
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+<div id="changeEmailModal" class="custom-modal-overlay" style="display:none;">
     <div class="custom-modal-box">
         <button class="custom-modal-close" onclick="closeChangeEmailModal()">×</button>
 
         <div class="text-center mb-4">
-            <img src="/images/hub_logo_new.png" width="150" alt="Change Email" />
-            <h4 class="fw-bold mt-2">Thay Đổi Email</h4>
+            <img src="/images/hub_logo_new.png" width="150" alt="@Localizer["ChangeEmailTitle"]" />
+            <h4 class="fw-bold mt-2">@Localizer["ChangeEmailTitle"]</h4>
         </div>
 
         <form asp-controller="Account" asp-action="ChangeEmail" method="post">
             <div class="form-group mb-3">
-                <label>Email mới</label>
-                <input type="email" name="emailNew" class="form-control" placeholder="Nhập email mới" required />
+                <label>@Localizer["NewEmailLabel"]</label>
+                <input type="email" name="emailNew" class="form-control" placeholder="@Localizer["NewEmailLabel"]" required />
             </div>
 
             <button type="submit" class="btn w-100 text-white fw-bold" style="background: #E48600;">
-                GỬI MÃ OTP
+                @Localizer["SendOtpButton"]
             </button>
         </form>
 

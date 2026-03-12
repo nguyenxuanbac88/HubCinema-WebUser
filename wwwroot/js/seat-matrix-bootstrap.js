@@ -140,86 +140,43 @@
         const selectedCount = document.querySelectorAll(".seat.selected").length;
         const isCurrentlySelected = seatEl.classList.contains("selected");
 
-        // ✅ Luật 4: Không vượt quá 8 ghế
+        // ✅ Không vượt quá 8 ghế
         if (selectedCount > 8 && !isCurrentlySelected) {
             showToast("Bạn chỉ được chọn tối đa 8 ghế mỗi lần.");
             return false;
         }
 
-        // ✅ Nếu đang chọn mới kiểm tra
+        // ✅ Nếu đang chọn mới thì kiểm tra
         if (!isCurrentlySelected) {
-            seatEl.classList.add("selected");
-
-            const selectedSeats = new Set(
-                seatsInRow
-                    .filter(s => s.classList.contains("selected") || s.classList.contains("confirmed") || s.classList.contains("held"))
-                    .map(s => s.dataset.id)
-            );
-
             let valid = true;
             let reason = "";
 
-            // ✅ Luật 1: Không để trống 1 ghế giữa
-            for (let i = 1; i < seatsInRow.length - 1; i++) {
-                const left = seatsInRow[i - 1];
-                const middle = seatsInRow[i];
-                const right = seatsInRow[i + 1];
+            // ✅ Chỉ tính các ghế đang chọn + giả lập ghế đang click
+            const selectedSeats = new Set(
+                seatsInRow
+                    .filter(s => s.classList.contains("selected") || s === seatEl)
+                    .map(s => s.dataset.id)
+            );
 
-                const isLeftSelected = selectedSeats.has(left.dataset.id);
-                const isMiddleEmpty = !selectedSeats.has(middle.dataset.id);
-                const isRightSelected = selectedSeats.has(right.dataset.id);
+            // ✅ Tạo danh sách các ghế đang chọn trên hàng
+            const takenSeats = seatsInRow.filter(s => selectedSeats.has(s.dataset.id));
 
-                if (
-                    isLeftSelected && isRightSelected && isMiddleEmpty &&
-                    !middle.classList.contains("confirmed") &&
-                    !middle.classList.contains("held")
-                ) {
-                    valid = false;
-                    reason = "Không được để trống 1 ghế giữa các ghế đã chọn hoặc đã bán.";
-                    break;
-                }
-            }
+            for (let i = 0; i < takenSeats.length - 1; i++) {
+                const leftIndex = seatsInRow.indexOf(takenSeats[i]);
+                const rightIndex = seatsInRow.indexOf(takenSeats[i + 1]);
 
-            // ✅ Luật 2: Không để trống 2 ghế liền giữa
-            if (valid) {
-                for (let i = 1; i < seatsInRow.length - 2; i++) {
-                    const s1 = seatsInRow[i];
-                    const s2 = seatsInRow[i + 1];
-                    const left = seatsInRow[i - 1];
-                    const right = seatsInRow[i + 2];
+                if (rightIndex - leftIndex === 2) {
+                    const middleSeat = seatsInRow[leftIndex + 1];
 
-                    if (
-                        !selectedSeats.has(s1.dataset.id) &&
-                        !selectedSeats.has(s2.dataset.id) &&
-                        selectedSeats.has(left.dataset.id) &&
-                        selectedSeats.has(right.dataset.id) &&
-                        !s1.classList.contains("confirmed") &&
-                        !s2.classList.contains("confirmed")
-                    ) {
+                    const isEmpty = !selectedSeats.has(middleSeat.dataset.id);
+
+                    if (isEmpty) {
                         valid = false;
-                        reason = "Không được để trống 2 ghế liền nhau giữa các ghế đã chọn.";
+                        reason = "Không được để trống 1 ghế giữa các ghế bạn đang chọn.";
                         break;
                     }
                 }
             }
-
-            // ✅ Luật 3: Không chọn cách xa nhau
-            if (valid) {
-                const selectedIndexes = seatsInRow
-                    .map((s, i) => selectedSeats.has(s.dataset.id) ? i : -1)
-                    .filter(i => i !== -1);
-
-                for (let i = 1; i < selectedIndexes.length; i++) {
-                    if (selectedIndexes[i] - selectedIndexes[i - 1] > 1) {
-                        valid = false;
-                        reason = "Các ghế được chọn phải nằm liền kề, không được cách xa.";
-                        break;
-                    }
-                }
-            }
-            // ✅ Luật 7: Ghế đang held (đã được xử lý từ trước bằng class 'held') — bỏ qua
-
-            seatEl.classList.remove("selected");
 
             if (!valid) {
                 showToast(reason);
@@ -229,6 +186,7 @@
 
         return true;
     }
+
     function showToast(message) {
         const modal = document.getElementById("errorModal");
         const msgEl = document.getElementById("errorModalMessage");
@@ -320,19 +278,77 @@
         }
 
     }
-
-
-
     const btnDatVe = document.getElementById("btnDatVe");
     if (btnDatVe) {
         btnDatVe.addEventListener("click", async () => {
             const selectedSeats = Array.from(document.querySelectorAll(".seat.selected"))
                 .map(seat => seat.dataset.id);
 
-            if (selectedSeats.length === 0) {
-                return alert("Vui lòng chọn ít nhất một ghế để tiếp tục.");
+            if (selectedSeats.length-1 === 0) {
+                showToast("Vui lòng chọn ít nhất một ghế để tiếp tục.")
+                return;
             }
+            // ✅ Kiểm tra ghế trống giữa các ghế đã chọn/đã giữ/đã bán
+            const seatRows = document.querySelectorAll(".seat-row");
+            for (const row of seatRows) {
+                const seatsInRow = Array.from(row.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
 
+                const occupiedSeats = seatsInRow.filter(s =>
+                    s.classList.contains("selected") ||
+                    s.classList.contains("held") ||
+                    s.classList.contains("confirmed")
+                );
+
+                for (let i = 0; i < occupiedSeats.length - 1; i++) {
+                    const leftIndex = seatsInRow.indexOf(occupiedSeats[i]);
+                    const rightIndex = seatsInRow.indexOf(occupiedSeats[i + 1]);
+
+                    if (rightIndex - leftIndex === 2) {
+                        const middleSeat = seatsInRow[leftIndex + 1];
+                        const isEmpty = !middleSeat.classList.contains("selected") &&
+                            !middleSeat.classList.contains("held") &&
+                            !middleSeat.classList.contains("confirmed");
+
+                        if (isEmpty) {
+                            showToast("Không được để trống một ghế ở giữa các ghế đã chọn hoặc đã bán.");
+                            middleSeat.scrollIntoView({ behavior: "smooth", block: "center" });
+                            return;
+                        }
+                    }
+                }
+            }
+            // ✅ ② Kiểm tra khoảng trống giữa các ghế đang chọn
+            for (const row of seatRows) {
+                const seatsInRow = Array.from(row.querySelectorAll(".seat")).filter(s => !s.classList.contains("empty"));
+
+                const selectedSeatsInRow = seatsInRow.filter(s => s.classList.contains("selected"));
+
+                if (selectedSeatsInRow.length >= 2) {
+                    for (let i = 0; i < selectedSeatsInRow.length - 1; i++) {
+                        const leftIndex = seatsInRow.indexOf(selectedSeatsInRow[i]);
+                        const rightIndex = seatsInRow.indexOf(selectedSeatsInRow[i + 1]);
+
+                        const distance = rightIndex - leftIndex;
+                        if (distance > 1) {
+                            let allMiddleEmpty = true;
+
+                            for (let j = leftIndex + 1; j < rightIndex; j++) {
+                                const seat = seatsInRow[j];
+                                if (seat.classList.contains("selected")) {
+                                    allMiddleEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (allMiddleEmpty) {
+                                showToast("Không được để trống ghế ở giữa các ghế bạn đang chọn.");
+                                seatsInRow[leftIndex + 1].scrollIntoView({ behavior: "smooth", block: "center" });
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
             const idSuatChieu = document.getElementById("seat-matrix").getAttribute('data-id-suat-chieu');
 
             // ✅ Gọi API giữ ghế trước khi lưu dữ liệu
@@ -394,6 +410,7 @@
                 },
                 body: JSON.stringify(bookingModel)
             });
+            document.cookie = "booking_flow=1; path=/";
 
             if (response.ok) {
                 window.location.href = "/Combo/Index?inBookingFlow=true";

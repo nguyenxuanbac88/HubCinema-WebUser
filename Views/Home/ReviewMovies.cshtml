@@ -1,5 +1,5 @@
 ﻿@model List<MovieTicketWebsite.Models.News>
-
+@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
 <style>
     .offer-card .card-body {
         height: 120px;
@@ -23,7 +23,7 @@
 </style>
 
 <div class="container py-4">
-    <h2 class="mb-4">TẤT CẢ TIN TỨC & ƯU ĐÃI</h2>
+    <h2 class="mb-4">@Localizer["AllNewsAndPromotions"]</h2>
     <div class="row g-4">
         @if (Model != null && Model.Any())
         {
@@ -38,7 +38,7 @@
                             <p class="card-title">@item.Title</p>
                             <a href="@Url.Action("Detail", "News", new { id = item.Id })"
                                class="btn btn-link text-primary fw-semibold text-decoration-none">
-                                Xem chi tiết
+                                @Localizer["ViewDetails"]
                             </a>
                         </div>
                     </div>
@@ -48,7 +48,7 @@
         else
         {
             <div class="col-12">
-                <div class="alert alert-warning text-center">Không có bài viết nào.</div>
+                <div class="alert alert-warning text-center">@Localizer["NoPosts"]</div>
             </div>
         }
     </div>

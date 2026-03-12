@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieTicketWebsite.Models;
+using MovieTicketWebsite.Services.Transaction;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
@@ -38,6 +39,12 @@ namespace MovieTicketWebsite.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     var userInfo = await response.Content.ReadFromJsonAsync<UserInfo>();
+
+                    // Gọi TransactionService
+                    var transactionService = HttpContext.RequestServices.GetRequiredService<ITransactionService>();
+                    var transactions = await transactionService.GetTransactionHistoryAsync(token);
+                    ViewBag.Transactions = transactions;
+
                     return View(userInfo);
                 }
                 else if (response.StatusCode == HttpStatusCode.Unauthorized)

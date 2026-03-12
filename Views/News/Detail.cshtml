@@ -1,4 +1,5 @@
-﻿@model MovieTicketWebsite.Models.News
+﻿@inject Microsoft.AspNetCore.Mvc.Localization.IViewLocalizer Localizer
+@model MovieTicketWebsite.Models.News
 @{
     ViewData["Title"] = Model.Title;
     var relatedNews = ViewBag.RelatedNews as List<MovieTicketWebsite.Models.News>;
@@ -15,13 +16,13 @@
                 @Html.Raw(Model.Content)
             </div>
 
-            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-4">← Quay lại trang chủ</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary mt-4">← @Localizer["BackToHome"]</a>
 
             <!-- Tin liên quan -->
             @if (relatedNews != null && relatedNews.Any())
             {
                 <div class="mt-5">
-                    <h5 class="fw-bold mb-3 text-uppercase">Tin liên quan</h5>
+                    <h5 class="fw-bold mb-3 text-uppercase">@Localizer["RelatedNews"]</h5>
 
                     <div class="position-relative">
                         <div class="related-slider d-flex overflow-hidden">
@@ -32,7 +33,7 @@
                                         <img src="@news.Thumbnail" class="card-img-top related-img" alt="@news.Title" />
                                         <div class="card-body p-2">
                                             <h6 class="card-title text-truncate" title="@news.Title">@news.Title</h6>
-                                            <a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
+                                            <a asp-controller="News" asp-action="Detail" asp-route-id="@news.Id" class="btn btn-sm btn-outline-primary mt-2">@Localizer["ReadMore"]</a>
                                         </div>
                                     </div>
                                 </div>
@@ -50,7 +51,7 @@
         <!-- Cột phải: Phim đang chiếu -->
         <div class="col-lg-3">
             <div class="sticky-top" style="top: 80px;">
-                <h6 class="fw-bold text-uppercase mb-3">Phim đang chiếu</h6>
+                <h6 class="fw-bold text-uppercase mb-3">@Localizer["NowShowing"]</h6>
                 <div class="row">
                     @if (showingMovies != null && showingMovies.Any())
                     {
