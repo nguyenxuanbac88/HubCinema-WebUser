@@ -16,6 +16,19 @@ Phần front-end này chủ yếu tiêu thụ API từ backend:
 
 ---
 
+## CV Version (mẫu ghi ngắn gọn)
+
+**Front-end Developer** | **HubCinema - Movie Ticket Booking Website** *(Github)*  
+Xây dựng front-end web đặt vé phim cho người dùng cuối, tích hợp dữ liệu và nghiệp vụ từ HubCinema-API.
+
+- Phát triển các luồng chính: xem phim/lịch chiếu, chọn ghế, chọn combo, checkout và thanh toán VNPay.
+- Tích hợp API backend cho xác thực người dùng (JWT), lịch chiếu, đặt vé, hóa đơn/vé và tin tức/banner.
+- Xây dựng giao diện responsive bằng Razor + Bootstrap, tối ưu trải nghiệm cho desktop/mobile.
+- Triển khai đa ngôn ngữ Việt/Anh (Localization), quản lý trạng thái bằng Session và middleware kiểm tra token.
+- **Công nghệ:** ASP.NET Core MVC (.NET 8), Razor Views, Bootstrap 5, JavaScript, jQuery, Slick Carousel, Newtonsoft.Json, VNPay, QRCoder.
+
+---
+
 ## 2) Những gì bạn đã làm ở phần front-end (theo code hiện có)
 
 Dựa trên cấu trúc và luồng trong repository này, phạm vi bạn đã triển khai gồm:
