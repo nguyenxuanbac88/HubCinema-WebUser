@@ -97,5 +97,9 @@ dotnet build MovieTicketWebsite.sln
 dotnet run
 ```
 
-Có thể deploy qua Docker/GitHub Actions (tham khảo `Dockerfile`, `docker-compose.yml`, `.github/workflows/deploy.yml`, `DOCKER_DEPLOYMENT.md`).
+Có thể deploy qua Docker/GitHub Actions:
 
+- `Dockerfile`: build image chạy ứng dụng ASP.NET Core.
+- `docker-compose.yml`: chạy nhanh theo mô hình container.
+- `.github/workflows/deploy.yml`: pipeline CI/CD deploy tự động.
+- `DOCKER_DEPLOYMENT.md`: hướng dẫn triển khai Docker chi tiết.
