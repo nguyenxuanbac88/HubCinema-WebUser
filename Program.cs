@@ -18,6 +18,7 @@ namespace MovieTicketWebsite
             builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<ITransactionService, TransactionService>();
+            builder.Services.AddScoped<MovieTicketWebsite.Services.PayPal.IPayPalService, MovieTicketWebsite.Services.PayPal.PayPalService>();
 
 
             builder.Services.AddControllersWithViews().AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder)

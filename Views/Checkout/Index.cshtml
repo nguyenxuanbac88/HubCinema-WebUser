@@ -8,41 +8,44 @@
     <h2 class="fw-bold mb-4">Thanh toán</h2>
 
     <div class="row">
-        <!-- 🔸 Cột trái: Chọn khuyến mãi + phương thức -->
         <div class="col-lg-8">
-                <!-- Mã khuyến mãi -->
-                <div class="mb-3">
-                    <label for="voucherCode" class="form-label">Mã khuyến mãi</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="VoucherCode" id="voucherCode" placeholder="Nhập mã giảm giá nếu có">
-                        <button type="button" class="btn btn-outline-primary">Áp dụng</button>
-                    </div>
+            <div class="mb-3">
+                <label for="voucherCode" class="form-label">Mã khuyến mãi</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" name="VoucherCode" id="voucherCode" placeholder="Nhập mã giảm giá nếu có">
+                    <button type="button" class="btn btn-outline-primary">Áp dụng</button>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Sử dụng điểm Stars</label>
+                <input type="number" name="UsedPoint" class="form-control" min="0" max="100" value="0">
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">Phương thức thanh toán</label>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="PaymentMethodUI" value="vnpay" id="vnpayRadio" checked>
+                    <label class="form-check-label" for="vnpayRadio">
+                        VNPay - ATM/VISA/MASTER
+                    </label>
                 </div>
 
-                <!-- Dùng điểm (nếu có hệ thống điểm tích lũy) -->
-                <div class="mb-3">
-                    <label class="form-label">Sử dụng điểm Stars</label>
-                    <input type="number" name="UsedPoint" class="form-control" min="0" max="100" value="0">
+                <div class="form-check mt-2">
+                    <input class="form-check-input" type="radio" name="PaymentMethodUI" value="paypal" id="paypalRadio">
+                    <label class="form-check-label" for="paypalRadio">
+                        PayPal
+                    </label>
                 </div>
+            </div>
 
-                <!-- Phương thức thanh toán -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold">Phương thức thanh toán</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="PaymentMethod" value="vnpay" id="vnpayRadio" checked>
-                        <label class="form-check-label" for="vnpayRadio">
-                            VNPay - ATM/VISA/MASTER
-                        </label>
-                    </div>
-                </div>
-                <!-- Thay nút submit -->
-                <button type="button" class="btn btn-danger px-4" id="openModalBtn" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal">
-                    Thanh toán
-                </button>
+            <button type="button" class="btn btn-danger px-4" id="openModalBtn" data-bs-toggle="modal" data-bs-target="#confirmPaymentModal">
+                Thanh toán
+            </button>
 
         </div>
 
-        <!-- 🔹 Cột phải: Thông tin đơn hàng -->
         <div class="col-lg-4">
             <div class="card shadow-sm p-3">
                 <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
@@ -68,7 +71,6 @@
                 </div>
 
                 <hr />
-                <!-- Tổng tiền ghế -->
                 @if (Model.Seats != null && Model.Seats.Any())
                 {
                     <div class="d-flex justify-content-between small">
@@ -80,7 +82,6 @@
 
                 }
 
-                <!-- Danh sách combo -->
                 @if (Model.Foods != null && Model.Foods.Any())
 
                 {
@@ -98,14 +99,10 @@
 
                 <hr />
 
-                <!-- Tổng cộng -->
                 <div class="d-flex justify-content-between fw-bold fs-6">
                     <div>Tổng cộng:</div>
                     <div>@Model.TotalAmount.ToString("N0") đ</div>
                 </div>
-
-
-
 
             </div>
         </div>
@@ -126,6 +123,15 @@
             document.getElementById("openModalBtn")?.addEventListener("click", () => {
                 document.getElementById("modalVoucherCode").value = document.getElementById("voucherCode").value;
                 document.getElementById("modalUsedPoint").value = document.querySelector("input[name='UsedPoint']").value;
+
+                // Lấy giá trị radio button (vnpay hoặc paypal) đang được chọn
+                const selectedPayment = document.querySelector('input[name="PaymentMethodUI"]:checked').value;
+
+                // Gán vào input hidden của form trong Modal (để submit về Controller)
+                const hiddenPaymentInput = document.querySelector('#confirmPaymentModal input[name="PaymentMethod"]');
+                if (hiddenPaymentInput) {
+                    hiddenPaymentInput.value = selectedPayment;
+                }
             });
         });
     </script>

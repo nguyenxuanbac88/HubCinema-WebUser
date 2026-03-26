@@ -176,6 +176,12 @@ namespace MovieTicketWebsite.Controllers
             HttpContext.Session.SetString("VnPayData", JsonConvert.SerializeObject(model));
             Console.ForegroundColor = ConsoleColor.Green;
 
+            // ✅ RẼ NHÁNH THANH TOÁN TẠI ĐÂY
+            if (!string.IsNullOrEmpty(PaymentMethod) && PaymentMethod.ToLower() == "paypal")
+            {
+                Console.WriteLine("🔄 Chuyển hướng sang PayPal...");
+                return RedirectToAction("RedirectToPayPal", "Payment");
+            }
 
             return RedirectToAction("RedirectToVNPay", "Payment");
         }
