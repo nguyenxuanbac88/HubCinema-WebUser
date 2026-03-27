@@ -3,11 +3,9 @@
     <span>Còn lại: <span id="countdown-time">05:00</span></span>
 </div>
 
-<!-- Nút test ẩn để giả lập hết thời gian -->
 <button id="testExpire" onclick="simulateExpire()" class="btn btn-danger btn-sm position-fixed bottom-0 end-0 m-3 d-none" style="z-index: 9999;">
     Giả lập hết thời gian
 </button>
-
 
 <script>
     let countdownInterval;
@@ -62,9 +60,8 @@
         startCountdown(0);
     }
 
-    // ✅ Hiện nút nếu đang ở localhost hoặc có query `test=1`
-    if (location.hostname === "localhost" || location.search.includes("test=1")) {
+    // ✅ Hiện nút nếu đang ở localhost, api.dvxuanbac.com hoặc có query `test=1`
+    if (location.hostname === "localhost" || location.hostname === "api.dvxuanbac.com" || location.search.includes("test=1")) {
         document.getElementById("testExpire").classList.remove("d-none");
     }
 </script>
-
