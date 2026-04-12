@@ -1,77 +1,77 @@
 # HubCinema WebUser (Customer)
 
-Frontend dành cho khách hàng của hệ thống bán vé xem phim HubCinema, phát triển bằng **ASP.NET Core MVC (.NET 8)**.  
-Ứng dụng tập trung vào trải nghiệm người dùng cuối: khám phá phim, chọn suất chiếu, đặt ghế, chọn combo và thanh toán trực tuyến.
+Customer-facing frontend for the HubCinema movie ticketing system, built with **ASP.NET Core MVC (.NET 8)**.  
+This application focuses on end-user experience: browsing movies, selecting showtimes, choosing seats, adding combos, and completing online payments.
 
-## Tổng quan
+## Overview
 
-HubCinema WebUser là phần **customer-facing** trong hệ sinh thái HubCinema.  
-Toàn bộ dữ liệu nghiệp vụ (phim, rạp, suất chiếu, combo, đơn hàng, tài khoản, ...) được lấy thông qua API backend do team xây dựng.
+HubCinema WebUser is the **customer-facing** part of the HubCinema ecosystem.  
+All business data (movies, cinemas, showtimes, combos, orders, accounts, etc.) is retrieved through the backend API built by the team.
 
-## Tính năng nổi bật
+## Key Features
 
-- Đăng ký, đăng nhập, quên mật khẩu
-- Trang chủ hiển thị nội dung phim và thông tin nổi bật
-- Trang chi tiết phim
-- Luồng đặt vé đầy đủ:
-  - Lấy sơ đồ ghế theo suất chiếu
-  - Chọn ghế
-  - Chọn combo
-  - Thanh toán
-- Tích hợp 2 cổng thanh toán:
+- User registration, login, and forgot password
+- Homepage with featured movie content and highlights
+- Movie detail page
+- Complete ticket booking flow:
+  - Get seat map by showtime
+  - Select seats
+  - Select combos
+  - Checkout/payment
+- Integrated with 2 payment gateways:
   - **PayPal**
   - **VNPay**
-- Song ngữ **Tiếng Việt / English**
-- Trang thành viên và lịch sử giao dịch
-- Hiển thị vé sau thanh toán và cho phép xem lại vé đã đặt
+- Bilingual support: **Vietnamese / English**
+- Member page and transaction history
+- Display tickets after payment and allow users to review booked tickets
 
-## Kiến trúc tích hợp
+## Integration Architecture
 
-- WebUser đóng vai trò frontend MVC cho người dùng cuối.
-- Backend API chịu trách nhiệm xử lý nghiệp vụ và cung cấp dữ liệu.
-- WebUser gọi API để:
-  - Lấy danh sách phim, rạp, suất chiếu, combo
-  - Xử lý thông tin người dùng
-  - Đồng bộ dữ liệu đơn hàng/thanh toán
-- Sau khi thanh toán thành công, hệ thống trả kết quả để hiển thị vé và lưu lịch sử giao dịch.
+- WebUser acts as the MVC frontend for end users.
+- The backend API handles business logic and data services.
+- WebUser calls the API to:
+  - Fetch movies, cinemas, showtimes, and combos
+  - Handle user information
+  - Synchronize order/payment data
+- After successful payment, the system returns results for ticket display and transaction history storage.
 
-## Công nghệ sử dụng
+## Technology Stack
 
 - **.NET 8 / ASP.NET Core MVC**
 - **Razor Views**
 - **Newtonsoft.Json**
 - **QRCoder**
-- Session & Middleware trong ASP.NET Core
+- ASP.NET Core Session & Middleware
 - Localization (vi/en)
 
-## Cấu trúc thư mục chính
+## Main Folder Structure
 
-- `Controllers/`: xử lý luồng request/response cho các màn hình
-- `Models/`: model dữ liệu và DTO sử dụng trong WebUser
-- `Services/`: tích hợp API, thanh toán PayPal/VNPay, transaction
-- `Views/`: giao diện Razor theo từng module
-- `wwwroot/`: tài nguyên tĩnh (CSS, JS, images)
-- `middlewares/`: middleware dùng trong pipeline
+- `Controllers/`: request/response flow handling for pages and features
+- `Models/`: data models and DTOs used in WebUser
+- `Services/`: API integration, PayPal/VNPay payment services, transactions
+- `Views/`: Razor UI views by module
+- `wwwroot/`: static assets (CSS, JS, images)
+- `middlewares/`: middleware used in the request pipeline
 
-## Thành viên & phạm vi đóng góp
+## Team & Contribution Scope
 
-Dự án được phát triển theo hướng phối hợp nhóm:
+This project was developed collaboratively:
 
-- API backend và phần admin được xây dựng bởi team backend/admin.
-- Phần customer WebUser được thực hiện bởi các thành viên trong nhóm với các module chính như:
-  - xác thực người dùng
-  - trang chủ, chi tiết phim
-  - quy trình đặt vé và thanh toán
-  - song ngữ
-  - trang thành viên và lịch sử giao dịch
+- Backend API and admin components were built by the backend/admin team.
+- The customer WebUser side was implemented by team members across major modules, including:
+  - User authentication
+  - Homepage and movie details
+  - Booking and payment flow
+  - Bilingual support
+  - Member page and transaction history
 
-Mục tiêu là đảm bảo trải nghiệm đặt vé liền mạch từ lúc chọn phim đến khi nhận vé sau thanh toán.
+The goal is to ensure a seamless booking experience from movie selection to ticket receipt after payment.
 
-## Yêu cầu môi trường
+## Environment Requirements
 
 - .NET SDK 8.0+
 
-## Chạy dự án local
+## Run Locally
 
 ```bash
 dotnet restore
@@ -79,16 +79,16 @@ dotnet build
 dotnet run --project MovieTicketWebsite.csproj
 ```
 
-Sau khi chạy, truy cập địa chỉ được hiển thị trên terminal (mặc định thường là `https://localhost:<port>`).
+After running, open the URL shown in the terminal (usually `https://localhost:<port>`).
 
-## Cấu hình
+## Configuration
 
-- Cập nhật các giá trị cấu hình trong:
+- Update configuration values in:
   - `appsettings.json`
   - `appsettings.Development.json`
-- Thiết lập endpoint API backend và thông tin cấu hình thanh toán (PayPal/VNPay) theo môi trường chạy.
+- Set backend API endpoints and payment configuration (PayPal/VNPay) based on your target environment.
 
-## Ghi chú
+## Notes
 
-- Đây là repository cho **WebUser (Customer)**.
-- Backend API và Admin được triển khai ở repository/service khác trong hệ thống HubCinema.
+- This repository is for **WebUser (Customer)**.
+- Backend API and Admin are deployed in other repositories/services within the HubCinema system.
